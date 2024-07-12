@@ -10,18 +10,25 @@ import SubmitButton from './SubmitButton';
 import Button from './Button';
 import useFormStore from '../store/formStore';
 import { saveData } from '../api/api';
+import { validateForm } from '../utils/validation';
 
 function CustomTabs({ sections }) {
   const [value, setValue] = useState(0);
   const formData = useFormStore((state) => state.formData);
   const setFormData = useFormStore((state) => state.setFormData);
   const clearFormData = useFormStore((state) => state.clearFormData);
+  const setErrors = useFormStore((state) => state.setErrors);
+  const errors = useFormStore((state) => state.errors);
 
-  // Initialize formData with empty strings
+  // Initialize formData with empty strings and default values for optional fields
   useEffect(() => {
     const initialFormData = sections.reduce((acc, section) => {
       section.fields.forEach(field => {
-        acc[field.name] = '';
+        if (['overtimePay', 'transportationCosts', 'familyAllowance', 'attendanceAllowance', 'leaveAllowance', 'specialAllowance'].includes(field.name)) {
+          acc[field.name] = '0';
+        } else {
+          acc[field.name] = '';
+        }
       });
       return acc;
     }, {});
@@ -38,6 +45,13 @@ function CustomTabs({ sections }) {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    const validationErrors = validateForm(formData);
+
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      return;
+    }
+
     console.log('Form submitted:', formData);
 
     try {
@@ -62,7 +76,7 @@ function CustomTabs({ sections }) {
         </Tabs>
         {sections.map((section, index) => (
           <CustomTabPanel key={index} value={value} index={index}>
-            <RegisterForm fields={section.fields} formData={formData} onChange={handleFormChange} />
+            <RegisterForm fields={section.fields} formData={formData} onChange={handleFormChange} errors={errors} />
           </CustomTabPanel>
         ))}
         <Stack direction="row" spacing={2} sx={{ marginTop: 2, justifyContent: 'flex-end' }}>
