@@ -1,12 +1,11 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import TextField from '@mui/material/TextField';
-import Grid from '@mui/material/Grid';
+import React from "react";
+import PropTypes from "prop-types";
+import TextField from "@mui/material/TextField";
+import Grid from "@mui/material/Grid";
 
-function RegisterForm({ fields, formData, onChange }) {
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    onChange({ [name]: value });
+const RegisterForm = ({ fields, formData, onChange, errors }) => {
+  const handleChange = (e) => {
+    onChange({ [e.target.name]: e.target.value });
   };
 
   return (
@@ -14,20 +13,22 @@ function RegisterForm({ fields, formData, onChange }) {
       {fields.map((field) => (
         <Grid item xs={12} sm={6} key={field.name}>
           <TextField
-            fullWidth
-            variant="outlined"
+            key={field.name}
+            type={field.type}
             label={field.label}
             name={field.name}
-            type={field.type}
-            value={formData[field.name] || ''}
-            onChange={handleInputChange}
+            value={formData[field.name] || ""}
+            onChange={handleChange}
+            error={!!errors[field.name]}
+            helperText={errors[field.name]}
             required={field.required}
+            fullWidth
           />
         </Grid>
       ))}
     </Grid>
   );
-}
+};
 
 RegisterForm.propTypes = {
   fields: PropTypes.arrayOf(
