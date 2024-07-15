@@ -3,116 +3,118 @@ import { Stack } from "@mui/material";
 import { Typography } from "@mui/material";
 import BackButton from "../../Component/BackButton";
 import CustomTabs from "../../Component/CustomTabs";
+import { useTranslation } from 'react-i18next';
 
 const AddEmployee = () => {
+  const { t } = useTranslation();
   const handleSubmit = (formData) => {
     console.log(formData);
   };
 
   const sections = [
     {
-      label: "Personal Info",
+      label: t("Personal Info"),
       fields: [
         {
           name: "firstName",
           type: "text",
-          label: "First Name",
+          label: t("First Name"),
           required: true,
         },
         {
           name: "lastName",
           type: "text",
-          label: "Last Name",
+          label: t("Last Name"),
           required: true,
         },
-        { name: "phone", type: "text", label: "Phone", required: true },
-        { name: "address", type: "text", label: "Address", required: true },
+        { name: "phone", type: "text", label: t("Phone"), required: true },
+        { name: "address", type: "text", label: t("Address"), required: true },
         {
           name: "dateOfBirth",
           type: "date",
-          label: "Date of Birth",
+          label: t("Date of Birth"),
           required: true,
         },
         {
           name: "joinDate",
           type: "date",
-          label: "Join Date",
+          label: t("Join Date"),
           required: true,
         },
         {
           name: "department",
           type: "text",
-          label: "Department",
+          label: t("Department"),
           required: true,
         },
       ],
     },
     {
-      label: "Bank Details",
+      label: t("Bank Details"),
       fields: [
         {
           name: "bankAccountNumber",
           type: "text",
-          label: "Bank Account Number",
+          label: t("Bank Account Number"),
           required: true,
         },
         {
           name: "bankName",
           type: "text",
-          label: "Bank Name",
+          label: t("Bank Name"),
           required: true,
         },
         {
           name: "branchCode",
           type: "text",
-          label: "Branch Code",
+          label: t("Branch Code"),
           required: true,
         },
       ],
     },
     {
-      label: "Salary Details",
+      label: t("Salary Details"),
       fields: [
         {
           name: "basicSalary",
           type: "text",
-          label: "Basic Salary",
+          label: t("Basic Salary"),
           required: true,
         },
         {
           name: "overtimePay",
           type: "text",
-          label: "Overtime Pay",
+          label: t("Overtime Pay"),
           required: true,
         },
         {
           name: "transportationCosts",
           type: "text",
-          label: "Transportation Costs",
+          label: t("Transportation Costs"),
           required: true,
         },
         {
           name: "familyAllowance",
           type: "text",
-          label: "Family Allowance",
+          label: t("Family Allowance"),
           required: true,
         },
         {
           name: "attendanceAllowance",
           type: "text",
-          label: "Attendance Allowance",
+          label: t("Attendance Allowance"),
           required: true,
         },
         {
           name: "leaveAllowance",
           type: "text",
-          label: "Leave Allowance",
+          label: t("Leave Allowance"),
           required: true,
         },
         {
           name: "specialAllowance",
           type: "text",
-          label: "Special Allowance",
+          label: t("Special Allowance"),
           required: true,
         },
       ],
@@ -128,7 +130,7 @@ const AddEmployee = () => {
         sx={{ mb: 2, mt: 2 }}
       >
         <BackButton />
-        <Typography variant="h5">Register Form</Typography>
+        <Typography variant="h5">登録フォーム</Typography>
       </Stack>
       <CustomTabs sections={sections} onSubmit={handleSubmit} />
     </React.Fragment>

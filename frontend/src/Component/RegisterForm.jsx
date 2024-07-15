@@ -20,6 +20,7 @@ const RegisterForm = ({ fields, formData, onChange, errors }) => {
           required={field.required}
           margin="normal"
           variant="outlined"
+          InputLabelProps={field.type === 'date' ? { shrink: true } : {}}
         />
         </ Grid>
       ))}
