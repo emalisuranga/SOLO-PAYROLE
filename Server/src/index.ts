@@ -14,5 +14,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // Routes
 app.use('/api/employees', employeeRoutes);
+app.get('/', (req, res) => {
+    res.send('Hello World!');
+  });
 
 export default app;

@@ -1,12 +1,29 @@
 import { Request, Response } from 'express';
 import { createEmployee } from '../models/employee';
+import { Employee } from '../types/employee';
 
-export const saveEmployee = async (req: Request, res: Response) => {
+export const addEmployee = async (req: Request, res: Response) => {
   try {
-    const employeeData = req.body;
-    const employeeId = await createEmployee(employeeData);
-    res.status(200).json({ message: 'Employee data saved successfully!', employeeId });
+    const employee: Employee = req.body;
+    const result = await createEmployee(employee);
+    res.status(201).json(result);
   } catch (error) {
-    res.status(500).json({ error: 'Failed to save employee data', details: error });
+    console.error('Error details:', error);
+
+    if (error instanceof Error) {
+      res.status(500).json({
+        error: 'Failed to save employee data',
+        details: {
+          message: error.message,
+          stack: error.stack,
+          name: error.name,
+        },
+      });
+    } else {
+      res.status(500).json({
+        error: 'Failed to save employee data',
+        details: 'An unknown error occurred',
+      });
+    }
   }
 };

@@ -1,0 +1,43 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model PersonalInfo {
+  id                 Int              @id @default(autoincrement())
+  firstName          String
+  lastName           String
+  phone              String
+  address            String
+  dateOfBirth        DateTime
+  joinDate           DateTime
+  department         String
+  bankDetails        BankDetails[]
+  salaryDetails      SalaryDetails[]
+}
+
+model BankDetails {
+  id                 Int              @id @default(autoincrement())
+  bankAccountNumber  String
+  bankName           String
+  branchCode         String
+  employee           PersonalInfo     @relation(fields: [employeeId], references: [id])
+  employeeId         Int
+}
+
+model SalaryDetails {
+  id                    Int              @id @default(autoincrement())
+  basicSalary           Float
+  overtimePay           Float
+  transportationCosts   Float
+  familyAllowance       Float
+  attendanceAllowance   Float
+  leaveAllowance        Float
+  specialAllowance      Float
+  employee              PersonalInfo     @relation(fields: [employeeId], references: [id])
+  employeeId            Int
+}

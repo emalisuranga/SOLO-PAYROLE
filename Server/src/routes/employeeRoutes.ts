@@ -1,8 +1,8 @@
 import { Router } from 'express';
-import { saveEmployee } from '../controllers/employeeController';
+import { addEmployee } from '../controllers/employeeController';
 
 const router = Router();
 
-router.post('/save', saveEmployee);
+router.post('/save', addEmployee);
 
 export default router;
