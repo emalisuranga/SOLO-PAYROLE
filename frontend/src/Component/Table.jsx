@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import {
-  Box,
   Table,
   TableBody,
   TableCell,
