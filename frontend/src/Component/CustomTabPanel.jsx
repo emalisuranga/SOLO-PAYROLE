@@ -1,6 +1,6 @@
 import React from 'react';
-import Box from '@mui/material/Box';
 import PropTypes from 'prop-types';
+import Box from '@mui/material/Box';
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -13,7 +13,7 @@ function CustomTabPanel(props) {
       aria-labelledby={`simple-tab-${index}`}
       {...other}
     >
-      {value === index && <Box sx={{ p: 3,height: 500 }}>{children}</Box>}
+      {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
     </div>
   );
 }

@@ -48,8 +48,14 @@ function CustomTabs({ sections }) {
     setValue(newValue);
   };
 
-  const handleFormChange = (newFormData) => {
-    setFormData({ ...formData, ...newFormData });
+  const handleFormChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: ['basicSalary', 'overtimePay', 'transportationCosts', 'familyAllowance', 'attendanceAllowance', 'leaveAllowance', 'specialAllowance'].includes(name)
+        ? parseFloat(value)
+        : value,
+    });
   };
 
   const handleSubmit = async (event) => {
@@ -64,10 +70,10 @@ function CustomTabs({ sections }) {
     console.log('Form submitted:', formData);
 
     try {
-      await saveData(formData);
-      console.log('Data saved successfully');
+      const result = await saveData(formData);
+      console.log('Data saved successfully:', result);
     } catch (error) {
-      console.error('Failed to save data', error);
+      console.error('Failed to save data:', error);
     }
   };
 
@@ -111,6 +117,7 @@ CustomTabs.propTypes = {
           type: PropTypes.string.isRequired,
           label: PropTypes.string.isRequired,
           required: PropTypes.bool,
+          defaultValue: PropTypes.any  // Add defaultValue to PropTypes
         })
       ).isRequired,
     })

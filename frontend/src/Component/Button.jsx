@@ -1,12 +1,13 @@
 import React from 'react';
-import { Button } from '@mui/material';
+import PropTypes from 'prop-types';
+import { Button as MuiButton } from '@mui/material';
 
-const SubmitButton = ({ variant, color, children, type }) => {
-  return (
-    <Button variant={variant} color={color} type={type}>
-      {children}
-    </Button>
-  );
+const Button = ({ children, ...props }) => {
+  return <MuiButton {...props}>{children}</MuiButton>;
 };
 
-export default SubmitButton;
+Button.propTypes = {
+  children: PropTypes.node.isRequired,
+};
+
+export default Button;

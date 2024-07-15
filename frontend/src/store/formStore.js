@@ -2,10 +2,11 @@ import { create } from 'zustand';
 
 const useFormStore = create((set) => ({
   formData: {},
+  errors: {},
   setFormData: (newFormData) => set((state) => ({ formData: { ...state.formData, ...newFormData } })),
   clearFormData: () => set({ formData: {} }),
-  errors: {},
   setErrors: (errors) => set({ errors }),
+  clearErrors: () => set({ errors: {} }),
 }));
 
 export default useFormStore;

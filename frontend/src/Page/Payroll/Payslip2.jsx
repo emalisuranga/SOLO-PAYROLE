@@ -9,11 +9,11 @@ import {
   Grid,
   Button,
   Typography,
+  TextField
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
-import InputField from "../../Component/InputField";
 
 const CustomTableCell = styled(TableCell)({
   border: "2px solid black",
@@ -676,7 +676,7 @@ const ThreeRowTable = () => {
             </TableBody>
           </Table>
         </Grid>
-        <InputField
+        <TextField
           type="text"
           label="備考"
           name="remarks"

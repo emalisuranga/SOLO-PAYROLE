@@ -1,30 +1,27 @@
-import React from "react";
-import PropTypes from "prop-types";
-import TextField from "@mui/material/TextField";
-import Grid from "@mui/material/Grid";
+import React from 'react';
+import PropTypes from 'prop-types';
+import { TextField,Grid } from '@mui/material';
 
 const RegisterForm = ({ fields, formData, onChange, errors }) => {
-  const handleChange = (e) => {
-    onChange({ [e.target.name]: e.target.value });
-  };
-
   return (
     <Grid container spacing={2}>
       {fields.map((field) => (
         <Grid item xs={12} sm={6} key={field.name}>
-          <TextField
-            key={field.name}
-            type={field.type}
-            label={field.label}
-            name={field.name}
-            value={formData[field.name] || ""}
-            onChange={handleChange}
-            error={!!errors[field.name]}
-            helperText={errors[field.name]}
-            required={field.required}
-            fullWidth
-          />
-        </Grid>
+        <TextField
+          key={field.name}
+          type={field.type}
+          label={field.label}
+          name={field.name}
+          value={formData[field.name] || ''}  // Ensure value is always defined
+          onChange={onChange}
+          error={!!errors[field.name]}
+          helperText={errors[field.name]}
+          fullWidth
+          required={field.required}
+          margin="normal"
+          variant="outlined"
+        />
+        </ Grid>
       ))}
     </Grid>
   );
@@ -41,6 +38,7 @@ RegisterForm.propTypes = {
   ).isRequired,
   formData: PropTypes.object.isRequired,
   onChange: PropTypes.func.isRequired,
+  errors: PropTypes.object.isRequired,
 };
 
 export default RegisterForm;
