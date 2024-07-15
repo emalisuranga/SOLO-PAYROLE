@@ -13,12 +13,21 @@ import { saveData } from '../api/api';
 import { validateForm } from '../utils/validation';
 
 function CustomTabs({ sections }) {
+  const {
+    formData,
+    setFormData,
+    clearFormData,
+    setErrors,
+    errors
+  } = useFormStore((state) => ({
+    formData: state.formData,
+    setFormData: state.setFormData,
+    clearFormData: state.clearFormData,
+    setErrors: state.setErrors,
+    errors: state.errors
+  }));
+
   const [value, setValue] = useState(0);
-  const formData = useFormStore((state) => state.formData);
-  const setFormData = useFormStore((state) => state.setFormData);
-  const clearFormData = useFormStore((state) => state.clearFormData);
-  const setErrors = useFormStore((state) => state.setErrors);
-  const errors = useFormStore((state) => state.errors);
 
   // Initialize formData with empty strings and default values for optional fields
   useEffect(() => {
@@ -58,7 +67,7 @@ function CustomTabs({ sections }) {
       await saveData(formData);
       console.log('Data saved successfully');
     } catch (error) {
-      console.error('Failed to save data');
+      console.error('Failed to save data', error);
     }
   };
 
