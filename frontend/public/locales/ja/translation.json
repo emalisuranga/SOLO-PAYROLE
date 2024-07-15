@@ -20,5 +20,14 @@
   "Family Allowance": "家族手当",
   "Attendance Allowance": "出勤手当",
   "Leave Allowance": "休暇手当",
-  "Special Allowance": "特別手当"
+  "Special Allowance": "特別手当",
+  "name": "名前",
+  "ID": "ID",
+  "Position": "ポジション",
+  "Action": "アクション",
+  "addEmployee": "従業員の追加",
+  "Employee ID": "社員番号",
+  "Full Name": "フルネーム",
+  "search": "検索",
+  "Employee Details": "従業員の詳細"
 }

@@ -1,7 +1,7 @@
 import React from "react";
 import { Routes, Route, BrowserRouter } from "react-router-dom";
 import Dashboard from "./Page/Dashboard";
-import Employee from "./Page/Employee";
+import Employee from "./Page/Employee/Employee";
 import Payroll from "./Page/Payroll";
 import Settings from "./Page/Settings";
 import AddEmployee from "./Page/Employee/AddEmployee";

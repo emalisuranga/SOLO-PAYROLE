@@ -9,6 +9,7 @@ i18n
   .use(initReactI18next)
   .init({
     fallbackLng: 'ja',
+    lng: 'ja', // Explicitly set the language to Japanese
     debug: true,
     interpolation: {
       escapeValue: false, // not needed for react as it escapes by default
