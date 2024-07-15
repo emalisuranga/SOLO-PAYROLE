@@ -4,7 +4,6 @@ import { Employee } from '../types/employee';
 const prisma = new PrismaClient();
 
 export const createEmployee = async (employee: Employee) => {
-  console.log("test")
   const result = await prisma.personalInfo.create({
     data: {
       firstName: employee.firstName,
@@ -32,6 +31,16 @@ export const createEmployee = async (employee: Employee) => {
           specialAllowance: parseFloat(employee.specialAllowance as unknown as string),
         },
       },
+    },
+  });
+  return result;
+};
+
+export const getAllEmployees = async () => {
+  const result = await prisma.personalInfo.findMany({
+    include: {
+      bankDetails: true,
+      salaryDetails: true,
     },
   });
   return result;
