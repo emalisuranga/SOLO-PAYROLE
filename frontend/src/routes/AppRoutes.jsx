@@ -8,6 +8,7 @@ import AddEmployee from '../Page/Employee/AddEmployee';
 import AddSalaryDetails from '../Page/Payroll/AddSalaryDetails';
 import Payslip from '../Page/Payroll/Payslip2';
 import EmployeeDetails from '../Page/Employee/EmployeeDetails';
+import EditEmployee from "../Page/Employee/EditEmployee";
 
 const AppRoutes = () => (
   <Routes>
@@ -19,6 +20,8 @@ const AppRoutes = () => (
     <Route path="/add-salary-details" element={<AddSalaryDetails />} />
     <Route path="/payslip" element={<Payslip />} />
     <Route path="/employee/:id" element={<EmployeeDetails />} />
+    <Route path="/employee/edit/:id" element={<EditEmployee />} />
+    
   </Routes>
 );
 

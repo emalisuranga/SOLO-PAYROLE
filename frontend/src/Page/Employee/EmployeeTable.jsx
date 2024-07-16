@@ -32,7 +32,7 @@ const EmployeeTable = ({ data }) => {
   };
 
   const handleEdit = (row) => {
-    console.log("Edit:", row);
+    navigate(`/employee/edit/${row.id}`);
     handleActionClose();
   };
 
@@ -41,7 +41,7 @@ const EmployeeTable = ({ data }) => {
     handleActionClose();
   };
 
-  const handleRowClick = (row) => {
+  const handleView = (row) => {
     navigate(`/employee/${row.id}`);
   };
 
@@ -66,7 +66,7 @@ const EmployeeTable = ({ data }) => {
         </TableHead>
         <TableBody>
           {data.map((row) => (
-            <TableRow hover key={row.id} onClick={() => handleRowClick(row)}>
+            <TableRow hover key={row.id} >
               <TableCell>{row.id}</TableCell>
               <TableCell>{`${row.firstName} ${row.lastName}`}</TableCell>
               <TableCell>{row.phone}</TableCell>
@@ -100,6 +100,9 @@ const EmployeeTable = ({ data }) => {
                   open={Boolean(anchorEl && currentRow === row)}
                   onClose={handleActionClose}
                 >
+                  <MenuItem onClick={() => handleView(row)}>
+                    {t("View")}
+                  </MenuItem>
                   <MenuItem onClick={() => handleEdit(row)}>
                     {t("Edit")}
                   </MenuItem>
