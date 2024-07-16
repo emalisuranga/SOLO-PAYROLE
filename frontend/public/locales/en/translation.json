@@ -28,6 +28,10 @@
   "addEmployee": "Add Employee",
   "Employee ID": "Employee ID",
   "Full Name": "Full Name",
-  "search": "Search",
-  "Employee Details": "Employee Details"
+  "Search": "Search",
+  "Employee Details": "Employee Details",
+  "View": "View",
+  "Edit": "Edit",
+  "Delete": "Delete",
+  "Total Allowance": "Total Allowance"
 }

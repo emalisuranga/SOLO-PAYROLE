@@ -28,6 +28,10 @@
   "addEmployee": "従業員の追加",
   "Employee ID": "社員番号",
   "Full Name": "フルネーム",
-  "search": "検索",
-  "Employee Details": "従業員の詳細"
+  "Search": "検索",
+  "Employee Details": "従業員の詳細",
+  "View": "詳細",
+  "Edit": "編集",
+  "Delete": "削除",
+  "Total Allowance":"合計手当"
 }
