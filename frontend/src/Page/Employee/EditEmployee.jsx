@@ -18,46 +18,25 @@ const EditEmployee = () => {
     const fetchData = async () => {
       try {
         await fetchEmployeeDetails(id);
-        if (employee) {
-          const sectionsData = getSections(employee);
-          setSections(sectionsData);
-        }
       } catch (error) {
         console.error('Failed to fetch employee details:', error);
       } finally {
         setLoading(false);
       }
     };
-    
     fetchData();
-  }, [id,employee, fetchEmployeeDetails]);
+  }, [id, fetchEmployeeDetails]);
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       console.log("Fetching employee details for ID:", id);
-  //       await fetchEmployeeDetails(id);
-  //       console.log("Employee details fetched:", employee);
-  //     } catch (error) {
-  //       console.error('Failed to fetch employee details:', error);
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
-  
-  //   fetchData();
-  // }, [id, fetchEmployeeDetails]);
-  
-  // useEffect(() => {
-  //   console.log("Employee state updated:");
-  // });
+  useEffect(() => {
+    if (employee) {
+      const sectionsData = getSections(employee);
+      setSections(sectionsData);
+    }
+  }, [employee]);
 
   const handleSubmit = (formData) => {
     navigate('/employee');
   };
-
-  //  const sections = getSections(employee);
-  // console.log(sections)
 
   if (loading) {
     return (
@@ -85,7 +64,7 @@ const EditEmployee = () => {
         <BackButton />
         <Typography variant="h5">更新フォーム</Typography>
       </Stack>
-      <CustomTabs sections={sections} onSubmit={handleSubmit} />
+      <CustomTabs sections={sections} mode="edit" initialData={employee} onSubmit={handleSubmit} />
     </React.Fragment>
   );
 };

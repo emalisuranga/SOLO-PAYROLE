@@ -9,14 +9,14 @@ import RegisterForm from "./RegisterForm";
 import SubmitButton from "./SubmitButton";
 import Button from "./Button";
 import useFormStore from "../store/formStore";
-import useEmployeeStore from "../store/employeeStore"; 
+import useEmployeeStore from '../store/employeeStore'; // Import the store
 import { validateForm } from "../utils/validation";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import CustomSnackbar from "./CustomSnackbar";
 import { initializeFormData, handleFormChange as handleChangeUtil } from "../utils/formUtils";
 
-function CustomTabs({ sections }) {
+function CustomTabs({ sections, mode = 'add', initialData = {} }) {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const { formData, setFormData, clearFormData, setErrors, errors } = useFormStore((state) => ({
@@ -31,12 +31,12 @@ function CustomTabs({ sections }) {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [snackbarSeverity, setSnackbarSeverity] = useState("success");
-  const { saveData } = useEmployeeStore();  // Use the saveData function from the store
+  const { saveData, updateData } = useEmployeeStore();  // Use the saveData and updateData functions from the store
 
   useEffect(() => {
-    const initialFormData = initializeFormData(sections);
+    const initialFormData = initializeFormData(sections, initialData);
     setFormData(initialFormData);
-  }, [sections, setFormData]);
+  }, [sections, initialData, setFormData]);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -54,17 +54,16 @@ function CustomTabs({ sections }) {
     }
 
     try {
-      const response = await saveData(formData);  // Call the saveData function from the store
-      if (response.success !== false) {
-        setSnackbarSeverity("success");
-        setSnackbarMessage(t("Data saved successfully!"));
-        setSnackbarOpen(true);
-        setTimeout(() => navigate("/employee"), 2000);
+      if (mode === 'edit') {
+        await updateData(formData);
+        setSnackbarMessage(t("Data updated successfully!"));
       } else {
-        setSnackbarSeverity("error");
-        setSnackbarMessage(response.message || t("Failed to save data"));
-        setSnackbarOpen(true);
+        await saveData(formData);
+        setSnackbarMessage(t("Data saved successfully!"));
       }
+      setSnackbarSeverity("success");
+      setSnackbarOpen(true);
+      setTimeout(() => navigate("/employee"), 2000);
     } catch (error) {
       setSnackbarSeverity("error");
       setSnackbarMessage(t("Failed to save data"));
@@ -96,7 +95,7 @@ function CustomTabs({ sections }) {
         ))}
         <Stack direction="row" spacing={2} sx={{ marginTop: 2, justifyContent: "flex-end" }}>
           <SubmitButton variant="contained" color="primary" type="submit">
-            {t("Submit")}
+            {t(mode === 'edit' ? "Update" : "Submit")}
           </SubmitButton>
           <Button variant="outlined" color="primary" onClick={handleClear}>
             {t("Clear")}
@@ -123,6 +122,13 @@ CustomTabs.propTypes = {
       ).isRequired,
     })
   ).isRequired,
+  mode: PropTypes.oneOf(['add', 'edit']), // New prop to determine the mode
+  initialData: PropTypes.object, // New prop to hold initial data for editing
+};
+
+CustomTabs.defaultProps = {
+  mode: 'add',
+  initialData: {},
 };
 
 function a11yProps(index) {
