@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { createEmployee,getAllEmployees } from '../models/employee';
+import { createEmployee,getAllEmployees,getEmployeeById } from '../models/employee';
 import { Employee } from '../types/employee';
 import { sendSuccessResponse, sendErrorResponse } from '../utils/responseHandler';
 
@@ -21,5 +21,18 @@ export const getEmployees = async (_req: Request, res: Response) => {
   } catch (error) {
     console.error('Error details:', error);
     sendErrorResponse(res, error, 'Failed to retrieve employee data');
+  }
+};
+
+export const getEmployeeByIdHandler = async (req: Request, res: Response) => {
+  const { id } = req.params;
+  try {
+    const employee = await getEmployeeById(parseInt(id, 10));
+    if (!employee) {
+      return res.status(404).json({ error: 'Employee not found' });
+    }
+    sendSuccessResponse(res, employee, 'Employee retrieved successfully');
+  } catch (error) {
+    sendErrorResponse(res, error, 'Failed to fetch employee');
   }
 };

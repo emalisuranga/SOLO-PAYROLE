@@ -45,3 +45,14 @@ export const getAllEmployees = async () => {
   });
   return result;
 };
+
+export const getEmployeeById = async (id: number) => {
+  const employee = await prisma.personalInfo.findUnique({
+    where: { id },
+    include: {
+      bankDetails: true,
+      salaryDetails: true,
+    },
+  });
+  return employee;
+};
