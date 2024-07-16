@@ -1,4 +1,6 @@
 export interface Employee {
+    salaryDetails: any;
+    bankDetails: any;
     firstName: string;
     lastName: string;
     phone: string;
