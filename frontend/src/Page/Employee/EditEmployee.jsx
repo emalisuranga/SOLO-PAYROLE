@@ -12,11 +12,16 @@ const EditEmployee = () => {
   const { employee, fetchEmployeeDetails } = useEmployeeStore();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
+  const [sections, setSections] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         await fetchEmployeeDetails(id);
+        if (employee) {
+          const sectionsData = getSections(employee);
+          setSections(sectionsData);
+        }
       } catch (error) {
         console.error('Failed to fetch employee details:', error);
       } finally {
@@ -25,13 +30,34 @@ const EditEmployee = () => {
     };
     
     fetchData();
-  }, [id, fetchEmployeeDetails]);
+  }, [id,employee, fetchEmployeeDetails]);
+
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       console.log("Fetching employee details for ID:", id);
+  //       await fetchEmployeeDetails(id);
+  //       console.log("Employee details fetched:", employee);
+  //     } catch (error) {
+  //       console.error('Failed to fetch employee details:', error);
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
+  
+  //   fetchData();
+  // }, [id, fetchEmployeeDetails]);
+  
+  // useEffect(() => {
+  //   console.log("Employee state updated:");
+  // });
 
   const handleSubmit = (formData) => {
     navigate('/employee');
   };
 
-  const sections = getSections(employee);
+  //  const sections = getSections(employee);
+  // console.log(sections)
 
   if (loading) {
     return (

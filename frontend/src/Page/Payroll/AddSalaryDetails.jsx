@@ -211,7 +211,6 @@ const AddSalary = () => {
   const navigate=useNavigate();
 
   const handleSearch = () => {
-    console.log("jdjdj")
     const filteredData = initialData.filter(
       (item) =>
         (searchName === "" ||

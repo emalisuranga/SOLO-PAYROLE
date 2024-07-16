@@ -1,4 +1,3 @@
-// src/components/CustomTabs.jsx
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import Tabs from "@mui/material/Tabs";
@@ -10,7 +9,7 @@ import RegisterForm from "./RegisterForm";
 import SubmitButton from "./SubmitButton";
 import Button from "./Button";
 import useFormStore from "../store/formStore";
-import { saveData } from "../api/api";
+import useEmployeeStore from "../store/employeeStore"; 
 import { validateForm } from "../utils/validation";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -32,9 +31,11 @@ function CustomTabs({ sections }) {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [snackbarSeverity, setSnackbarSeverity] = useState("success");
+  const { saveData } = useEmployeeStore();  // Use the saveData function from the store
 
   useEffect(() => {
-    setFormData(initializeFormData(sections));
+    const initialFormData = initializeFormData(sections);
+    setFormData(initialFormData);
   }, [sections, setFormData]);
 
   const handleChange = (event, newValue) => {
@@ -53,11 +54,17 @@ function CustomTabs({ sections }) {
     }
 
     try {
-      await saveData(formData);
-      setSnackbarSeverity("success");
-      setSnackbarMessage(t("Data saved successfully!"));
-      setSnackbarOpen(true);
-      setTimeout(() => navigate("/employee"), 2000);
+      const response = await saveData(formData);  // Call the saveData function from the store
+      if (response.success !== false) {
+        setSnackbarSeverity("success");
+        setSnackbarMessage(t("Data saved successfully!"));
+        setSnackbarOpen(true);
+        setTimeout(() => navigate("/employee"), 2000);
+      } else {
+        setSnackbarSeverity("error");
+        setSnackbarMessage(response.message || t("Failed to save data"));
+        setSnackbarOpen(true);
+      }
     } catch (error) {
       setSnackbarSeverity("error");
       setSnackbarMessage(t("Failed to save data"));

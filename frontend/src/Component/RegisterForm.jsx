@@ -1,28 +1,28 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { TextField,Grid } from '@mui/material';
+import { TextField, Grid } from '@mui/material';
 
 const RegisterForm = ({ fields, formData, onChange, errors }) => {
   return (
     <Grid container spacing={2}>
       {fields.map((field) => (
         <Grid item xs={12} sm={6} key={field.name}>
-        <TextField
-          key={field.name}
-          type={field.type}
-          label={field.label}
-          name={field.name}
-          value={formData[field.name] || ''}  // Ensure value is always defined
-          onChange={onChange}
-          error={!!errors[field.name]}
-          helperText={errors[field.name]}
-          fullWidth
-          required={field.required}
-          margin="normal"
-          variant="outlined"
-          InputLabelProps={field.type === 'date' ? { shrink: true } : {}}
-        />
-        </ Grid>
+          <TextField
+            key={field.name}
+            type={field.type}
+            label={field.label}
+            name={field.name}
+            value={formData[field.name] || field.defaultValue || ''} // Ensure value is always defined
+            onChange={onChange}
+            error={!!errors[field.name]}
+            helperText={errors[field.name]}
+            fullWidth
+            required={field.required}
+            margin="normal"
+            variant="outlined"
+            InputLabelProps={field.type === 'date' ? { shrink: true } : {}}
+          />
+        </Grid>
       ))}
     </Grid>
   );
