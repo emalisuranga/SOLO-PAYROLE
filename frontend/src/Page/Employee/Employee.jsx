@@ -3,35 +3,30 @@ import { Box, Typography, Grid, Button, TextField, MenuItem, CircularProgress } 
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import EmployeeTable from './EmployeeTable';
-import axios from 'axios';
+import useEmployeeStore from '../../store/employeeStore';
 
 const Employee = () => {
   const { t } = useTranslation();
   const [searchName, setSearchName] = useState("");
   const [searchId, setSearchId] = useState("");
-  const [tableData, setTableData] = useState([]);
-  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
+  const { employees, loading, fetchEmployees } = useEmployeeStore((state) => ({
+    employees: state.employees,
+    loading: state.loading,
+    fetchEmployees: state.fetchEmployees,
+  }));
+
   useEffect(() => {
-    axios.get('http://localhost:3000/api/employees')
-      .then(response => {
-        setTableData(response.data.data || []);
-        console.log(response.data.data)
-        setLoading(false);
-      })
-      .catch(error => {
-        console.error('Error fetching data:', error);
-        setLoading(false);
-      });
-  }, []);
+    fetchEmployees();
+  }, [fetchEmployees]);
 
   const handleSearch = () => {
-    const filteredData = tableData.filter(item =>
+    const filteredData = employees.filter(item =>
       (searchName === "" || item.firstName.toLowerCase().includes(searchName.toLowerCase()) || item.lastName.toLowerCase().includes(searchName.toLowerCase())) &&
       (searchId === "" || item.id.toString() === searchId.toString())
     );
-    setTableData(filteredData);
+    useEmployeeStore.setState({ filteredEmployees: filteredData });
   };
 
   if (loading) {
@@ -46,7 +41,7 @@ const Employee = () => {
     <Box sx={{ flexGrow: 1, p: 3 }}>
       <Grid container spacing={2}>
         <Grid item xs={12}>
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2  }}>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
             <Typography variant="h5">{t('Employee Details')}</Typography>
             <Button variant="contained" onClick={() => navigate("/addemployee")}>{t('addEmployee')}</Button>
           </Box>
@@ -69,17 +64,17 @@ const Employee = () => {
               size="small"
               sx={{ width: 100 }}  // Adjust the width here
             >
-              {tableData.map((item) => (
+              {employees.map((item) => (
                 <MenuItem key={item.id} value={item.id}>
                   {item.id}
                 </MenuItem>
               ))}
             </TextField>
-            <Button variant="contained" onClick={handleSearch} sx={{ height: 40 }}>{t('search')}</Button>
+            <Button variant="contained" onClick={handleSearch} sx={{ height: 40 }}>{t('Search')}</Button>
           </Box>
         </Grid>
         <Grid item xs={12}>
-          <EmployeeTable data={tableData} />
+          <EmployeeTable data={employees} />
         </Grid>
       </Grid>
     </Box>
