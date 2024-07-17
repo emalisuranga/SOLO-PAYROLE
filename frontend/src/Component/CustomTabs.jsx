@@ -54,7 +54,7 @@ function CustomTabs({ sections, mode = 'add', initialData = {} }) {
 
     try {
       if (mode === 'edit') {
-        await updateData(formData);
+        await updateData({ ...formData, id: initialData.id });
         setSnackbarMessage(t("Data updated successfully!"));
       } else {
         await saveData(formData);

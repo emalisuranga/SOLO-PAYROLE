@@ -42,6 +42,9 @@ export const getAllEmployees = async () => {
       bankDetails: true,
       salaryDetails: true,
     },
+    orderBy: {
+      id: 'asc', 
+    },
   });
   return result;
 };
