@@ -10,11 +10,10 @@ import SubmitButton from "./SubmitButton";
 import Button from "./Button";
 import useFormStore from "../store/formStore";
 import useEmployeeStore from '../store/employeeStore';
-import { validateForm } from "../utils/validation";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import CustomSnackbar from "./CustomSnackbar";
-import { initializeFormData, handleFormChange as handleChangeUtil } from "../utils/formUtils";
+import { validateForm,initializeFormData, handleFormChange as handleChangeUtil } from "../utils/formUtils";
 
 function CustomTabs({ sections, mode = 'add', initialData = {} }) {
   const navigate = useNavigate();
@@ -46,7 +45,7 @@ function CustomTabs({ sections, mode = 'add', initialData = {} }) {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const validationErrors = validateForm(formData);
+    const validationErrors = await validateForm(formData);
 
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);

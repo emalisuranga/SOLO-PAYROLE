@@ -12,7 +12,7 @@ const RegisterForm = ({ fields, formData, onChange, errors }) => {
             type={field.type}
             label={field.label}
             name={field.name}
-            value={formData[field.name] || field.defaultValue || ''} // Ensure value is always defined
+            value={formData[field.name] !== undefined ? formData[field.name] : (field.defaultValue !== undefined ? field.defaultValue : '')}
             onChange={onChange}
             error={!!errors[field.name]}
             helperText={errors[field.name]}
