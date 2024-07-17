@@ -117,3 +117,10 @@ export const updateEmployee = async (id: number, employee: Employee) => {
   });
   return result;
 };
+
+export const deleteEmployee = async (id: number) => {
+  const result = await prisma.personalInfo.delete({
+    where: { id },
+  });
+  return result;
+};

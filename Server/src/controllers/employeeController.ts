@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { createEmployee,getAllEmployees,getEmployeeById,updateEmployee } from '../models/employee';
+import { createEmployee,getAllEmployees,getEmployeeById,updateEmployee,deleteEmployee } from '../models/employee';
 import { Employee } from '../types/employee';
 import { sendSuccessResponse, sendErrorResponse } from '../utils/responseHandler';
 
@@ -46,5 +46,17 @@ export const updateEmployeeHandler = async (req: Request, res: Response) => {
   } catch (error) {
     console.error('Error updating employee:', error);
     sendErrorResponse(res, error, 'Failed to update employee data');
+  }
+};
+
+export const deleteEmployeeHandler = async (req: Request, res: Response) => {
+  const { id } = req.params;
+
+  try {
+    const result = await deleteEmployee(parseInt(id, 10));
+    sendSuccessResponse(res, result, 'Employee deleted successfully');
+  } catch (error) {
+    console.error('Error deleting employee:', error);
+    sendErrorResponse(res, error, 'Failed to delete employee');
   }
 };

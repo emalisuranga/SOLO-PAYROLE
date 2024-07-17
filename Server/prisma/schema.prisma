@@ -25,7 +25,7 @@ model BankDetails {
   bankAccountNumber  String
   bankName           String
   branchCode         String
-  employee           PersonalInfo     @relation(fields: [employeeId], references: [id])
+  employee           PersonalInfo @relation(fields: [employeeId], references: [id], onDelete: Cascade)
   employeeId         Int
 }
 
@@ -38,6 +38,6 @@ model SalaryDetails {
   attendanceAllowance   Float
   leaveAllowance        Float
   specialAllowance      Float
-  employee              PersonalInfo     @relation(fields: [employeeId], references: [id])
+  employee              PersonalInfo @relation(fields: [employeeId], references: [id], onDelete: Cascade)
   employeeId            Int
 }
