@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { Box, Typography, CircularProgress } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import useEmployeeStore from "../../store/employeeStore";
+import EmployeeHeader from '../../Page/Employee/EmployeeHeader';
 
 const EmployeeDetails = () => {
   const { t } = useTranslation();
@@ -50,7 +51,9 @@ const EmployeeDetails = () => {
   }
 
   return (
-    <Box sx={{ p: 3 }}>
+    <React.Fragment>
+      <EmployeeHeader titleKey="employeeDetails" />
+      <Box sx={{ p: 3 }}>
       <Typography variant="h4">{`${employee.firstName} ${employee.lastName}`}</Typography>
       <Typography variant="body1">{`${t("Phone")}: ${employee.phone}`}</Typography>
       <Typography variant="body1">{`${t("Address")}: ${employee.address}`}</Typography>
@@ -69,6 +72,8 @@ const EmployeeDetails = () => {
         employee.salaryDetails[0]?.specialAllowance,
       ].reduce((acc, allowance) => acc + (allowance || 0), 0)}`}</Typography>
     </Box>
+    </React.Fragment>
+    
   );
 };
 

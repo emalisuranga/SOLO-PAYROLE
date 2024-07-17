@@ -1,7 +1,5 @@
 import React from "react";
-import { Stack } from "@mui/material";
-import { Typography } from "@mui/material";
-import BackButton from "../../Component/BackButton";
+import EmployeeHeader from '../../Page/Employee/EmployeeHeader';
 import CustomTabs from "../../Component/CustomTabs";
 import getSections from '../../utils/sections';
 
@@ -12,15 +10,7 @@ const AddEmployee = () => {
 
   return (
     <React.Fragment>
-      <Stack
-        direction="row"
-        alignItems="center"
-        spacing={2}
-        sx={{ mb: 2, mt: 2 }}
-      >
-        <BackButton />
-        <Typography variant="h5">登録フォーム</Typography>
-      </Stack>
+      <EmployeeHeader titleKey="registrationForm" />
       <CustomTabs sections={sections} onSubmit={handleSubmit} />
     </React.Fragment>
   );
