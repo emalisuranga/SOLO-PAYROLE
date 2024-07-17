@@ -37,5 +37,10 @@
   "Update": "アップデート",
   "registrationForm": "登録フォーム",
   "updateForm": "更新フォーム",
-  "employeeDetails": "雇用主の詳細"
+  "employeeDetails": "雇用主の詳細",
+  "Cancel": "キャンセル",
+  "Confirm Delete": "削除の確認",
+  "DeleteConfirmationMessage": "この従業員を削除してもよろしいですか？この操作は元に戻せません。",
+  "deleteSuccess": "削除しました",
+  "deleteFail": "削除に失敗しました"
 }
