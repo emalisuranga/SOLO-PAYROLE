@@ -1,140 +1,62 @@
 import { t } from 'i18next';
 
+const formatDate = (dateString) => {
+  if (!dateString) return '';
+  const date = new Date(dateString);
+  return date.toISOString().split('T')[0]; // Extract only the date part
+};
+
+const createField = (name, type, label, required, defaultValue) => ({
+  name,
+  type,
+  label: t(label), // Translate the label
+  required,
+  defaultValue,
+});
+
+const createFields = (employee, fieldsConfig) => 
+  fieldsConfig.map(field => 
+    createField(
+      field.name,
+      field.type,
+      field.label,
+      field.required,
+      field.type === 'date' ? formatDate(employee?.[field.name]) : employee?.[field.name] || ''
+    )
+  );
 
 const getSections = (employee) => [
   {
     label: t("Personal Info"),
-    fields: [
-      {
-        name: "firstName",
-        type: "text",
-        label: t("First Name"),
-        required: true,
-        defaultValue: employee ? employee.firstName : '',
-      },
-      {
-        name: "lastName",
-        type: "text",
-        label: t("Last Name"),
-        required: true,
-        defaultValue: employee ? employee.lastName : '',
-      },
-      {
-        name: "phone",
-        type: "text",
-        label: t("Phone"),
-        required: true,
-        defaultValue: employee ? employee.phone : '',
-      },
-      {
-        name: "address",
-        type: "text",
-        label: t("Address"),
-        required: true,
-        defaultValue: employee ? employee.address : '',
-      },
-      {
-        name: "dateOfBirth",
-        type: "date",
-        label: t("Date of Birth"),
-        required: true,
-        defaultValue: employee ? employee.dateOfBirth.split('T')[0] : '',
-      },
-      {
-        name: "joinDate",
-        type: "date",
-        label: t("Join Date"),
-        required: true,
-        defaultValue: employee ? employee.joinDate.split('T')[0] : '',
-      },
-      {
-        name: "department",
-        type: "text",
-        label: t("Department"),
-        required: true,
-        defaultValue: employee ? employee.department : '',
-      },
-    ],
+    fields: createFields(employee, [
+      { name: "firstName", type: "text", label: "First Name", required: true },
+      { name: "lastName", type: "text", label: "Last Name", required: true },
+      { name: "phone", type: "text", label: "Phone", required: true },
+      { name: "address", type: "text", label: "Address", required: true },
+      { name: "dateOfBirth", type: "date", label: "Date of Birth", required: true },
+      { name: "joinDate", type: "date", label: "Join Date", required: true },
+      { name: "department", type: "text", label: "Department", required: true },
+    ]),
   },
   {
     label: t("Bank Details"),
-    fields: [
-      {
-        name: "bankAccountNumber",
-        type: "text",
-        label: t("Bank Account Number"),
-        required: true,
-        defaultValue: employee ? employee.bankDetails[0]?.bankAccountNumber : '',
-      },
-      {
-        name: "bankName",
-        type: "text",
-        label: t("Bank Name"),
-        required: true,
-        defaultValue: employee ? employee.bankDetails[0]?.bankName : '',
-      },
-      {
-        name: "branchCode",
-        type: "text",
-        label: t("Branch Code"),
-        required: true,
-        defaultValue: employee ? employee.bankDetails[0]?.branchCode : '',
-      },
-    ],
+    fields: createFields(employee?.bankDetails?.[0] || {}, [
+      { name: "bankAccountNumber", type: "text", label: "Bank Account Number", required: true },
+      { name: "bankName", type: "text", label: "Bank Name", required: true },
+      { name: "branchCode", type: "text", label: "Branch Code", required: true },
+    ]),
   },
   {
     label: t("Salary Details"),
-    fields: [
-      {
-        name: "basicSalary",
-        type: "text",
-        label: t("Basic Salary"),
-        required: true,
-        defaultValue: employee ? employee.salaryDetails[0]?.basicSalary : '',
-      },
-      {
-        name: "overtimePay",
-        type: "text",
-        label: t("Overtime Pay"),
-        required: true,
-        defaultValue: employee ? employee.salaryDetails[0]?.overtimePay : '',
-      },
-      {
-        name: "transportationCosts",
-        type: "text",
-        label: t("Transportation Costs"),
-        required: true,
-        defaultValue: employee ? employee.salaryDetails[0]?.transportationCosts : '',
-      },
-      {
-        name: "familyAllowance",
-        type: "text",
-        label: t("Family Allowance"),
-        required: true,
-        defaultValue: employee ? employee.salaryDetails[0]?.familyAllowance : '',
-      },
-      {
-        name: "attendanceAllowance",
-        type: "text",
-        label: t("Attendance Allowance"),
-        required: true,
-        defaultValue: employee ? employee.salaryDetails[0]?.attendanceAllowance : '',
-      },
-      {
-        name: "leaveAllowance",
-        type: "text",
-        label: t("Leave Allowance"),
-        required: true,
-        defaultValue: employee ? employee.salaryDetails[0]?.leaveAllowance : '',
-      },
-      {
-        name: "specialAllowance",
-        type: "text",
-        label: t("Special Allowance"),
-        required: true,
-        defaultValue: employee ? employee.salaryDetails[0]?.specialAllowance : '',
-      },
-    ],
+    fields: createFields(employee?.salaryDetails?.[0] || {}, [
+      { name: "basicSalary", type: "text", label: "Basic Salary", required: true },
+      { name: "overtimePay", type: "text", label: "Overtime Pay", required: true },
+      { name: "transportationCosts", type: "text", label: "Transportation Costs", required: true },
+      { name: "familyAllowance", type: "text", label: "Family Allowance", required: true },
+      { name: "attendanceAllowance", type: "text", label: "Attendance Allowance", required: true },
+      { name: "leaveAllowance", type: "text", label: "Leave Allowance", required: true },
+      { name: "specialAllowance", type: "text", label: "Special Allowance", required: true },
+    ]),
   },
 ];
 

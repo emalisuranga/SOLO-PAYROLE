@@ -9,7 +9,7 @@ import RegisterForm from "./RegisterForm";
 import SubmitButton from "./SubmitButton";
 import Button from "./Button";
 import useFormStore from "../store/formStore";
-import useEmployeeStore from '../store/employeeStore'; // Import the store
+import useEmployeeStore from '../store/employeeStore';
 import { validateForm } from "../utils/validation";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -31,7 +31,7 @@ function CustomTabs({ sections, mode = 'add', initialData = {} }) {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [snackbarSeverity, setSnackbarSeverity] = useState("success");
-  const { saveData, updateData } = useEmployeeStore();  // Use the saveData and updateData functions from the store
+  const { saveData, updateData } = useEmployeeStore();
 
   useEffect(() => {
     const initialFormData = initializeFormData(sections, initialData);
@@ -122,8 +122,8 @@ CustomTabs.propTypes = {
       ).isRequired,
     })
   ).isRequired,
-  mode: PropTypes.oneOf(['add', 'edit']), // New prop to determine the mode
-  initialData: PropTypes.object, // New prop to hold initial data for editing
+  mode: PropTypes.oneOf(['add', 'edit']),
+  initialData: PropTypes.object,
 };
 
 CustomTabs.defaultProps = {

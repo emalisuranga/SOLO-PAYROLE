@@ -6,11 +6,13 @@ import CustomTabs from "../../Component/CustomTabs";
 import { useParams, useNavigate } from 'react-router-dom';
 import useEmployeeStore from '../../store/employeeStore';
 import getSections from '../../utils/sections';
+import { useTranslation } from "react-i18next";
 
 const EditEmployee = () => {
   const { id } = useParams();
   const { employee, fetchEmployeeDetails } = useEmployeeStore();
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [loading, setLoading] = useState(true);
   const [sections, setSections] = useState([]);
 
