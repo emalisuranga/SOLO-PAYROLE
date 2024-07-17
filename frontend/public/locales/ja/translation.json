@@ -34,5 +34,8 @@
   "Edit": "編集",
   "Delete": "削除",
   "Total Allowance":"合計手当",
-  "Update": "アップデート"
+  "Update": "アップデート",
+  "registrationForm": "登録フォーム",
+  "updateForm": "更新フォーム",
+  "employeeDetails": "雇用主の詳細"
 }

@@ -34,5 +34,8 @@
   "Edit": "Edit",
   "Delete": "Delete",
   "Total Allowance": "Total Allowance",
-  "Update": "Update"
+  "Update": "Update",
+  "registrationForm": "Registration Form",
+  "updateForm": "Update Form",
+  "employeeDetails": "Employer Details"
 }
