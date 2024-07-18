@@ -16,13 +16,12 @@ import {
   DialogContentText,
   DialogTitle,
   Button,
-  Snackbar,
-  Alert
 } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { useTranslation } from 'react-i18next';
 import useEmployeeStore from '../../store/employeeStore';
 import { useNavigate } from "react-router-dom";
+import CustomSnackbar from "./CustomSnackbar";
 
 const EmployeeTable = ({ data }) => {
   const { t } = useTranslation();
@@ -66,19 +65,25 @@ const EmployeeTable = ({ data }) => {
     setCurrentRow(null);
   };
 
+  const handleCloseSnackbar = () => {
+    setSnackbarOpen(false);
+  };
+
   const handleDeleteConfirm = async () => {
     if (currentRow) {
       try {
         await deleteEmployee(currentRow.id);
-        setSnackbarMessage(t("deleteSuccess"));
-        setSnackbarSeverity("success");
+        setSnackbarMessage(t("delete_success"));
+        setSnackbarSeverity("deleteSuccess");
+        setSnackbarOpen(true);
         fetchEmployees();
       } catch (error) {
-        setSnackbarMessage(t("Failed to delete employee"));
         setSnackbarSeverity("error");
+        setSnackbarMessage(t("delete_error"));
+        setSnackbarOpen(true);
+        console.error("Failed to save data", error);
       }
-      setSnackbarOpen(true);
-      handleDialogClose();
+      handleDialogClose()
     }
   };
 
@@ -111,17 +116,17 @@ const EmployeeTable = ({ data }) => {
               <TableCell>{new Date(row.dateOfBirth).toLocaleDateString()}</TableCell>
               <TableCell>{new Date(row.joinDate).toLocaleDateString()}</TableCell>
               <TableCell>{row.department}</TableCell>
-              <TableCell>{row.bankDetails[0]?.bankAccountNumber}</TableCell>
-              <TableCell>{row.bankDetails[0]?.bankName}</TableCell>
-              <TableCell>{row.salaryDetails[0]?.basicSalary}</TableCell>
+              <TableCell>{row.bankDetails?.bankAccountNumber}</TableCell>
+              <TableCell>{row.bankDetails?.bankName}</TableCell>
+              <TableCell>{row.salaryDetails?.basicSalary}</TableCell>
               <TableCell>
                 {[
-                  row.salaryDetails[0]?.overtimePay,
-                  row.salaryDetails[0]?.transportationCosts,
-                  row.salaryDetails[0]?.familyAllowance,
-                  row.salaryDetails[0]?.attendanceAllowance,
-                  row.salaryDetails[0]?.leaveAllowance,
-                  row.salaryDetails[0]?.specialAllowance,
+                  row.salaryDetails?.overtimePay,
+                  row.salaryDetails?.transportationCosts,
+                  row.salaryDetails?.familyAllowance,
+                  row.salaryDetails?.attendanceAllowance,
+                  row.salaryDetails?.leaveAllowance,
+                  row.salaryDetails?.specialAllowance,
                 ].reduce((acc, allowance) => acc + (allowance || 0), 0)}
               </TableCell>
               <TableCell>
@@ -154,6 +159,7 @@ const EmployeeTable = ({ data }) => {
           </Button>
         </DialogActions>
       </Dialog>
+      <CustomSnackbar open={snackbarOpen} message={snackbarMessage} severity={snackbarSeverity} onClose={handleCloseSnackbar} />
     </TableContainer>
   );
 };

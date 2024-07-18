@@ -42,5 +42,13 @@
   "Confirm Delete": "削除の確認",
   "DeleteConfirmationMessage": "この従業員を削除してもよろしいですか？この操作は元に戻せません。",
   "deleteSuccess": "削除しました",
-  "deleteFail": "削除に失敗しました"
+  "deleteFail": "削除に失敗しました",
+  "actions": {
+    "add_success": "データが正常に追加されました",
+    "update_success": "データが正常に更新されました",
+    "delete_success": "従業員が正常に削除されました",
+    "add_error": "データの追加に失敗しました",
+    "update_error": "データの更新に失敗しました",
+    "delete_error": "従業員の削除に失敗しました"
+  }
 }

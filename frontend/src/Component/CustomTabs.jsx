@@ -54,18 +54,20 @@ function CustomTabs({ sections, mode = 'add', initialData = {} }) {
 
     try {
       if (mode === 'edit') {
-        await updateData({ ...formData, id: initialData.id });
-        setSnackbarMessage(t("Data updated successfully!"));
+        console.log({ ...formData, id: initialData.id,bankDetails: [{ id: initialData.bankDetails.id }], salaryDetails: [{ id: initialData.salaryDetails.id }] })
+        // await updateData({ ...formData, id: initialData.id });
+        await updateData({ ...formData, id: initialData.id,bankDetails: [{ id: initialData.bankDetails.id }], salaryDetails: [{ id: initialData.salaryDetails.id }] });
+        setSnackbarMessage(t("update_success"));
       } else {
         await saveData(formData);
-        setSnackbarMessage(t("Data saved successfully!"));
+        setSnackbarMessage(t("update_error"));
       }
       setSnackbarSeverity("success");
       setSnackbarOpen(true);
       setTimeout(() => navigate("/employee"), 2000);
     } catch (error) {
       setSnackbarSeverity("error");
-      setSnackbarMessage(t("Failed to save data"));
+      setSnackbarMessage(t("add_error"));
       setSnackbarOpen(true);
       console.error("Failed to save data", error);
     }

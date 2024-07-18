@@ -108,8 +108,19 @@ export const updateEmployee = async (id: number, employee: Employee) => {
 };
 
 export const deleteEmployee = async (id: number) => {
-  const result = await prisma.personalInfo.delete({
-    where: { id },
+  const result = await prisma.$transaction(async (prisma) => {
+    await prisma.bankDetails.deleteMany({
+      where: { employeeId: id },
+    });
+    await prisma.salaryDetails.deleteMany({
+      where: { employeeId: id },
+    });
+    const deletedEmployee = await prisma.personalInfo.delete({
+      where: { id },
+    });
+
+    return deletedEmployee;
   });
+
   return result;
 };

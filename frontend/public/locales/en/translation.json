@@ -41,6 +41,12 @@
   "Cancel": "Cancel",
   "Confirm Delete": "Confirm Delete",
   "DeleteConfirmationMessage": "Are you sure you want to delete this employee? This action cannot be undone.",
-  "deleteSuccess": "Employee deleted",
-  "deleteFail": "Delete failed"
+  "actions": {
+    "add_success": "Employee added successfully",
+    "update_success": "Employee updated successfully",
+    "delete_success": "Employee deleted successfully",
+    "add_error": "Failed to add Employee",
+    "update_error": "Failed to update Employee",
+    "delete_error": "Failed to delete employee"
+  }
 }

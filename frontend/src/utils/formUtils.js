@@ -18,10 +18,10 @@ export const initializeFormData = (sections, initialData = {}) => {
       } else {
         if (nestedValue !== undefined) {
           formData[field.name] = nestedValue;
-        } else if (initialData.bankDetails && initialData.bankDetails[0][field.name] !== undefined) {
-          formData[field.name] = initialData.bankDetails[0][field.name];
-        } else if (initialData.salaryDetails && initialData.salaryDetails[0][field.name] !== undefined) {
-          formData[field.name] = initialData.salaryDetails[0][field.name];
+        } else if (initialData.bankDetails && initialData.bankDetails[field.name] !== undefined) {
+          formData[field.name] = initialData.bankDetails[field.name];
+        } else if (initialData.salaryDetails && initialData.salaryDetails[field.name] !== undefined) {
+          formData[field.name] = initialData.salaryDetails[field.name];
         } else {
           formData[field.name] = ([
             "overtimePay",
