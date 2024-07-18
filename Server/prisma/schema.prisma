@@ -18,6 +18,8 @@ model PersonalInfo {
   department    String
   bankDetails   BankDetails?
   salaryDetails SalaryDetails?
+  workDetails   WorkDetails?
+  Deductions Deductions?
 }
 
 model BankDetails {
@@ -40,4 +42,32 @@ model SalaryDetails {
   specialAllowance    Float
   employee            PersonalInfo @relation(fields: [employeeId], references: [id])
   employeeId          Int          @unique
+}
+
+model WorkDetails {
+  id                       Int          @id @default(autoincrement())
+  scheduledWorkingDays     Int
+  numberOfWorkingDays      Int
+  numberOfPaidHolidays     Int
+  remainingPaidVacationDays Int
+  overtime                 Int
+  timeLate                 Int
+  timeLeavingEarly         Int
+  employee                 PersonalInfo @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  employeeId               Int          @unique
+}
+
+model Deductions {
+  id                      Int          @id @default(autoincrement())
+  healthInsurance         Float
+  employeePensionInsurance Float
+  employmentInsurance     Float
+  longTermCareInsurance   Float
+  socialInsurance         Float
+  incomeTax               Float
+  residentTax             Float
+  advancePayment          Float
+  yearEndAdjustment       Float
+  employee                PersonalInfo @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  employeeId              Int          @unique
 }
