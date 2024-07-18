@@ -1,21 +1,88 @@
-import * as Yup from 'yup';
+import * as Yup from "yup";
 
-export const validationSchema = Yup.object().shape({
-  firstName: Yup.string().required('First Name is required'),
-  lastName: Yup.string().required('Last Name is required'),
-  phone: Yup.string().matches(/^\d{11}$/, 'Phone must be an 11 digit number').required('Phone is required'),
-  address: Yup.string().required('Address is required'),
-  dateOfBirth: Yup.date().required('Date of Birth is required'),
-  joinDate: Yup.date().required('Join Date is required'),
-  department: Yup.string().required('Department is required'),
-  bankAccountNumber: Yup.number().typeError('Bank Account Number must be a number').required('Bank Account Number is required'),
-  bankName: Yup.string().required('Bank Name is required'),
-  branchCode: Yup.number().typeError('Branch Code must be a number').required('Branch Code is required'),
-  basicSalary: Yup.number().typeError('Basic Salary must be a number').required('Basic Salary is required'),
-  overtimePay: Yup.number().typeError('Overtime Pay must be a number').required('Overtime Pay is required'),
-  transportationCosts: Yup.number().typeError('Transportation Costs must be a number').required('Transportation Costs is required'),
-  familyAllowance: Yup.number().typeError('Family Allowance must be a number').required('Family Allowance is required'),
-  attendanceAllowance: Yup.number().typeError('Attendance Allowance must be a number').required('Attendance Allowance is required'),
-  leaveAllowance: Yup.number().typeError('Leave Allowance must be a number').required('Leave Allowance is required'),
-  specialAllowance: Yup.number().typeError('Special Allowance must be a number').required('Special Allowance is required'),
-});
+const getValidationSchema = (t) => {
+
+  return Yup.object().shape({
+    firstName: Yup.string()
+      .matches(
+        /^[A-Za-z]+$/,
+        t("validation.lettersOnly", { field: t("fields.firstName") })
+      )
+      .required(t("validation.required", { field: t("fields.firstName") })),
+    lastName: Yup.string()
+      .matches(
+        /^[A-Za-z]+$/,
+        t("validation.lettersOnly", { field: t("fields.lastName") })
+      )
+      .required(t("validation.required", { field: t("fields.lastName") })),
+    phone: Yup.string()
+      .matches(/^\d{11}$/, t("validation.phoneDigits"))
+      .required(t("validation.required", { field: t("fields.phone") })),
+    address: Yup.string().required(
+      t("validation.required", { field: t("fields.address") })
+    ),
+    dateOfBirth: Yup.date().required(
+      t("validation.required", { field: t("fields.dateOfBirth") })
+    ),
+    joinDate: Yup.date().required(
+      t("validation.required", { field: t("fields.joinDate") })
+    ),
+    department: Yup.string()
+      .required(t("validation.required", { field: t("fields.department") })),
+    bankAccountNumber: Yup.number()
+      .typeError(
+        t("validation.number", { field: t("fields.bankAccountNumber") })
+      )
+      .required(
+        t("validation.required", { field: t("fields.bankAccountNumber") })
+      ),
+    bankName: Yup.string()
+      .matches(
+        /^[A-Za-z]+$/,
+        t("validation.lettersOnly", { field: t("fields.bankName") })
+      )
+      .required(t("validation.required", { field: t("fields.bankName") })),
+    branchCode: Yup.number()
+      .typeError(t("validation.number", { field: t("fields.branchCode") }))
+      .required(t("validation.required", { field: t("fields.branchCode") })),
+    basicSalary: Yup.number()
+      .typeError(t("validation.number", { field: t("fields.basicSalary") }))
+      .required(t("validation.required", { field: t("fields.basicSalary") })),
+    overtimePay: Yup.number()
+      .typeError(t("validation.number", { field: t("fields.overtimePay") }))
+      .required(t("validation.required", { field: t("fields.overtimePay") })),
+    transportationCosts: Yup.number()
+      .typeError(
+        t("validation.number", { field: t("fields.transportationCosts") })
+      )
+      .required(
+        t("validation.required", { field: t("fields.transportationCosts") })
+      ),
+    familyAllowance: Yup.number()
+      .typeError(t("validation.number", { field: t("fields.familyAllowance") }))
+      .required(
+        t("validation.required", { field: t("fields.familyAllowance") })
+      ),
+    attendanceAllowance: Yup.number()
+      .typeError(
+        t("validation.number", { field: t("fields.attendanceAllowance") })
+      )
+      .required(
+        t("validation.required", { field: t("fields.attendanceAllowance") })
+      ),
+    leaveAllowance: Yup.number()
+      .typeError(t("validation.number", { field: t("fields.leaveAllowance") }))
+      .required(
+        t("validation.required", { field: t("fields.leaveAllowance") })
+      ),
+    specialAllowance: Yup.number()
+      .typeError(
+        t("validation.number", { field: t("fields.specialAllowance") })
+      )
+      .required(
+        t("validation.required", { field: t("fields.specialAllowance") })
+      ),
+  });
+};
+
+export default getValidationSchema;

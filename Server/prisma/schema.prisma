@@ -8,36 +8,36 @@ datasource db {
 }
 
 model PersonalInfo {
-  id                 Int              @id @default(autoincrement())
-  firstName          String
-  lastName           String
-  phone              String
-  address            String
-  dateOfBirth        DateTime
-  joinDate           DateTime
-  department         String
-  bankDetails        BankDetails[]
-  salaryDetails      SalaryDetails[]
+  id            Int             @id @default(autoincrement())
+  firstName     String
+  lastName      String
+  phone         String
+  address       String
+  dateOfBirth   DateTime
+  joinDate      DateTime
+  department    String
+  bankDetails   BankDetails?
+  salaryDetails SalaryDetails?
 }
 
 model BankDetails {
-  id                 Int              @id @default(autoincrement())
-  bankAccountNumber  String
-  bankName           String
-  branchCode         String
-  employee           PersonalInfo @relation(fields: [employeeId], references: [id], onDelete: Cascade)
-  employeeId         Int
+  id                Int          @id @default(autoincrement())
+  bankAccountNumber String
+  bankName          String
+  branchCode        String
+  employee          PersonalInfo @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  employeeId        Int          @unique
 }
 
 model SalaryDetails {
-  id                    Int              @id @default(autoincrement())
-  basicSalary           Float
-  overtimePay           Float
-  transportationCosts   Float
-  familyAllowance       Float
-  attendanceAllowance   Float
-  leaveAllowance        Float
-  specialAllowance      Float
-  employee              PersonalInfo @relation(fields: [employeeId], references: [id], onDelete: Cascade)
-  employeeId            Int
+  id                  Int          @id @default(autoincrement())
+  basicSalary         Float
+  overtimePay         Float
+  transportationCosts Float
+  familyAllowance     Float
+  attendanceAllowance Float
+  leaveAllowance      Float
+  specialAllowance    Float
+  employee            PersonalInfo @relation(fields: [employeeId], references: [id])
+  employeeId          Int          @unique
 }

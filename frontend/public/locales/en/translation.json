@@ -1,26 +1,6 @@
 {
   "Submit": "Submit",
   "Clear": "Clear",
-  "Personal Info": "Personal Info",
-  "Bank Details": "Bank Details",
-  "Salary Details": "Salary Details",
-  "First Name": "First Name",
-  "Last Name": "Last Name",
-  "Phone": "Phone",
-  "Address": "Address",
-  "Date of Birth": "Date of Birth",
-  "Join Date": "Join Date",
-  "Department": "Department",
-  "Bank Account Number": "Bank Account Number",
-  "Bank Name": "Bank Name",
-  "Branch Code": "Branch Code",
-  "Basic Salary": "Basic Salary",
-  "Overtime Pay": "Overtime Pay",
-  "Transportation Costs": "Transportation Costs",
-  "Family Allowance": "Family Allowance",
-  "Attendance Allowance": "Attendance Allowance",
-  "Leave Allowance": "Leave Allowance",
-  "Special Allowance": "Special Allowance",
   "name": "Name",
   "ID": "ID",
   "Position": "Position",
@@ -41,6 +21,42 @@
   "Cancel": "Cancel",
   "Confirm Delete": "Confirm Delete",
   "DeleteConfirmationMessage": "Are you sure you want to delete this employee? This action cannot be undone.",
-  "deleteSuccess": "Employee deleted",
-  "deleteFail": "Delete failed"
+  "actions": {
+    "add_success": "Employee added successfully",
+    "update_success": "Employee updated successfully",
+    "delete_success": "Employee deleted successfully",
+    "add_error": "Failed to add Employee",
+    "update_error": "Failed to update Employee",
+    "delete_error": "Failed to delete employee"
+  },
+  "fields": {
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "phone": "Phone",
+    "address": "Address",
+    "dateOfBirth": "Date of Birth",
+    "joinDate": "Join Date",
+    "department": "Department",
+    "bankAccountNumber": "Bank Account Number",
+    "bankName": "Bank Name",
+    "branchCode": "Branch Code",
+    "basicSalary": "Basic Salary",
+    "overtimePay": "Overtime Pay",
+    "transportationCosts": "Transportation Costs",
+    "familyAllowance": "Family Allowance",
+    "attendanceAllowance": "Attendance Allowance",
+    "leaveAllowance": "Leave Allowance",
+    "specialAllowance": "Special Allowance"
+  },
+  "sections": {
+    "personalInfo": "Personal Info",
+    "bankDetails": "Bank Details",
+    "salaryDetails": "Salary Details"
+  },
+  "validation": {
+    "lettersOnly": "{{field}} can only contain letters",
+    "phoneDigits": "Phone must be an 11 digit number",
+    "number": "{{field}} must be a number",
+    "required": "{{field}} is required"
+  }
 }

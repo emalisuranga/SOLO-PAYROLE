@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { Box, Typography, CircularProgress } from "@mui/material";
+import { Box, Typography, CircularProgress, Card, CardContent, Grid } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import useEmployeeStore from "../../store/employeeStore";
 import EmployeeHeader from '../../Page/Employee/EmployeeHeader';
@@ -21,7 +21,7 @@ const EmployeeDetails = () => {
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          height: "100%",
+          height: "100vh",
         }}
       >
         <CircularProgress />
@@ -36,7 +36,7 @@ const EmployeeDetails = () => {
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          height: "100%",
+          height: "100vh",
         }}
       >
         <Typography variant="h6" color="error">
@@ -50,30 +50,56 @@ const EmployeeDetails = () => {
     return null;
   }
 
+  const renderEmployeeDetail = (label, value) => (
+    <Grid item xs={12} sm={6} md={4}>
+      <Typography variant="subtitle1" color="textSecondary">
+        {label}
+      </Typography>
+      <Typography variant="body1">
+        {value}
+      </Typography>
+    </Grid>
+  );
+
   return (
     <React.Fragment>
       <EmployeeHeader titleKey="employeeDetails" />
       <Box sx={{ p: 3 }}>
-      <Typography variant="h4">{`${employee.firstName} ${employee.lastName}`}</Typography>
-      <Typography variant="body1">{`${t("Phone")}: ${employee.phone}`}</Typography>
-      <Typography variant="body1">{`${t("Address")}: ${employee.address}`}</Typography>
-      <Typography variant="body1">{`${t("Date of Birth")}: ${new Date(employee.dateOfBirth).toLocaleDateString()}`}</Typography>
-      <Typography variant="body1">{`${t("Join Date")}: ${new Date(employee.joinDate).toLocaleDateString()}`}</Typography>
-      <Typography variant="body1">{`${t("Department")}: ${employee.department}`}</Typography>
-      <Typography variant="body1">{`${t("Bank Account Number")}: ${employee.bankDetails[0]?.bankAccountNumber}`}</Typography>
-      <Typography variant="body1">{`${t("Bank Name")}: ${employee.bankDetails[0]?.bankName}`}</Typography>
-      <Typography variant="body1">{`${t("Basic Salary")}: ${employee.salaryDetails[0]?.basicSalary}`}</Typography>
-      <Typography variant="body1">{`${t("Total Allowance")}: ${[
-        employee.salaryDetails[0]?.overtimePay,
-        employee.salaryDetails[0]?.transportationCosts,
-        employee.salaryDetails[0]?.familyAllowance,
-        employee.salaryDetails[0]?.attendanceAllowance,
-        employee.salaryDetails[0]?.leaveAllowance,
-        employee.salaryDetails[0]?.specialAllowance,
-      ].reduce((acc, allowance) => acc + (allowance || 0), 0)}`}</Typography>
-    </Box>
+        <Card>
+          <CardContent>
+            <Typography variant="h4" gutterBottom>{`${employee.firstName} ${employee.lastName}`}</Typography>
+            <Grid container spacing={2}>
+              {renderEmployeeDetail(t("Phone"), employee.phone)}
+              {renderEmployeeDetail(t("Address"), employee.address)}
+              {renderEmployeeDetail(t("Date of Birth"), new Date(employee.dateOfBirth).toLocaleDateString())}
+              {renderEmployeeDetail(t("Join Date"), new Date(employee.joinDate).toLocaleDateString())}
+              {renderEmployeeDetail(t("Department"), employee.department)}
+              {renderEmployeeDetail(t("Bank Account Number"), employee.bankDetails?.bankAccountNumber)}
+              {renderEmployeeDetail(t("Bank Name"), employee.bankDetails?.bankName)}
+              {renderEmployeeDetail(t("Branch Code"), employee.bankDetails?.branchCode)}
+              {renderEmployeeDetail(t("Basic Salary"), employee.salaryDetails?.basicSalary)}
+              {renderEmployeeDetail(
+                t("Total Allowance"),
+                [
+                  employee.salaryDetails?.overtimePay,
+                  employee.salaryDetails?.transportationCosts,
+                  employee.salaryDetails?.familyAllowance,
+                  employee.salaryDetails?.attendanceAllowance,
+                  employee.salaryDetails?.leaveAllowance,
+                  employee.salaryDetails?.specialAllowance,
+                ].reduce((acc, allowance) => acc + (allowance || 0), 0)
+              )}
+              {renderEmployeeDetail(t("Overtime Pay"), employee.salaryDetails?.overtimePay)}
+              {renderEmployeeDetail(t("Transportation Costs"), employee.salaryDetails?.transportationCosts)}
+              {renderEmployeeDetail(t("Family Allowance"), employee.salaryDetails?.familyAllowance)}
+              {renderEmployeeDetail(t("Attendance Allowance"), employee.salaryDetails?.attendanceAllowance)}
+              {renderEmployeeDetail(t("Leave Allowance"), employee.salaryDetails?.leaveAllowance)}
+              {renderEmployeeDetail(t("Special Allowance"), employee.salaryDetails?.specialAllowance)}
+            </Grid>
+          </CardContent>
+        </Card>
+      </Box>
     </React.Fragment>
-    
   );
 };
 

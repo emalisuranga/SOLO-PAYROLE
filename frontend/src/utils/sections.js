@@ -6,10 +6,10 @@ const formatDate = (dateString) => {
   return date.toISOString().split('T')[0]; // Extract only the date part
 };
 
-const createField = (name, type, label, required, defaultValue) => ({
+const createField = (name, type, required, defaultValue) => ({
   name,
   type,
-  label: t(label), // Translate the label
+  label: t(`fields.${name}`), 
   required,
   defaultValue,
 });
@@ -25,39 +25,39 @@ const createFields = (employee, fieldsConfig) =>
     )
   );
 
-const getSections = (employee) => [
-  {
-    label: t("Personal Info"),
-    fields: createFields(employee, [
-      { name: "firstName", type: "text", label: "First Name", required: true },
-      { name: "lastName", type: "text", label: "Last Name", required: true },
-      { name: "phone", type: "text", label: "Phone", required: true },
-      { name: "address", type: "text", label: "Address", required: true },
-      { name: "dateOfBirth", type: "date", label: "Date of Birth", required: true },
-      { name: "joinDate", type: "date", label: "Join Date", required: true },
-      { name: "department", type: "text", label: "Department", required: true },
-    ]),
-  },
-  {
-    label: t("Bank Details"),
-    fields: createFields(employee?.bankDetails?.[0] || {}, [
-      { name: "bankAccountNumber", type: "text", label: "Bank Account Number", required: true },
-      { name: "bankName", type: "text", label: "Bank Name", required: true },
-      { name: "branchCode", type: "text", label: "Branch Code", required: true },
-    ]),
-  },
-  {
-    label: t("Salary Details"),
-    fields: createFields(employee?.salaryDetails?.[0] || {}, [
-      { name: "basicSalary", type: "text", label: "Basic Salary", required: true },
-      { name: "overtimePay", type: "text", label: "Overtime Pay", required: true },
-      { name: "transportationCosts", type: "text", label: "Transportation Costs", required: true },
-      { name: "familyAllowance", type: "text", label: "Family Allowance", required: true },
-      { name: "attendanceAllowance", type: "text", label: "Attendance Allowance", required: true },
-      { name: "leaveAllowance", type: "text", label: "Leave Allowance", required: true },
-      { name: "specialAllowance", type: "text", label: "Special Allowance", required: true },
-    ]),
-  },
-];
+  const getSections = (employee) => [
+    {
+      label: t("sections.personalInfo"),
+      fields: createFields(employee, [
+        { name: "firstName", type: "text", required: true },
+        { name: "lastName", type: "text", required: true },
+        { name: "phone", type: "text", required: true },
+        { name: "address", type: "text", required: true },
+        { name: "dateOfBirth", type: "date", required: true },
+        { name: "joinDate", type: "date", required: true },
+        { name: "department", type: "text", required: true },
+      ]),
+    },
+    {
+      label: t("sections.bankDetails"),
+      fields: createFields(employee?.bankDetails?.[0] || {}, [
+        { name: "bankAccountNumber", type: "text", required: true },
+        { name: "bankName", type: "text", required: true },
+        { name: "branchCode", type: "text", required: true },
+      ]),
+    },
+    {
+      label: t("sections.salaryDetails"),
+      fields: createFields(employee?.salaryDetails?.[0] || {}, [
+        { name: "basicSalary", type: "text", required: true },
+        { name: "overtimePay", type: "text", required: true },
+        { name: "transportationCosts", type: "text", required: true },
+        { name: "familyAllowance", type: "text", required: true },
+        { name: "attendanceAllowance", type: "text", required: true },
+        { name: "leaveAllowance", type: "text", required: true },
+        { name: "specialAllowance", type: "text", required: true },
+      ]),
+    },
+  ];
 
 export default getSections;
