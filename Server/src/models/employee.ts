@@ -43,7 +43,7 @@ export const getAllEmployees = async () => {
       salaryDetails: true,
     },
     orderBy: {
-      id: 'asc', 
+      id: 'asc',
     },
   });
   return result;
@@ -61,6 +61,18 @@ export const getEmployeeById = async (id: number) => {
 };
 
 export const updateEmployee = async (id: number, employee: Employee) => {
+  const bankDetailsExists = await prisma.bankDetails.findUnique({
+    where: { employeeId: id },
+  });
+
+  const salaryDetailsExists = await prisma.salaryDetails.findUnique({
+    where: { employeeId: id },
+  });
+
+  if (!bankDetailsExists || !salaryDetailsExists) {
+    throw new Error("Related records not found");
+  }
+
   const result = await prisma.personalInfo.update({
     where: { id },
     data: {
@@ -72,48 +84,25 @@ export const updateEmployee = async (id: number, employee: Employee) => {
       joinDate: new Date(employee.joinDate),
       department: employee.department,
       bankDetails: {
-        upsert: {
-          create: {
-            bankAccountNumber: employee.bankAccountNumber,
-            bankName: employee.bankName,
-            branchCode: employee.branchCode,
-          },
-          update: {
-            bankAccountNumber: employee.bankAccountNumber,
-            bankName: employee.bankName,
-            branchCode: employee.branchCode,
-          },
-          where: {
-            id: employee.bankDetails ? employee.bankDetails[0]?.id : 0,
-          },
+        update: {
+          bankAccountNumber: employee.bankAccountNumber,
+          bankName: employee.bankName,
+          branchCode: employee.branchCode,
         },
       },
       salaryDetails: {
-        upsert: {
-          create: {
-            basicSalary: parseFloat(employee.basicSalary as unknown as string),
-            overtimePay: parseFloat(employee.overtimePay as unknown as string),
-            transportationCosts: parseFloat(employee.transportationCosts as unknown as string),
-            familyAllowance: parseFloat(employee.familyAllowance as unknown as string),
-            attendanceAllowance: parseFloat(employee.attendanceAllowance as unknown as string),
-            leaveAllowance: parseFloat(employee.leaveAllowance as unknown as string),
-            specialAllowance: parseFloat(employee.specialAllowance as unknown as string),
-          },
-          update: {
-            basicSalary: parseFloat(employee.basicSalary as unknown as string),
-            overtimePay: parseFloat(employee.overtimePay as unknown as string),
-            transportationCosts: parseFloat(employee.transportationCosts as unknown as string),
-            familyAllowance: parseFloat(employee.familyAllowance as unknown as string),
-            attendanceAllowance: parseFloat(employee.attendanceAllowance as unknown as string),
-            leaveAllowance: parseFloat(employee.leaveAllowance as unknown as string),
-            specialAllowance: parseFloat(employee.specialAllowance as unknown as string),
-          },
-          where: {
-            id: employee.salaryDetails ? employee.salaryDetails[0]?.id : 0,
-          },
+        update: {
+          basicSalary: parseFloat(employee.basicSalary as unknown as string),
+          overtimePay: parseFloat(employee.overtimePay as unknown as string),
+          transportationCosts: parseFloat(employee.transportationCosts as unknown as string),
+          familyAllowance: parseFloat(employee.familyAllowance as unknown as string),
+          attendanceAllowance: parseFloat(employee.attendanceAllowance as unknown as string),
+          leaveAllowance: parseFloat(employee.leaveAllowance as unknown as string),
+          specialAllowance: parseFloat(employee.specialAllowance as unknown as string),
         },
       },
     },
+    include: { salaryDetails: true, bankDetails: true },
   });
   return result;
 };
