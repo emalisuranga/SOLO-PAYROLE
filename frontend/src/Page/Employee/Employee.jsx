@@ -9,6 +9,7 @@ const Employee = () => {
   const { t } = useTranslation();
   const [searchName, setSearchName] = useState("");
   const [searchId, setSearchId] = useState("");
+  const [filteredEmployees, setFilteredEmployees] = useState([]);
   const navigate = useNavigate();
 
   const { employees, loading, fetchEmployees } = useEmployeeStore((state) => ({
@@ -21,12 +22,21 @@ const Employee = () => {
     fetchEmployees();
   }, [fetchEmployees]);
 
+  useEffect(() => {
+    setFilteredEmployees(employees);
+  }, [employees]);
+
   const handleSearch = () => {
+    console.log("handleSearch")
+    console.log("searchId",searchId)
+    console.log("item.id.toString()",employees.id)
     const filteredData = employees.filter(item =>
       (searchName === "" || item.firstName.toLowerCase().includes(searchName.toLowerCase()) || item.lastName.toLowerCase().includes(searchName.toLowerCase())) &&
       (searchId === "" || item.id.toString() === searchId.toString())
     );
-    useEmployeeStore.setState({ filteredEmployees: filteredData });
+    console.log("filteredData",filteredData)
+    setFilteredEmployees(filteredData);
+    // useEmployeeStore.setState({ filteredEmployees: filteredData });
   };
 
   if (loading) {
@@ -74,7 +84,7 @@ const Employee = () => {
           </Box>
         </Grid>
         <Grid item xs={12}>
-          <EmployeeTable data={employees} />
+          <EmployeeTable data={filteredEmployees} />
         </Grid>
       </Grid>
     </Box>

@@ -73,13 +73,13 @@ const EmployeeTable = ({ data }) => {
     if (currentRow) {
       try {
         await deleteEmployee(currentRow.id);
-        setSnackbarMessage(t("delete_success"));
-        setSnackbarSeverity("deleteSuccess");
+        setSnackbarMessage(t("actions.delete_success"));
+        setSnackbarSeverity("success");
         setSnackbarOpen(true);
-        fetchEmployees();
+        setTimeout(() => fetchEmployees(), 2000);
       } catch (error) {
+        setSnackbarMessage(t("actions.delete_error"));
         setSnackbarSeverity("error");
-        setSnackbarMessage(t("delete_error"));
         setSnackbarOpen(true);
         console.error("Failed to save data", error);
       }
@@ -147,7 +147,7 @@ const EmployeeTable = ({ data }) => {
         <DialogTitle>{t('Confirm Delete')}</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            {t('Are you sure you want to delete this employee? This action cannot be undone.')}
+            {t('DeleteConfirmationMessage')}
           </DialogContentText>
         </DialogContent>
         <DialogActions>

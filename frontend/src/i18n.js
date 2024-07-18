@@ -12,7 +12,7 @@ i18n
     lng: 'en', // Explicitly set the language to Japanese
     debug: true,
     interpolation: {
-      escapeValue: false, // not needed for react as it escapes by default
+      escapeValue: false, 
     },
     backend: {
       loadPath: '/locales/{{lng}}/translation.json',

@@ -1,4 +1,5 @@
-import { validationSchema } from './validationSchema';
+import  getValidationSchema  from './validationSchema';
+import { useTranslation } from "react-i18next";
 
 const formatDate = (dateString) => {
   if (!dateString) return '';
@@ -47,15 +48,19 @@ export const handleFormChange = (formData, setFormData) => (event) => {
   });
 };
 
-export const validateForm = async (formData) => {
+export const validateForm = async (formData, t) => {
+  const validationSchema = getValidationSchema(t);
+
   try {
     await validationSchema.validate(formData, { abortEarly: false });
     return {};
-  } catch (errors) {
+  } catch (validationError) {
     const validationErrors = {};
-    errors.inner.forEach(error => {
-      validationErrors[error.path] = error.message;
-    });
+    if (validationError.inner) {
+      validationError.inner.forEach((error) => {
+        validationErrors[error.path] = error.message;
+      });
+    }
     return validationErrors;
   }
 };

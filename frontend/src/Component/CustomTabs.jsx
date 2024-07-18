@@ -45,7 +45,7 @@ function CustomTabs({ sections, mode = 'add', initialData = {} }) {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const validationErrors = await validateForm(formData);
+    const validationErrors = await validateForm(formData,t);
 
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
@@ -57,17 +57,17 @@ function CustomTabs({ sections, mode = 'add', initialData = {} }) {
         console.log({ ...formData, id: initialData.id,bankDetails: [{ id: initialData.bankDetails.id }], salaryDetails: [{ id: initialData.salaryDetails.id }] })
         // await updateData({ ...formData, id: initialData.id });
         await updateData({ ...formData, id: initialData.id,bankDetails: [{ id: initialData.bankDetails.id }], salaryDetails: [{ id: initialData.salaryDetails.id }] });
-        setSnackbarMessage(t("update_success"));
+        setSnackbarMessage(t("actions.update_success"));
       } else {
         await saveData(formData);
-        setSnackbarMessage(t("update_error"));
+        setSnackbarMessage(t("actions.add_success"));
       }
       setSnackbarSeverity("success");
       setSnackbarOpen(true);
       setTimeout(() => navigate("/employee"), 2000);
     } catch (error) {
       setSnackbarSeverity("error");
-      setSnackbarMessage(t("add_error"));
+      setSnackbarMessage(t("actions.add_error"));
       setSnackbarOpen(true);
       console.error("Failed to save data", error);
     }
