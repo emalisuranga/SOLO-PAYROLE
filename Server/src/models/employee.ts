@@ -124,3 +124,14 @@ export const deleteEmployee = async (id: number) => {
 
   return result;
 };
+
+export const getEmployeeNamesAndIds = async () => {
+  const employees = await prisma.personalInfo.findMany({
+    select: {
+      id: true,
+      firstName: true,
+      lastName: true,
+    },
+  });
+  return employees;
+};

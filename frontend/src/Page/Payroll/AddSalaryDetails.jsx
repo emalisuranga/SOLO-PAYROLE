@@ -1,23 +1,12 @@
 import React, { useState } from "react";
 import {
-  Stack,
-  TextField,
-  MenuItem,
-  Box,
-  Typography,
-  Grid,
-  Button
+  Button,
 } from "@mui/material";
-import BackButton from "../../Component/BackButton";
 import CustomTabs from "../../Component/CustomTabs";
-import { useNavigate } from 'react-router-dom';
+import EmployeeHeader from "../../Page/Employee/EmployeeHeader";
+import EmployeeSearch from "./EmployeeSearch";
+import { useNavigate } from "react-router-dom";
 
-const initialData = [
-  { id: 1, name: "John Doe", position: "Developer" },
-  { id: 2, name: "Jane Smith", position: "Designer" },
-  { id: 3, name: "Sam Johnson", position: "Manager" },
-  // Add more data as needed
-];
 
 const AddSalary = () => {
   const handleSubmit = (formData) => {
@@ -205,37 +194,28 @@ const AddSalary = () => {
     },
   ];
 
-  const [searchName, setSearchName] = useState("");
-  const [searchId, setSearchId] = useState("");
-  const [tableData, setTableData] = useState(initialData);
-  const navigate=useNavigate();
+  const navigate = useNavigate();
 
-  const handleSearch = () => {
-    const filteredData = initialData.filter(
-      (item) =>
-        (searchName === "" ||
-          item.name.toLowerCase().includes(searchName.toLowerCase())) &&
-        (searchId === "" || item.id.toString() === searchId.toString())
-    );
-    setTableData(filteredData);
+  // const handleSearch = () => {
+  //   const filteredData = initialData.filter(
+  //     (item) =>
+  //       (searchName === "" ||
+  //         item.name.toLowerCase().includes(searchName.toLowerCase())) &&
+  //       (searchId === "" || item.id.toString() === searchId.toString())
+  //   );
+  //   setTableData(filteredData);
+  // };
+
+
+  const [selectedEmployee, setSelectedEmployee] = useState(null);
+
+  const handleSearch = (employee) => {
+    setSelectedEmployee(employee);
   };
-
-  const handleNav = ()  => {
-    console.log("test")
-  }
 
   return (
     <React.Fragment>
-      <Stack
-        direction="row"
-        alignItems="center"
-        spacing={2}
-        sx={{ mb: 2, mt: 2 }}
-      >
-        <BackButton />
-        <Typography variant="h5">給与詳細フォーム</Typography>
-      </Stack>
-      <Grid item xs={12}>
+      {/* <Grid item xs={12}>
         <Box sx={{ display: "flex", gap: 2, mb: 2,justifyContent: "flex-end" }}>
           <TextField
             label="Name"
@@ -263,9 +243,18 @@ const AddSalary = () => {
             Search
           </Button>
         </Box>
-      </Grid>
+      </Grid> */}
+      <EmployeeHeader titleKey="addSalaryForm" />
+      <EmployeeSearch onSearch={handleSearch} />
       <CustomTabs sections={sections} onSubmit={handleSubmit} />
-      <Button variant="contained" onClick={()=>{navigate("/payslip")}}>Payslip1</Button>
+      <Button
+        variant="contained"
+        onClick={() => {
+          navigate("/payslip");
+        }}
+      >
+        Payslip1
+      </Button>
     </React.Fragment>
   );
 };
