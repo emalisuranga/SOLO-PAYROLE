@@ -24,6 +24,7 @@
   "DeleteConfirmationMessage": "この従業員を削除してもよろしいですか？この操作は元に戻せません。",
   "deleteSuccess": "削除しました",
   "deleteFail": "削除に失敗しました",
+  "pleaseSelectEmployee": "給与詳細を作成するには従業員を選択してください。",
   "actions": {
     "add_success": "データが正常に追加されました",
     "update_success": "データが正常に更新されました",
@@ -46,15 +47,34 @@
     "basicSalary": "基本給",
     "overtimePay": "残業代",
     "transportationCosts": "交通費",
-    "familyAllowance": "家族手当",
+    "scheduledWorkingDays": "予定勤務日数",
+    "numberOfWorkingDays": "勤務日数",
+    "numberOfPaidHolidays": "有給休暇日数",
+    "remainingPaidVacationDays": "残りの有給休暇日数",
+    "overtime": "残業",
+    "timeLate": "遅刻時間",
+    "timeLeavingEarly": "早退時間",
     "attendanceAllowance": "出勤手当",
+    "familyAllowance": "家族手当",
     "leaveAllowance": "休暇手当",
-    "specialAllowance": "特別手当"
+    "specialAllowance": "特別手当",
+    "healthInsurance": "健康保険",
+    "employeePensionInsurance": "従業員年金保険",
+    "employmentInsurance": "雇用保険",
+    "longTermCareInsurance": "介護保険",
+    "socialInsurance": "社会保険",
+    "incomeTax": "所得税",
+    "residentTax": "住民税",
+    "advancePayment": "前払い",
+    "yearEndAdjustment": "年末調整"
   },
   "sections": {
     "personalInfo": "個人情報",
     "bankDetails": "銀行の詳細",
-    "salaryDetails": "給与の詳細"
+    "salaryDetails": "給与の詳細",
+    "attendanceWorkDetails": "出勤および作業の詳細",
+    "earnings": "収入",
+    "deductions": "控除"
   },
   "validation": {
     "lettersOnly": "{{field}} は文字のみ使用できます",

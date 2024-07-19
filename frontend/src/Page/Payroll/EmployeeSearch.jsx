@@ -33,7 +33,9 @@ const EmployeeSearch = ({ onSearch }) => {
     }
     if (idToSearch) {
       try {
+        console.log("idToSearch", idToSearch);
         const employee = await fetchEmployeeDetails(idToSearch);
+        console.log("Fetched Employee:", employee);
         onSearch(employee);
       } catch (error) {
         console.error('Error fetching employee details:', error);

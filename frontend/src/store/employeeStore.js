@@ -25,6 +25,7 @@ const useEmployeeStore = create((set) => ({
     try {
       const response = await api.get(`/employees/${id}`);
       set({ employee: response.data.data, loading: false });
+      return response.data.data;
     } catch (error) {
       console.error("Error fetching employee details:", error);
       set({ error: "Error fetching employee details", loading: false });
