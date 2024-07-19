@@ -6,18 +6,18 @@ import { useNavigate } from "react-router-dom";
 import CustomTabsForSalary from "./CustomTabsForSalary";
 import getSalarySections from "../../utils/salarySections";
 import LoadingAnimation from "../../Component/LoadingAnimation";
-import styled from 'styled-components';
+import styled from "styled-components";
 
 const EmployeeInfoContainer = styled(Box)`
-display: flex;
-align-items: center;
-justify-content: space-between;
-margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
 `;
 
 const EmployeeInfo = styled(Typography)`
-font-size: 1.2em;
-font-weight: bold;
+  font-size: 1.2em;
+  font-weight: bold;
 `;
 
 const AddSalary = () => {

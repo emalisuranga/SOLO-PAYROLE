@@ -3,6 +3,6 @@ import { addSalaryDetailsHandler } from '../controllers/salaryController';
 
 const router = Router();
 
-router.post('/add', addSalaryDetailsHandler);
+router.post('/save', addSalaryDetailsHandler);
 
 export default router;

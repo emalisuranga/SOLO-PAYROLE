@@ -1,54 +1,117 @@
-import  getValidationSchema  from './validationSchema';
+import getValidationSchema from "./validationSchema";
+import { getSalaryValidationSchema } from "./validationSchemaForSalary";
 
 const formatDate = (dateString) => {
-  if (!dateString) return '';
+  if (!dateString) return "";
   const date = new Date(dateString);
-  return date.toISOString().split('T')[0]; // Extract only the date part
+  return date.toISOString().split("T")[0]; // Extract only the date part
 };
 
 export const initializeFormData = (sections, initialData = {}) => {
   const formData = {};
 
-  sections.forEach(section => {
-    section.fields.forEach(field => {
+  sections.forEach((section) => {
+    section.fields.forEach((field) => {
       const nestedValue = initialData[field.name];
 
-      if (field.type === 'date') {
-        formData[field.name] = nestedValue ? formatDate(nestedValue) : '';
+      if (field.type === "date") {
+        formData[field.name] = nestedValue ? formatDate(nestedValue) : "";
       } else {
         if (nestedValue !== undefined) {
           formData[field.name] = nestedValue;
-        } else if (initialData.bankDetails && initialData.bankDetails[field.name] !== undefined) {
+        } else if (
+          initialData.bankDetails &&
+          initialData.bankDetails[field.name] !== undefined
+        ) {
           formData[field.name] = initialData.bankDetails[field.name];
-        } else if (initialData.salaryDetails && initialData.salaryDetails[field.name] !== undefined) {
+        } else if (
+          initialData.salaryDetails &&
+          initialData.salaryDetails[field.name] !== undefined
+        ) {
           formData[field.name] = initialData.salaryDetails[field.name];
         } else {
-          formData[field.name] = ([
+          formData[field.name] = [
             "overtimePay",
             "transportationCosts",
             "familyAllowance",
             "attendanceAllowance",
             "leaveAllowance",
-            "specialAllowance"
-          ].includes(field.name) ? "0" : "");
+            "specialAllowance",
+          ].includes(field.name)
+            ? "0"
+            : "";
         }
       }
     });
   });
-  // console.log("initializeFormData:formData",formData)
   return formData;
 };
 
+export const initializeSalaryFormData = (sections, initialData = {}) => {
+  const formData = {};
+
+  sections.forEach((section) => {
+    section.fields.forEach((field) => {
+      if (section.label === "Earnings") {
+        const nestedValue = initialData.salaryDetails && initialData.salaryDetails[field.name];
+
+        formData[field.name] = nestedValue !== undefined ? nestedValue : field.defaultValue || 0;
+      } else {
+        const nestedValue = initialData[field.name];
+
+        if (nestedValue !== undefined) {
+          formData[field.name] = nestedValue;
+        } else if (
+          initialData.workDetails &&
+          initialData.workDetails[field.name] !== undefined
+        ) {
+          formData[field.name] = initialData.workDetails[field.name];
+        } else if (
+          initialData.earnings &&
+          initialData.earnings[field.name] !== undefined
+        ) {
+          formData[field.name] = initialData.earnings[field.name];
+        } else if (
+          initialData.deductions &&
+          initialData.deductions[field.name] !== undefined
+        ) {
+          formData[field.name] = initialData.deductions[field.name];
+        } else {
+          formData[field.name] = field.defaultValue || 0;
+        }
+      }
+    });
+  });
+
+  return formData;
+};
 export const handleFormChange = (formData, setFormData) => (event) => {
   const { name, value } = event.target;
   setFormData({
     ...formData,
-    [name]: value
+    [name]: value,
   });
 };
 
 export const validateForm = async (formData, t) => {
   const validationSchema = getValidationSchema(t);
+
+  try {
+    await validationSchema.validate(formData, { abortEarly: false });
+    return {};
+  } catch (validationError) {
+    const validationErrors = {};
+    if (validationError.inner) {
+      validationError.inner.forEach((error) => {
+        validationErrors[error.path] = error.message;
+      });
+    }
+    return validationErrors;
+  }
+};
+
+export const salaryValidation = async (formData, t) => {
+  const validationSchema = getSalaryValidationSchema(t);
 
   try {
     await validationSchema.validate(formData, { abortEarly: false });

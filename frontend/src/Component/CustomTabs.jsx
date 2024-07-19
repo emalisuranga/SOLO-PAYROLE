@@ -1,13 +1,9 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
-import Tabs from "@mui/material/Tabs";
-import Tab from "@mui/material/Tab";
-import Box from "@mui/material/Box";
-import { Stack } from "@mui/material";
+import { Stack,Button,Box,Tab,Tabs } from "@mui/material";
 import CustomTabPanel from "./CustomTabPanel";
 import RegisterForm from "./RegisterForm";
 import SubmitButton from "./SubmitButton";
-import Button from "./Button";
 import useFormStore from "../store/formStore";
 import useEmployeeStore from '../store/employeeStore';
 import { useNavigate } from "react-router-dom";

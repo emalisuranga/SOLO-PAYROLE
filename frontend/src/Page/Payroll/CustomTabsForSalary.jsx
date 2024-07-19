@@ -1,16 +1,17 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
-import { Stack, Button,Tab,Tabs, Box } from "@mui/material";
+import { Stack, Button, Tab, Tabs, Box } from "@mui/material";
 import CustomTabPanel from "../../Component/CustomTabPanel";
 import RegisterForm from "../../Component/RegisterForm";
 import CustomSnackbar from "../../Component/CustomSnackbar";
 import useFormStore from "../../store/formStore";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { salaryValidation, initializeSalaryFormData, handleFormChange as handleChangeUtil } from "../../utils/formUtils";
+import useSalaryStore from "../../store/salaryStore";
+import useEmployeeStore from "../../store/employeeStore"; // Import the employee store
 
-import { validateForm,initializeFormData, handleFormChange as handleChangeUtil } from "../../utils/formUtils";
-
-function CustomTabsForSalary({ sections, onSubmit, initialData }) {
+function CustomTabsForSalary({ sections, initialData }) {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const { formData, setFormData, clearFormData, setErrors, errors } = useFormStore((state) => ({
@@ -20,6 +21,8 @@ function CustomTabsForSalary({ sections, onSubmit, initialData }) {
     setErrors: state.setErrors,
     errors: state.errors,
   }));
+  const { saveSalary } = useSalaryStore();
+  const { fetchEmployeeDetails } = useEmployeeStore(); // Get the fetchEmployeeDetails function from the store
 
   const [value, setValue] = useState(0);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
@@ -27,9 +30,20 @@ function CustomTabsForSalary({ sections, onSubmit, initialData }) {
   const [snackbarSeverity, setSnackbarSeverity] = useState("success");
 
   useEffect(() => {
-    const initialFormData = initializeFormData(sections, initialData);
-    setFormData(initialFormData);
-  }, [sections, initialData, setFormData]);
+    const fetchData = async () => {
+      if (initialData?.id) {
+        const employeeData = await fetchEmployeeDetails(initialData.id);
+        console.log(JSON.stringify(employeeData))
+        const initialFormData = initializeSalaryFormData(sections, employeeData);
+        setFormData(initialFormData);
+      } else {
+        const initialFormData = initializeSalaryFormData(sections, initialData);
+        setFormData(initialFormData);
+      }
+    };
+
+    fetchData();
+  }, [sections, initialData, setFormData, fetchEmployeeDetails]);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -39,7 +53,7 @@ function CustomTabsForSalary({ sections, onSubmit, initialData }) {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const validationErrors = validateForm(formData);
+    const validationErrors = await salaryValidation(formData, t);
 
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
@@ -47,7 +61,7 @@ function CustomTabsForSalary({ sections, onSubmit, initialData }) {
     }
 
     try {
-      await onSubmit(formData);
+      await saveSalary(formData);
       setSnackbarSeverity("success");
       setSnackbarMessage(t("Data saved successfully!"));
       setSnackbarOpen(true);
@@ -110,7 +124,6 @@ CustomTabsForSalary.propTypes = {
       ).isRequired,
     })
   ).isRequired,
-  onSubmit: PropTypes.func.isRequired,
   initialData: PropTypes.object,
 };
 
