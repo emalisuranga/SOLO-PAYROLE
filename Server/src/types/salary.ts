@@ -1,6 +1,6 @@
 export interface Salary {
     employeeId: number;
-    month: string;
+    month: number;
     year: number;
     workDetails: WorkDetails;
     earnings: Earnings;
