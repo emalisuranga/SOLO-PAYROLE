@@ -69,7 +69,11 @@
     "incomeTax": "Income Tax",
     "residentTax": "Resident Tax",
     "advancePayment": "Advance Payment",
-    "yearEndAdjustment": "Year-end Adjustment"
+    "yearEndAdjustment": "Year-end Adjustment",
+    "salaryDetails": "Salary Details",
+    "totalEarnings": "Total Earnings",
+    "totalDeductions": "Total Deductions",
+    "netSalary": "Net Salary"
   },
   "sections": {
     "personalInfo": "Employee Info",

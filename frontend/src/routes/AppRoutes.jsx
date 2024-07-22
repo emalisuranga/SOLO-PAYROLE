@@ -10,11 +10,13 @@ import SalaryDetails from '../Page/Payroll/SalaryDetails';
 import Payslip from '../Page/Payroll/Payslip2';
 import EmployeeDetails from '../Page/Employee/EmployeeDetails';
 import EditEmployee from "../Page/Employee/EditEmployee";
+import ViewSalaryDetails from '../Page/Payroll/ViewSalaryDetails';
 
 const AppRoutes = () => (
   <Routes>
     <Route path="/" element={<Dashboard />} />
     <Route path="/employee" element={<Employee />} />
+    <Route path="/salary-details/view/:paymentId" element={<ViewSalaryDetails />} />
     {/* <Route path="/salary-details" element={<Payroll />} /> */}
     <Route path="/salary-details" element={<SalaryDetails />} />
     <Route path="/settings" element={<Settings />} />

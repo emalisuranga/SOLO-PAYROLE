@@ -144,3 +144,21 @@ export const getSalaryDetailsByMonth = async (month: number, year: number) => {
         },
     });
 };
+
+export const getSalaryDetailsByPaymentId = async (paymentId: number) => {
+    return await prisma.paymentDetails.findUnique({
+      where: { id: paymentId },
+      include: {
+        workDetails: true,
+        earnings: true,
+        deductions: true,
+        employee: {
+          select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+          },
+        },
+      },
+    });
+  };

@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { addSalaryDetails, getSalaryDetailsByMonth } from '../models/salary';
+import { addSalaryDetails, getSalaryDetailsByMonth, getSalaryDetailsByPaymentId } from '../models/salary';
 import { Salary } from '../types/salary';
 
 export const addSalaryDetailsHandler = async (req: Request, res: Response) => {
@@ -17,9 +17,6 @@ export const addSalaryDetailsHandler = async (req: Request, res: Response) => {
 export const getSalaryDetailsByMonthHandler = async (req: Request, res: Response) => {
   const { month, year } = req.params;
 
-  console.log(month)
-  console.log(year)
-
   try {
       const parsedMonth = parseInt(month, 10);
       const parsedYear = parseInt(year, 10);
@@ -33,5 +30,22 @@ export const getSalaryDetailsByMonthHandler = async (req: Request, res: Response
   } catch (error) {
       console.error("Error fetching salary details by month:", error);
       res.status(500).json({ status: 'error', message: 'Failed to fetch salary details', error });
+  }
+};
+
+export const getSalaryDetailsByPaymentIdHandler = async (req: Request, res: Response) => {
+  const { paymentId } = req.params;
+
+  try {
+    const salaryDetails = await getSalaryDetailsByPaymentId(Number(paymentId));
+
+    if (!salaryDetails) {
+      return res.status(404).json({ status: 'error', message: 'No salary details found for the specified payment ID.' });
+    }
+
+    res.json({ status: 'success', data: salaryDetails });
+  } catch (error) {
+    console.error('Error fetching salary details by payment ID:', error);
+    res.status(500).json({ status: 'error', message: 'Failed to fetch salary details', error });
   }
 };

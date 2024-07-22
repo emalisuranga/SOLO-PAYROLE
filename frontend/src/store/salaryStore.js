@@ -19,6 +19,18 @@ const useSalaryStore = create((set) => ({
       set({ error: "Error fetching data", loading: false });
     }
   },
+  fetchSalaryDetailsById: async (paymentId) => {
+    console.log("fetchSalaryDetailsById",paymentId)
+    set({ loading: true, error: null });
+    try {
+      const response = await api.get(`/salary-details/payment/${paymentId}`);
+      set({ salary: response.data.data, loading: false });
+      return response.data.data;
+    } catch (error) {
+      console.error("Error fetching salary details:", error);
+      set({ error: "Error fetching salary details", loading: false });
+    }
+  },
   fetchSalaryDetailsByMonth: async (month, year) => {
     set({ loading: true, error: null });
     try {

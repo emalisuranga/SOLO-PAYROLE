@@ -6,8 +6,10 @@ import SalaryFilter from "../../Component/SalaryFilter";
 import SalaryTable from "../../Component/SalaryTable";
 import Loading from "../../Component/Common/Loading";
 import Error from "../../Component/Common/Error";
+import { useTranslation } from 'react-i18next';
 
 const SalaryDetailsTable = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { salaries, fetchSalaryDetailsByMonth, loading, error } =
     useSalaryStore();
@@ -54,12 +56,12 @@ const SalaryDetailsTable = () => {
               mb: 2,
             }}
           >
-            <Typography variant="h5">Salary Details</Typography>
+            <Typography variant="h5">{t('sections.salaryDetails')}</Typography>
             <Button
               variant="contained"
               onClick={() => navigate("/add-salary-details")}
             >
-              Add Salary
+              {t('addSalaryForm')}
             </Button>
           </Box>
         </Grid>

@@ -41,7 +41,7 @@ const SalaryFilter = ({ month, year, onMonthChange, onYearChange, onSearch }) =>
   return (
     <Box sx={{ display: 'flex', gap: 2, mb: 2 }}>
       <TextField
-        label="Month"
+        label= {t('Month')}
         variant="outlined"
         value={month}
         onChange={onMonthChange}
@@ -56,7 +56,7 @@ const SalaryFilter = ({ month, year, onMonthChange, onYearChange, onSearch }) =>
         ))}
       </TextField>
       <TextField
-        label="Year"
+        label= {t('Year')}
         variant="outlined"
         value={year}
         onChange={onYearChange}
@@ -71,7 +71,7 @@ const SalaryFilter = ({ month, year, onMonthChange, onYearChange, onSearch }) =>
         ))}
       </TextField>
       <Button variant="contained" onClick={onSearch}>
-        Search
+        {t('Search')}
       </Button>
     </Box>
   );

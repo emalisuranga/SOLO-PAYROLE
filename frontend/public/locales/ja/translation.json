@@ -71,7 +71,11 @@
     "incomeTax": "所得税",
     "residentTax": "住民税",
     "advancePayment": "前払い",
-    "yearEndAdjustment": "年末調整"
+    "yearEndAdjustment": "年末調整",
+    "salaryDetails": "給与の詳細",
+    "totalEarnings": "総収入",
+    "totalDeductions": "総控除",
+    "netSalary": "純給与"
   },
   "sections": {
     "personalInfo": "個人情報",
