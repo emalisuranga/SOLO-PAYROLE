@@ -34,7 +34,6 @@ const Employee = () => {
       (searchName === "" || item.firstName.toLowerCase().includes(searchName.toLowerCase()) || item.lastName.toLowerCase().includes(searchName.toLowerCase())) &&
       (searchId === "" || item.id.toString() === searchId.toString())
     );
-    console.log("filteredData",filteredData)
     setFilteredEmployees(filteredData);
     // useEmployeeStore.setState({ filteredEmployees: filteredData });
   };
