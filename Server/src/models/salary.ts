@@ -67,7 +67,8 @@ export const addSalaryDetails = async (salary: Salary) => {
 
     const totalEarnings = calculateTotalEarnings(salary.earnings);
     const totalDeductions = calculateTotalDeductions(salary.deductions);
-    const netSalary = totalEarnings - totalDeductions;
+    const basicSalary = salary.earnings.basicSalary;
+    const netSalary = (basicSalary + totalEarnings) - totalDeductions;
 
     return await prisma.paymentDetails.create({
         data: {
@@ -112,6 +113,34 @@ export const addSalaryDetails = async (salary: Salary) => {
             totalEarnings: totalEarnings,
             totalDeductions: totalDeductions,
             netSalary: netSalary,
+        },
+    });
+};
+
+/**
+ * Get salary details by month and year.
+ * @param month - The month.
+ * @param year - The year.
+ * @returns The salary details.
+ */
+export const getSalaryDetailsByMonth = async (month: number, year: number) => {
+    console.log(month,year)
+    return await prisma.paymentDetails.findMany({
+        where: {
+            month: month,
+            year: year,
+        },
+        include: {
+            workDetails: true,
+            earnings: true,
+            deductions: true,
+            employee: {
+                select: {
+                    id: true,
+                    firstName: true,
+                    lastName: true,
+                },
+            },
         },
     });
 };
