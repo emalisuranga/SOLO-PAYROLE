@@ -53,7 +53,7 @@ const Employee = () => {
         <Grid item xs={12}>
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
             <Typography variant="h5">{t('Employee Details')}</Typography>
-            <Button variant="contained" onClick={() => navigate("/addemployee")}>{t('addEmployee')}</Button>
+            <Button variant="contained" onClick={() => navigate("/add-employee")}>{t('addEmployee')}</Button>
           </Box>
         </Grid>
         <Grid item xs={12}>

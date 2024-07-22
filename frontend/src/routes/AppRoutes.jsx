@@ -14,9 +14,9 @@ const AppRoutes = () => (
   <Routes>
     <Route path="/" element={<Dashboard />} />
     <Route path="/employee" element={<Employee />} />
-    <Route path="/payroll" element={<Payroll />} />
+    <Route path="/salary-details" element={<Payroll />} />
     <Route path="/settings" element={<Settings />} />
-    <Route path="/addemployee" element={<AddEmployee />} />
+    <Route path="/add-employee" element={<AddEmployee />} />
     <Route path="/add-salary-details" element={<AddSalaryDetails />} />
     <Route path="/payslip" element={<Payslip />} />
     <Route path="/employee/:id" element={<EmployeeDetails />} />
