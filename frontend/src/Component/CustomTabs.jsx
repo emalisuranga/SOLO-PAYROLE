@@ -3,7 +3,6 @@ import PropTypes from "prop-types";
 import { Stack,Button,Box,Tab,Tabs } from "@mui/material";
 import CustomTabPanel from "./CustomTabPanel";
 import RegisterForm from "./RegisterForm";
-import SubmitButton from "./SubmitButton";
 import useFormStore from "../store/formStore";
 import useEmployeeStore from '../store/employeeStore';
 import { useNavigate } from "react-router-dom";
@@ -91,9 +90,9 @@ function CustomTabs({ sections, mode = 'add', initialData = {} }) {
           </CustomTabPanel>
         ))}
         <Stack direction="row" spacing={2} sx={{ marginTop: 2, justifyContent: "flex-end" }}>
-          <SubmitButton variant="contained" color="primary" type="submit">
+          <Button variant="contained" color="primary" type="submit">
             {t(mode === 'edit' ? "Update" : "Submit")}
-          </SubmitButton>
+          </Button>
           <Button variant="outlined" color="primary" onClick={handleClear}>
             {t("Clear")}
           </Button>
