@@ -110,6 +110,17 @@
     "totalEarnings": "Total Earnings",
     "totalDeductions": "Total Deductions",
     "netSalary": "Net Salary",
-    "actions": "Actions"
+    "actions": "Actions",
+    "employeeId": "Employee ID",
+    "fullName": "Full Name",
+    "phone": "Phone",
+    "address": "Address",
+    "dateOfBirth": "Date of Birth",
+    "joinDate": "Join Date",
+    "department": "Department",
+    "bankAccountNumber": "Bank Account Number",
+    "bankName": "Bank Name",
+    "basicSalary": "Basic Salary",
+    "totalAllowance": "Total Allowance"
   }
 }

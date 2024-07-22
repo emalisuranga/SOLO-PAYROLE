@@ -112,6 +112,17 @@
     "totalEarnings": "総収入",
     "totalDeductions": "総控除",
     "netSalary": "純給料",
-    "actions": "アクション"
+    "actions": "アクション",
+    "employeeId": "社員ID",
+    "fullName": "フルネーム",
+    "phone": "電話",
+    "address": "住所",
+    "dateOfBirth": "生年月日",
+    "joinDate": "入社日",
+    "department": "部門",
+    "bankAccountNumber": "銀行口座番号",
+    "bankName": "銀行名",
+    "basicSalary": "基本給",
+    "totalAllowance": "総手当"
   }
 }
