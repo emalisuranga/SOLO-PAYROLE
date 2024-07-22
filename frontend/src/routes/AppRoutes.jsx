@@ -2,7 +2,7 @@ import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import Dashboard from '../Page/Dashboard';
 import Employee from '../Page/Employee/Employee';
-import Payroll from '../Page/Payroll';
+// import Payroll from '../Page/Payroll';
 import Settings from '../Page/Settings';
 import AddEmployee from '../Page/Employee/AddEmployee';
 import AddSalaryDetails from '../Page/Payroll/AddSalaryDetails';

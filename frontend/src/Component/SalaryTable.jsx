@@ -1,10 +1,29 @@
-import React, { useState } from 'react';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, IconButton, Menu, MenuItem, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button } from '@mui/material';
-import { Edit, Delete, Visibility, MoreVert as MoreVertIcon } from '@mui/icons-material';
-import PropTypes from 'prop-types';
-import { useNavigate } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
-import CustomSnackbar from './CustomSnackbar';
+import React, { useState } from "react";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  IconButton,
+  Menu,
+  MenuItem,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Button,
+} from "@mui/material";
+import {
+  MoreVert as MoreVertIcon,
+} from "@mui/icons-material";
+import PropTypes from "prop-types";
+import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import CustomSnackbar from "./CustomSnackbar";
 
 const SalaryTable = ({ salaries, onView, onEdit, onDelete }) => {
   const navigate = useNavigate();
@@ -13,8 +32,8 @@ const SalaryTable = ({ salaries, onView, onEdit, onDelete }) => {
   const [currentRow, setCurrentRow] = useState(null);
   const [openDialog, setOpenDialog] = useState(false);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const [snackbarMessage, setSnackbarMessage] = useState('');
-  const [snackbarSeverity, setSnackbarSeverity] = useState('success');
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarSeverity, setSnackbarSeverity] = useState("success");
 
   const handleActionClick = (event, row) => {
     setAnchorEl(event.currentTarget);
@@ -70,13 +89,13 @@ const SalaryTable = ({ salaries, onView, onEdit, onDelete }) => {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>ID</TableCell>
-              <TableCell>First Name</TableCell>
-              <TableCell>Last Name</TableCell>
-              <TableCell>Total Earnings</TableCell>
-              <TableCell>Total Deductions</TableCell>
-              <TableCell>Net Salary</TableCell>
-              <TableCell>Actions</TableCell>
+              <TableCell>{t("table.id")}</TableCell>
+              <TableCell>{t("table.firstName")}</TableCell>
+              <TableCell>{t("table.lastName")}</TableCell>
+              <TableCell>{t("table.totalEarnings")}</TableCell>
+              <TableCell>{t("table.totalDeductions")}</TableCell>
+              <TableCell>{t("table.netSalary")}</TableCell>
+              <TableCell>{t("table.actions")}</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -92,10 +111,20 @@ const SalaryTable = ({ salaries, onView, onEdit, onDelete }) => {
                   <IconButton onClick={(e) => handleActionClick(e, salary)}>
                     <MoreVertIcon />
                   </IconButton>
-                  <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleActionClose}>
-                    <MenuItem onClick={() => handleView(currentRow)}>{t("View")}</MenuItem>
-                    <MenuItem onClick={() => handleEdit(currentRow)}>{t("Edit")}</MenuItem>
-                    <MenuItem onClick={() => setOpenDialog(true)}>{t('Delete')}</MenuItem>
+                  <Menu
+                    anchorEl={anchorEl}
+                    open={Boolean(anchorEl)}
+                    onClose={handleActionClose}
+                  >
+                    <MenuItem onClick={() => handleView(currentRow)}>
+                      {t("View")}
+                    </MenuItem>
+                    <MenuItem onClick={() => handleEdit(currentRow)}>
+                      {t("Edit")}
+                    </MenuItem>
+                    <MenuItem onClick={() => setOpenDialog(true)}>
+                      {t("Delete")}
+                    </MenuItem>
                   </Menu>
                 </TableCell>
               </TableRow>
@@ -105,22 +134,27 @@ const SalaryTable = ({ salaries, onView, onEdit, onDelete }) => {
       </TableContainer>
 
       <Dialog open={openDialog} onClose={handleDialogClose}>
-        <DialogTitle>{t('Confirm Delete')}</DialogTitle>
+        <DialogTitle>{t("Confirm Delete")}</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            {t('DeleteConfirmationMessage')}
+            {t("DeleteConfirmationMessage")}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleDialogClose} color="primary">
-            {t('Cancel')}
+            {t("Cancel")}
           </Button>
           <Button onClick={handleDeleteConfirm} color="secondary" autoFocus>
-            {t('Delete')}
+            {t("Delete")}
           </Button>
         </DialogActions>
       </Dialog>
-      <CustomSnackbar open={snackbarOpen} message={snackbarMessage} severity={snackbarSeverity} onClose={handleCloseSnackbar} />
+      <CustomSnackbar
+        open={snackbarOpen}
+        message={snackbarMessage}
+        severity={snackbarSeverity}
+        onClose={handleCloseSnackbar}
+      />
     </>
   );
 };

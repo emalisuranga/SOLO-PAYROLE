@@ -1,21 +1,7 @@
 import React from 'react';
 import { Box, Button, TextField, MenuItem } from '@mui/material';
 import PropTypes from 'prop-types';
-
-const months = [
-  { value: 1, label: 'January' },
-  { value: 2, label: 'February' },
-  { value: 3, label: 'March' },
-  { value: 4, label: 'April' },
-  { value: 5, label: 'May' },
-  { value: 6, label: 'June' },
-  { value: 7, label: 'July' },
-  { value: 8, label: 'August' },
-  { value: 9, label: 'September' },
-  { value: 10, label: 'October' },
-  { value: 11, label: 'November' },
-  { value: 12, label: 'December' },
-];
+import { useTranslation } from 'react-i18next';
 
 const getYears = (currentYear) => {
   const years = [];
@@ -26,7 +12,31 @@ const getYears = (currentYear) => {
 };
 
 const SalaryFilter = ({ month, year, onMonthChange, onYearChange, onSearch }) => {
+    const { t } = useTranslation();
   const currentYear = new Date().getFullYear();
+  const lastMonth = new Date().getMonth(); 
+
+  const getAvailableMonths = () => {
+    if (year === currentYear) {
+      return months.filter((month) => month.value <= lastMonth);
+    }
+    return months;
+  };
+
+  const months = [
+    { value: 1, label: t('months.january') },
+    { value: 2, label: t('months.february') },
+    { value: 3, label: t('months.march') },
+    { value: 4, label: t('months.april') },
+    { value: 5, label: t('months.may') },
+    { value: 6, label: t('months.june') },
+    { value: 7, label: t('months.july') },
+    { value: 8, label: t('months.august') },
+    { value: 9, label: t('months.september') },
+    { value: 10, label: t('months.october') },
+    { value: 11, label: t('months.november') },
+    { value: 12, label: t('months.december') },
+  ];
 
   return (
     <Box sx={{ display: 'flex', gap: 2, mb: 2 }}>
@@ -39,7 +49,7 @@ const SalaryFilter = ({ month, year, onMonthChange, onYearChange, onSearch }) =>
         size="small"
         sx={{ width: 150 }}
       >
-        {months.map((option) => (
+        {getAvailableMonths().map((option) => (
           <MenuItem key={option.value} value={option.value}>
             {option.label}
           </MenuItem>
