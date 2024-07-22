@@ -80,7 +80,6 @@ function CustomTabsForSalary({ sections, initialData }) {
       setSnackbarOpen(true);
       console.error("Failed to save data", error);
     }
-    }
   };
 
   const handleCloseSnackbar = () => {

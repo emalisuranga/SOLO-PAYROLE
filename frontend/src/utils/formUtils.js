@@ -129,10 +129,19 @@ export const salaryValidation = async (formData, t) => {
 };
 
 export const transformFormDataForSalary = (formData,initialData ) => {
+  const now = new Date();
+  let month = now.getMonth(); // JavaScript months are 0-based, so this gets the last month.
+  let year = now.getFullYear();
+
+  if (month === 0) {
+    month = 12; // December of the previous year
+    year -= 1;
+  }
+
   return {
     employeeId: initialData.id,
-    month: new Date().getMonth() + 1,
-    year: new Date().getFullYear(),
+    month: month,
+    year: year,
     workDetails: {
       scheduledWorkingDays: parseInt(formData.scheduledWorkingDays, 10),
       numberOfWorkingDays: parseInt(formData.numberOfWorkingDays, 10),
