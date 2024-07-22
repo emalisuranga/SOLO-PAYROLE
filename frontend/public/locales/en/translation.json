@@ -29,7 +29,10 @@
     "delete_success": "Employee deleted successfully",
     "add_error": "Failed to add Employee",
     "update_error": "Failed to update Employee",
-    "delete_error": "Failed to delete employee"
+    "delete_error": "Failed to delete employee",
+    "salaryDataSaved": "Salary Data saved successfully!",
+    "salaryDataSaveFailed": "Failed to save data",
+    "salaryDetailsExist": "Salary details for this employee for the current month already exist."
   },
   "fields": {
     "firstName": "First Name",

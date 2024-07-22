@@ -4,7 +4,7 @@ import { getSalaryValidationSchema } from "./validationSchemaForSalary";
 const formatDate = (dateString) => {
   if (!dateString) return "";
   const date = new Date(dateString);
-  return date.toISOString().split("T")[0]; // Extract only the date part
+  return date.toISOString().split("T")[0];
 };
 
 export const initializeFormData = (sections, initialData = {}) => {
@@ -85,6 +85,7 @@ export const initializeSalaryFormData = (sections, initialData = {}) => {
 
   return formData;
 };
+
 export const handleFormChange = (formData, setFormData) => (event) => {
   const { name, value } = event.target;
   setFormData({
@@ -125,4 +126,41 @@ export const salaryValidation = async (formData, t) => {
     }
     return validationErrors;
   }
+};
+
+export const transformFormDataForSalary = (formData,initialData ) => {
+  return {
+    employeeId: initialData.id,
+    month: new Date().getMonth() + 1,
+    year: new Date().getFullYear(),
+    workDetails: {
+      scheduledWorkingDays: parseInt(formData.scheduledWorkingDays, 10),
+      numberOfWorkingDays: parseInt(formData.numberOfWorkingDays, 10),
+      numberOfPaidHolidays: parseInt(formData.numberOfPaidHolidays, 10),
+      remainingPaidVacationDays: parseInt(formData.remainingPaidVacationDays, 10),
+      overtime: parseFloat(formData.overtime),
+      timeLate: parseFloat(formData.timeLate),
+      timeLeavingEarly: parseFloat(formData.timeLeavingEarly),
+    },
+    earnings: {
+      basicSalary: parseFloat(initialData.salaryDetails?.basicSalary || 0),
+      overtimePay: parseFloat(formData.overtimePay),
+      transportationCosts: parseFloat(formData.transportationCosts),
+      attendanceAllowance: parseFloat(formData.attendanceAllowance),
+      familyAllowance: parseFloat(formData.familyAllowance),
+      leaveAllowance: parseFloat(formData.leaveAllowance),
+      specialAllowance: parseFloat(formData.specialAllowance),
+    },
+    deductions: {
+      healthInsurance: parseFloat(formData.healthInsurance),
+      employeePensionInsurance: parseFloat(formData.employeePensionInsurance),
+      employmentInsurance: parseFloat(formData.employmentInsurance),
+      longTermCareInsurance: parseFloat(formData.longTermCareInsurance),
+      socialInsurance: parseFloat(formData.socialInsurance),
+      incomeTax: parseFloat(formData.incomeTax),
+      residentTax: parseFloat(formData.residentTax),
+      advancePayment: parseFloat(formData.advancePayment),
+      yearEndAdjustment: parseFloat(formData.yearEndAdjustment),
+    }
+  };
 };

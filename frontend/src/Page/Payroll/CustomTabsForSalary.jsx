@@ -7,7 +7,7 @@ import CustomSnackbar from "../../Component/CustomSnackbar";
 import useFormStore from "../../store/formStore";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { salaryValidation, initializeSalaryFormData, handleFormChange as handleChangeUtil } from "../../utils/formUtils";
+import { salaryValidation, initializeSalaryFormData, transformFormDataForSalary, handleFormChange as handleChangeUtil } from "../../utils/formUtils";
 import useSalaryStore from "../../store/salaryStore";
 import useEmployeeStore from "../../store/employeeStore"; // Import the employee store
 
@@ -33,7 +33,7 @@ function CustomTabsForSalary({ sections, initialData }) {
     const fetchData = async () => {
       if (initialData?.id) {
         const employeeData = await fetchEmployeeDetails(initialData.id);
-        console.log(JSON.stringify(employeeData))
+        // console.log(JSON.stringify(employeeData))
         const initialFormData = initializeSalaryFormData(sections, employeeData);
         setFormData(initialFormData);
       } else {
@@ -60,17 +60,26 @@ function CustomTabsForSalary({ sections, initialData }) {
       return;
     }
 
+    const transformedData = transformFormDataForSalary(formData, initialData);
+    console.log("transformedData",JSON.stringify(transformedData))
+
     try {
-      await saveSalary(formData);
+      await saveSalary(transformedData);
       setSnackbarSeverity("success");
-      setSnackbarMessage(t("Data saved successfully!"));
+      setSnackbarMessage(t("salaryDataSaved"));
       setSnackbarOpen(true);
       setTimeout(() => navigate("/salary-details"), 2000);
     } catch (error) {
-      setSnackbarSeverity("error");
-      setSnackbarMessage(t("Failed to save data"));
+      if (error.message.includes("Salary details for employee")) {
+        setSnackbarSeverity("error");
+        setSnackbarMessage(t("Salary details for this employee for the current month already exist."));
+      } else {
+        setSnackbarSeverity("error");
+        setSnackbarMessage(t("salaryDataSaveFailed"));
+      }
       setSnackbarOpen(true);
       console.error("Failed to save data", error);
+    }
     }
   };
 

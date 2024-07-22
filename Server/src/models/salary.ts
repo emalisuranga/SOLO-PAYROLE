@@ -3,8 +3,48 @@ import { Salary } from '../types/salary';
 
 const prisma = new PrismaClient();
 
+/**
+ * Calculate the total earnings.
+ * @param earnings - The earnings details.
+ * @returns The total earnings.
+ */
+const calculateTotalEarnings = (earnings: Salary['earnings']): number => {
+    return (
+        earnings.overtimePay +
+        earnings.transportationCosts +
+        earnings.attendanceAllowance +
+        earnings.familyAllowance +
+        earnings.leaveAllowance +
+        earnings.specialAllowance
+    );
+};
+
+/**
+ * Calculate the total deductions.
+ * @param deductions - The deductions details.
+ * @returns The total deductions.
+ */
+const calculateTotalDeductions = (deductions: Salary['deductions']): number => {
+    return (
+        deductions.healthInsurance +
+        deductions.employeePensionInsurance +
+        deductions.employmentInsurance +
+        deductions.longTermCareInsurance +
+        deductions.socialInsurance +
+        deductions.incomeTax +
+        deductions.residentTax +
+        deductions.advancePayment +
+        deductions.yearEndAdjustment
+    );
+};
+
+/**
+ * Add salary details for an employee.
+ * @param salary - The salary details.
+ * @throws Will throw an error if the employee does not exist.
+ * @returns The created payment details.
+ */
 export const addSalaryDetails = async (salary: Salary) => {
-    // Check if the employee exists
     const employeeExists = await prisma.personalInfo.findUnique({
         where: { id: salary.employeeId },
     });
@@ -13,16 +53,27 @@ export const addSalaryDetails = async (salary: Salary) => {
         throw new Error(`Employee with ID ${salary.employeeId} does not exist.`);
     }
 
-    const now = new Date();
-    const lastMonth = now.getMonth() === 0 ? 12 : now.getMonth();
-    const lastMonthYear = now.getMonth() === 0 ? now.getFullYear() - 1 : now.getFullYear();
+    const existingSalary = await prisma.paymentDetails.findFirst({
+        where: {
+            employeeId: salary.employeeId,
+            month: salary.month,
+            year: salary.year,
+        },
+    });
 
-    // Proceed with adding salary details
+    if (existingSalary) {
+        throw new Error(`Salary details for employee ${salary.employeeId} for month ${salary.month} and year ${salary.year} already exist.`);
+    }
+
+    const totalEarnings = calculateTotalEarnings(salary.earnings);
+    const totalDeductions = calculateTotalDeductions(salary.deductions);
+    const netSalary = totalEarnings - totalDeductions;
+
     return await prisma.paymentDetails.create({
         data: {
             employeeId: salary.employeeId,
-            month: lastMonth,
-            year: lastMonthYear,
+            month: salary.month,
+            year: salary.year,
             workDetails: {
                 create: {
                     scheduledWorkingDays: salary.workDetails.scheduledWorkingDays,
@@ -58,6 +109,9 @@ export const addSalaryDetails = async (salary: Salary) => {
                     yearEndAdjustment: salary.deductions.yearEndAdjustment,
                 },
             },
+            totalEarnings: totalEarnings,
+            totalDeductions: totalDeductions,
+            netSalary: netSalary,
         },
     });
 };

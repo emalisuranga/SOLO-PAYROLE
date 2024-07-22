@@ -44,15 +44,20 @@ model SalaryDetails {
 }
 
 model PaymentDetails {
-  id             Int             @id @default(autoincrement())
-  employee       PersonalInfo    @relation(fields: [employeeId], references: [id], onDelete: Cascade)
-  employeeId     Int
-  month          Int
-  year           Int
-  createdAt      DateTime        @default(now())
-  workDetails    WorkDetails?
-  earnings       Earnings?
-  deductions     Deductions?
+  id                Int             @id @default(autoincrement())
+  employee          PersonalInfo    @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  employeeId        Int
+  month             Int
+  year              Int
+  createdAt         DateTime        @default(now())
+  workDetails       WorkDetails?
+  earnings          Earnings?
+  deductions        Deductions?
+  totalEarnings     Float
+  totalDeductions   Float
+  netSalary         Float
+
+  @@unique([employeeId, month, year])
 }
 
 model WorkDetails {

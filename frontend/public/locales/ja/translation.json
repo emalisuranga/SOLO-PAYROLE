@@ -31,7 +31,10 @@
     "delete_success": "従業員が正常に削除されました",
     "add_error": "データの追加に失敗しました",
     "update_error": "データの更新に失敗しました",
-    "delete_error": "従業員の削除に失敗しました"
+    "delete_error": "従業員の削除に失敗しました",
+    "salaryDataSaved": "データが正常に保存されました！",
+    "salaryDataSaveFailed": "データの保存に失敗しました",
+    "salaryDetailsExist": "この従業員の今月の給与明細は既に存在します。"
   },
   "fields": {
     "firstName": "名前",

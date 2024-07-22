@@ -16,7 +16,6 @@ const useSalaryStore = create((set) => ({
       const response = await api.get("/salary-details");
       set({ salaries: response.data.data || [], loading: false });
     } catch (error) {
-      console.error("Error fetching data:", error);
       set({ error: "Error fetching data", loading: false });
     }
   },
