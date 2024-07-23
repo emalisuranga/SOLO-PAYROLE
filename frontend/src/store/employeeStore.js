@@ -59,7 +59,6 @@ const useEmployeeStore = create((set) => ({
     }
   },
   deleteEmployee: async (id) => {
-    console.log("handleDeleteConfirm")
     try {
       const response = await api.delete(`/employees/${id}`);
       return response.data;

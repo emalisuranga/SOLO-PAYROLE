@@ -62,7 +62,6 @@ export const deleteEmployeeHandler = async (req: Request, res: Response) => {
 };
 
 export const getEmployeeNamesAndIdsHandler = async (_req: Request, res: Response) => {
-  console.log("getEmployeeNamesAndIdsHandler")
   try {
     const result = await getEmployeeNamesAndIds()
     sendSuccessResponse(res, result, 'Employees retrieved successfully');

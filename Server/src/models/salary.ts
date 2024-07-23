@@ -124,7 +124,6 @@ export const addSalaryDetails = async (salary: Salary) => {
  * @returns The salary details.
  */
 export const getSalaryDetailsByMonth = async (month: number, year: number) => {
-    console.log(month, year)
     return await prisma.paymentDetails.findMany({
         where: {
             month: month,

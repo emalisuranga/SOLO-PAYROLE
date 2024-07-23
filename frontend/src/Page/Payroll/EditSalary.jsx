@@ -16,7 +16,6 @@ const EditSalary = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        console.log("paymentId:", paymentId); // Ensure this logs correctly
         if (paymentId) {
           await fetchSalaryDetailsById(paymentId);
         }

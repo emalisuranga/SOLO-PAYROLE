@@ -22,7 +22,6 @@ const EmployeeInfo = styled(Typography)`
 
 const AddSalary = () => {
   const handleSubmit = (formData) => {
-    console.log(formData);
   };
 
   const navigate = useNavigate();
