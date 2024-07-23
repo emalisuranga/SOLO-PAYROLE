@@ -11,20 +11,21 @@ import Payslip from '../Page/Payroll/Payslip2';
 import EmployeeDetails from '../Page/Employee/EmployeeDetails';
 import EditEmployee from "../Page/Employee/EditEmployee";
 import ViewSalaryDetails from '../Page/Payroll/ViewSalaryDetails';
+import EditSalary from '../Page/Payroll/EditSalary';
 
 const AppRoutes = () => (
   <Routes>
     <Route path="/" element={<Dashboard />} />
-    <Route path="/employee" element={<Employee />} />
-    <Route path="/salary-details/view/:paymentId" element={<ViewSalaryDetails />} />
-    {/* <Route path="/salary-details" element={<Payroll />} /> */}
-    <Route path="/salary-details" element={<SalaryDetails />} />
     <Route path="/settings" element={<Settings />} />
+    <Route path="/employee" element={<Employee />} />
     <Route path="/add-employee" element={<AddEmployee />} />
     <Route path="/add-salary-details" element={<AddSalaryDetails />} />
     <Route path="/payslip" element={<Payslip />} />
     <Route path="/employee/:id" element={<EmployeeDetails />} />
     <Route path="/employee/edit/:id" element={<EditEmployee />} />
+    <Route path="/salary-details/view/:paymentId" element={<ViewSalaryDetails />} />
+    <Route path="/salary-details" element={<SalaryDetails />} />
+    <Route path="/salary-details/edit/:paymentId" element={<EditSalary />} />
     
   </Routes>
 );

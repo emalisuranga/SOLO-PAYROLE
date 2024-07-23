@@ -13,11 +13,12 @@
   "View": "詳細",
   "Edit": "編集",
   "Delete": "削除",
-  "Total Allowance":"合計手当",
+  "Total Allowance": "合計手当",
   "Update": "アップデート",
   "registrationForm": "登録フォーム",
   "addSalaryForm": "給与の詳細を追加",
   "updateForm": "更新フォーム",
+  "updateSalaryForm": "給与フォームの更新",
   "employeeDetails": "雇用主の詳細",
   "Cancel": "キャンセル",
   "Confirm Delete": "削除の確認",
@@ -36,7 +37,8 @@
     "delete_error": "従業員の削除に失敗しました",
     "salaryDataSaved": "データが正常に保存されました！",
     "salaryDataSaveFailed": "データの保存に失敗しました",
-    "salaryDetailsExist": "この従業員の今月の給与明細は既に存在します。"
+    "salaryDetailsExist": "この従業員の今月の給与明細は既に存在します。",
+     "salaryDataUpdated": "給与データが正常に更新されました"
   },
   "fields": {
     "firstName": "名前",

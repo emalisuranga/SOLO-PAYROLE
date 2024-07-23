@@ -20,7 +20,6 @@ const useSalaryStore = create((set) => ({
     }
   },
   fetchSalaryDetailsById: async (paymentId) => {
-    console.log("fetchSalaryDetailsById",paymentId)
     set({ loading: true, error: null });
     try {
       const response = await api.get(`/salary-details/payment/${paymentId}`);
@@ -51,9 +50,9 @@ const useSalaryStore = create((set) => ({
       throw error;
     }
   },
-  updateSalary: async (data) => {
+  updateSalary: async (id, data) => {
     try {
-      const response = await api.put(`/salary-details/${data.id}`, data);
+      const response = await api.put(`/salary-details/payment/${id}`, data);
       return response.data;
     } catch (error) {
       console.error("Error updating salary data:", error);

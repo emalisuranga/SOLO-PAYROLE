@@ -7,22 +7,30 @@ import CustomSnackbar from "../../Component/CustomSnackbar";
 import useFormStore from "../../store/formStore";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { salaryValidation, initializeSalaryFormData, transformFormDataForSalary, handleFormChange as handleChangeUtil } from "../../utils/formUtils";
+import {
+  salaryValidation,
+  initializeSalaryFormData,
+  transformFormDataForSalary,
+  initializeUpdateSalaryFormData,
+  initializeAddSalaryFormData,
+  handleFormChange as handleChangeUtil,
+} from "../../utils/formUtils";
 import useSalaryStore from "../../store/salaryStore";
-import useEmployeeStore from "../../store/employeeStore"; // Import the employee store
+import useEmployeeStore from "../../store/employeeStore";
 
 function CustomTabsForSalary({ sections, initialData }) {
   const navigate = useNavigate();
   const { t } = useTranslation();
-  const { formData, setFormData, clearFormData, setErrors, errors } = useFormStore((state) => ({
-    formData: state.formData,
-    setFormData: state.setFormData,
-    clearFormData: state.clearFormData,
-    setErrors: state.setErrors,
-    errors: state.errors,
-  }));
-  const { saveSalary } = useSalaryStore();
-  const { fetchEmployeeDetails } = useEmployeeStore(); // Get the fetchEmployeeDetails function from the store
+  const { formData, setFormData, clearFormData, setErrors, errors } =
+    useFormStore((state) => ({
+      formData: state.formData,
+      setFormData: state.setFormData,
+      clearFormData: state.clearFormData,
+      setErrors: state.setErrors,
+      errors: state.errors,
+    }));
+  const { saveSalary, updateSalary } = useSalaryStore();
+  const { fetchEmployeeDetails } = useEmployeeStore();
 
   const [value, setValue] = useState(0);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
@@ -31,15 +39,14 @@ function CustomTabsForSalary({ sections, initialData }) {
 
   useEffect(() => {
     const fetchData = async () => {
-      if (initialData?.id) {
+      let initialFormData = {};
+      if (!initialData?.employeeId) {
         const employeeData = await fetchEmployeeDetails(initialData.id);
-        // console.log(JSON.stringify(employeeData))
-        const initialFormData = initializeSalaryFormData(sections, employeeData);
-        setFormData(initialFormData);
+        initialFormData = initializeAddSalaryFormData(sections, employeeData);
       } else {
-        const initialFormData = initializeSalaryFormData(sections, initialData);
-        setFormData(initialFormData);
+        initialFormData = initializeUpdateSalaryFormData(sections, initialData);
       }
+      setFormData(initialFormData);
     };
 
     fetchData();
@@ -61,21 +68,26 @@ function CustomTabsForSalary({ sections, initialData }) {
     }
 
     const transformedData = transformFormDataForSalary(formData, initialData);
-    console.log("transformedData",JSON.stringify(transformedData))
 
     try {
-      await saveSalary(transformedData);
-      setSnackbarSeverity("success");
-      setSnackbarMessage(t("salaryDataSaved"));
+      if (initialData?.employeeId) {
+        await updateSalary(initialData.id, transformedData);
+        setSnackbarSeverity("success");
+        setSnackbarMessage(t("actions.salaryDataUpdated"));
+      } else {
+        await saveSalary(transformedData);
+        setSnackbarSeverity("success");
+        setSnackbarMessage(t("actions.salaryDataSaved"));
+      }
       setSnackbarOpen(true);
       setTimeout(() => navigate("/salary-details"), 2000);
     } catch (error) {
       if (error.message.includes("Salary details for employee")) {
         setSnackbarSeverity("error");
-        setSnackbarMessage(t("Salary details for this employee for the current month already exist."));
+        setSnackbarMessage(t("actions.salaryDetailsExist"));
       } else {
         setSnackbarSeverity("error");
-        setSnackbarMessage(t("salaryDataSaveFailed"));
+        setSnackbarMessage(t("actions.salaryDataSaveFailed"));
       }
       setSnackbarOpen(true);
       console.error("Failed to save data", error);
@@ -93,17 +105,30 @@ function CustomTabsForSalary({ sections, initialData }) {
   return (
     <form onSubmit={handleSubmit}>
       <Box sx={{ width: "100%" }}>
-        <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
+        <Tabs
+          value={value}
+          onChange={handleChange}
+          aria-label="basic tabs example"
+        >
           {sections.map((section, index) => (
             <Tab key={index} label={section.label} {...a11yProps(index)} />
           ))}
         </Tabs>
         {sections.map((section, index) => (
           <CustomTabPanel key={index} value={value} index={index}>
-            <RegisterForm fields={section.fields} formData={formData} onChange={handleFormChange} errors={errors} />
+            <RegisterForm
+              fields={section.fields}
+              formData={formData}
+              onChange={handleFormChange}
+              errors={errors}
+            />
           </CustomTabPanel>
         ))}
-        <Stack direction="row" spacing={2} sx={{ marginTop: 2, justifyContent: "flex-end" }}>
+        <Stack
+          direction="row"
+          spacing={2}
+          sx={{ marginTop: 2, justifyContent: "flex-end" }}
+        >
           <Button variant="contained" color="primary" type="submit">
             {t("Submit")}
           </Button>
@@ -112,7 +137,12 @@ function CustomTabsForSalary({ sections, initialData }) {
           </Button>
         </Stack>
       </Box>
-      <CustomSnackbar open={snackbarOpen} message={snackbarMessage} severity={snackbarSeverity} onClose={handleCloseSnackbar} />
+      <CustomSnackbar
+        open={snackbarOpen}
+        message={snackbarMessage}
+        severity={snackbarSeverity}
+        onClose={handleCloseSnackbar}
+      />
     </form>
   );
 }

@@ -36,7 +36,6 @@ const EmployeeTable = ({ data }) => {
 
   useEffect(() => {
     if (currentRow) {
-      console.log(currentRow);
     }
   }, [currentRow]);
 

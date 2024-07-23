@@ -53,8 +53,9 @@ const SalaryTable = ({ salaries, onView, onEdit, onDelete }) => {
   };
 
   const handleEdit = (row) => {
-    onEdit(row.id);
-    navigate(`/employee/edit/${row.id}`);
+    // onEdit(row.id);
+    console.log("row",row.id);
+    navigate(`/salary-details/edit/${row.id}`);
     handleActionClose();
   };
 

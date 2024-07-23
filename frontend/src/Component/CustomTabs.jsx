@@ -49,8 +49,6 @@ function CustomTabs({ sections, mode = 'add', initialData = {} }) {
 
     try {
       if (mode === 'edit') {
-        console.log({ ...formData, id: initialData.id,bankDetails: [{ id: initialData.bankDetails.id }], salaryDetails: [{ id: initialData.salaryDetails.id }] })
-        // await updateData({ ...formData, id: initialData.id });
         await updateData({ ...formData, id: initialData.id,bankDetails: [{ id: initialData.bankDetails.id }], salaryDetails: [{ id: initialData.salaryDetails.id }] });
         setSnackbarMessage(t("actions.update_success"));
       } else {
