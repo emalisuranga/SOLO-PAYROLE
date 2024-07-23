@@ -82,7 +82,7 @@ function CustomTabsForSalary({ sections, initialData }) {
       setSnackbarOpen(true);
       setTimeout(() => navigate("/salary-details"), 2000);
     } catch (error) {
-      if (error.message.includes("Salary details for employee")) {
+      if (error.response.data.error.message.includes("Salary details for employee 4 for month 6 and year 2024 already exist.")) {
         setSnackbarSeverity("error");
         setSnackbarMessage(t("actions.salaryDetailsExist"));
       } else {

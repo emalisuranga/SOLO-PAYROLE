@@ -8,9 +8,25 @@ export const addSalaryDetailsHandler = async (req: Request, res: Response) => {
   try {
     const createdSalary = await addSalaryDetails(salary);
     res.status(201).json({ status: 'success', data: createdSalary });
-  } catch (error) {
+  } catch (error: unknown) {
     console.error('Error adding salary details:', error);
-    res.status(500).json({ status: 'error', message: 'Failed to add salary details', error });
+
+    if (error instanceof Error) {
+      res.status(500).json({
+        status: 'error',
+        message: 'Failed to add salary details',
+        error: {
+          message: error.message,
+          stack: error.stack,
+        },
+      });
+    } else {
+      res.status(500).json({
+        status: 'error',
+        message: 'Failed to add salary details',
+        error,
+      });
+    }
   }
 };
 

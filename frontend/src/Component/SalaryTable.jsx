@@ -91,7 +91,7 @@ const SalaryTable = ({ salaries, onView, onEdit, onDelete }) => {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>{t("table.id")}</TableCell>
+              <TableCell>{t("table.employeeId")}</TableCell>
               <TableCell>{t("table.firstName")}</TableCell>
               <TableCell>{t("table.lastName")}</TableCell>
               <TableCell>{t("table.totalEarnings")}</TableCell>
@@ -103,7 +103,7 @@ const SalaryTable = ({ salaries, onView, onEdit, onDelete }) => {
           <TableBody>
             {salaries.map((salary) => (
               <TableRow key={salary.id}>
-                <TableCell>{salary.id}</TableCell>
+                <TableCell>{salary.employee.id}</TableCell>
                 <TableCell>{salary.employee.firstName}</TableCell>
                 <TableCell>{salary.employee.lastName}</TableCell>
                 <TableCell>{salary.totalEarnings}</TableCell>
