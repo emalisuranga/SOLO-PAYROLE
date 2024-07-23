@@ -124,7 +124,7 @@ export const addSalaryDetails = async (salary: Salary) => {
  * @returns The salary details.
  */
 export const getSalaryDetailsByMonth = async (month: number, year: number) => {
-    console.log(month,year)
+    console.log(month, year)
     return await prisma.paymentDetails.findMany({
         where: {
             month: month,
@@ -147,18 +147,68 @@ export const getSalaryDetailsByMonth = async (month: number, year: number) => {
 
 export const getSalaryDetailsByPaymentId = async (paymentId: number) => {
     return await prisma.paymentDetails.findUnique({
-      where: { id: paymentId },
-      include: {
-        workDetails: true,
-        earnings: true,
-        deductions: true,
-        employee: {
-          select: {
-            id: true,
-            firstName: true,
-            lastName: true,
-          },
+        where: { id: paymentId },
+        include: {
+            workDetails: true,
+            earnings: true,
+            deductions: true,
+            employee: {
+                select: {
+                    id: true,
+                    firstName: true,
+                    lastName: true,
+                },
+            },
         },
-      },
     });
-  };
+};
+
+export const updateSalaryDetails = async (id: number, salary: Salary) => {
+    const totalEarnings = calculateTotalEarnings(salary.earnings);
+    const totalDeductions = calculateTotalDeductions(salary.deductions);
+    const netSalary = totalEarnings - totalDeductions;
+
+    return await prisma.paymentDetails.update({
+        where: { id },
+        data: {
+            workDetails: {
+                update: {
+                    scheduledWorkingDays: salary.workDetails.scheduledWorkingDays,
+                    numberOfWorkingDays: salary.workDetails.numberOfWorkingDays,
+                    numberOfPaidHolidays: salary.workDetails.numberOfPaidHolidays,
+                    remainingPaidVacationDays: salary.workDetails.remainingPaidVacationDays,
+                    overtime: salary.workDetails.overtime,
+                    timeLate: salary.workDetails.timeLate,
+                    timeLeavingEarly: salary.workDetails.timeLeavingEarly,
+                },
+            },
+            earnings: {
+                update: {
+                    basicSalary: salary.earnings.basicSalary,
+                    overtimePay: salary.earnings.overtimePay,
+                    transportationCosts: salary.earnings.transportationCosts,
+                    attendanceAllowance: salary.earnings.attendanceAllowance,
+                    familyAllowance: salary.earnings.familyAllowance,
+                    leaveAllowance: salary.earnings.leaveAllowance,
+                    specialAllowance: salary.earnings.specialAllowance,
+                },
+            },
+            deductions: {
+                update: {
+                    healthInsurance: salary.deductions.healthInsurance,
+                    employeePensionInsurance: salary.deductions.employeePensionInsurance,
+                    employmentInsurance: salary.deductions.employmentInsurance,
+                    longTermCareInsurance: salary.deductions.longTermCareInsurance,
+                    socialInsurance: salary.deductions.socialInsurance,
+                    incomeTax: salary.deductions.incomeTax,
+                    residentTax: salary.deductions.residentTax,
+                    advancePayment: salary.deductions.advancePayment,
+                    yearEndAdjustment: salary.deductions.yearEndAdjustment,
+                },
+            },
+            totalEarnings,
+            totalDeductions,
+            netSalary,
+        },
+    });
+};

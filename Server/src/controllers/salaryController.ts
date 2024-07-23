@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { addSalaryDetails, getSalaryDetailsByMonth, getSalaryDetailsByPaymentId } from '../models/salary';
+import { addSalaryDetails, getSalaryDetailsByMonth, getSalaryDetailsByPaymentId, updateSalaryDetails } from '../models/salary';
 import { Salary } from '../types/salary';
 
 export const addSalaryDetailsHandler = async (req: Request, res: Response) => {
@@ -47,5 +47,18 @@ export const getSalaryDetailsByPaymentIdHandler = async (req: Request, res: Resp
   } catch (error) {
     console.error('Error fetching salary details by payment ID:', error);
     res.status(500).json({ status: 'error', message: 'Failed to fetch salary details', error });
+  }
+};
+
+export const updateSalaryDetailsHandler = async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const salaryData = req.body;
+
+  try {
+      const updatedSalary = await updateSalaryDetails(parseInt(id), salaryData);
+      res.json({ status: 'success', data: updatedSalary });
+  } catch (error) {
+      console.error('Error updating salary details:', error);
+      res.status(500).json({ status: 'error', message: 'Failed to update salary details', error });
   }
 };

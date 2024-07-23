@@ -27,15 +27,11 @@ const Employee = () => {
   }, [employees]);
 
   const handleSearch = () => {
-    console.log("handleSearch")
-    console.log("searchId",searchId)
-    console.log("item.id.toString()",employees.id)
     const filteredData = employees.filter(item =>
       (searchName === "" || item.firstName.toLowerCase().includes(searchName.toLowerCase()) || item.lastName.toLowerCase().includes(searchName.toLowerCase())) &&
       (searchId === "" || item.id.toString() === searchId.toString())
     );
     setFilteredEmployees(filteredData);
-    // useEmployeeStore.setState({ filteredEmployees: filteredData });
   };
 
   if (loading) {
@@ -71,7 +67,7 @@ const Employee = () => {
               onChange={(e) => setSearchId(e.target.value)}
               select
               size="small"
-              sx={{ width: 100 }}  // Adjust the width here
+              sx={{ width: 100 }} 
             >
               {employees.map((item) => (
                 <MenuItem key={item.id} value={item.id}>
