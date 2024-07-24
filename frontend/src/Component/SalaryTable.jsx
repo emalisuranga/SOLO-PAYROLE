@@ -25,7 +25,7 @@ import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import CustomSnackbar from "./CustomSnackbar";
 
-const SalaryTable = ({ salaries, onView, onEdit, onDelete }) => {
+const SalaryTable = ({ salaries, onDelete }) => {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const [anchorEl, setAnchorEl] = useState(null);

@@ -64,7 +64,9 @@ const AddSalary = () => {
       <Button
         variant="contained"
         onClick={() => {
-          navigate("/payslip");
+          const employeeId = 4;
+          const paymentDetailsId = 4
+          navigate(`/salary-slip/${employeeId}/${paymentDetailsId}`);
         }}
       >
         Payslip1

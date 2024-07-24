@@ -9,58 +9,23 @@ import {
   Grid,
   Button,
   Typography,
-  TextField
+  TextField,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
+import { generatePaymentText } from "../../utils/dateUtils";
 
 const CustomTableCell = styled(TableCell)({
   border: "2px solid black",
   width: "150px",
   padding: "8px",
   boxSizing: "border-box",
-  height: "50px"
+  height: "50px",
 });
 
-const ThreeRowTable = () => {
-  const exportAsPDF = async () => {
-    const input = document.getElementById("salary-slip");
-
-    // Capture the element as a canvas
-    const canvas = await html2canvas(input, {
-      scale: 2,
-    });
-
-    const imgData = canvas.toDataURL("image/png");
-
-    // A4 size in points (1 point = 1/72 inch)
-    const a4Width = 595.28;
-    const a4Height = 841.89;
-
-    // Get the dimensions of the input element
-    const rect = input.getBoundingClientRect();
-    const elementWidth = rect.width;
-    const elementHeight = rect.height;
-
-    // Calculate scale to fit the element within A4 dimensions
-    const scaleX = a4Width / elementWidth;
-    const scaleY = a4Height / elementHeight;
-    const scale = Math.min(scaleX, scaleY);
-
-    const pdfWidth = elementWidth * scale;
-    const pdfHeight = elementHeight * scale;
-
-    // Create a new PDF document with A4 dimensions
-    const pdf = new jsPDF({
-      orientation: "portrait",
-      unit: "pt",
-      format: [a4Width, a4Height],
-    });
-
-    pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
-    pdf.save("salary-slip.pdf");
-  };
+const SalarySlipPrint = ({ salarySlip }) => {
+  const paymentText = generatePaymentText(salarySlip.year, salarySlip.month);
 
   return (
     <Box
@@ -98,7 +63,7 @@ const ThreeRowTable = () => {
                     alignItems: "center",
                   }}
                 >
-                  <Typography variant="body2">令和6年6月支給分</Typography>
+                  <Typography variant="body2">{paymentText}</Typography>
                   <Typography variant="body2">給料明細書</Typography>
                 </Box>
               </CustomTableCell>
@@ -112,7 +77,7 @@ const ThreeRowTable = () => {
                     alignItems: "center",
                   }}
                 >
-                  <Typography variant="body1">ガヤシャン</Typography>
+                  <Typography variant="body1">{`${salarySlip.employee.firstName} ${salarySlip.employee.lastName}`}</Typography>
                   <Typography variant="body1">殿</Typography>
                 </Box>
               </CustomTableCell>
@@ -151,7 +116,7 @@ const ThreeRowTable = () => {
                 </CustomTableCell>
                 <CustomTableCell>
                   <Typography variant="body2" align="center">
-                    12
+                    {`${salarySlip.employeeId}`}
                   </Typography>
                 </CustomTableCell>
               </TableRow>
@@ -162,7 +127,7 @@ const ThreeRowTable = () => {
         <Grid container spacing={2} sx={{ mt: 6 }}>
           <Grid item xs={5}>
             <Typography variant="body2" align="left">
-              令和6年6月支給分
+              {paymentText}
             </Typography>
           </Grid>
           <Grid item xs={6}>
@@ -189,7 +154,10 @@ const ThreeRowTable = () => {
                   </Typography>
                 </CustomTableCell>
                 <CustomTableCell>
-                  <Typography variant="body2" align="center"></Typography>
+                  <Typography
+                    variant="body2"
+                    align="center"
+                  >{`${salarySlip.employee.department}`}</Typography>
                 </CustomTableCell>
                 <CustomTableCell>
                   <Typography variant="body2" align="center">
@@ -197,7 +165,10 @@ const ThreeRowTable = () => {
                   </Typography>
                 </CustomTableCell>
                 <CustomTableCell>
-                  <Typography variant="body2" align="center"></Typography>
+                  <Typography
+                    variant="body2"
+                    align="center"
+                  >{`${salarySlip.employeeId}`}</Typography>
                 </CustomTableCell>
                 <CustomTableCell>
                   <Typography variant="body2" align="center">
@@ -205,7 +176,10 @@ const ThreeRowTable = () => {
                   </Typography>
                 </CustomTableCell>
                 <CustomTableCell>
-                  <Typography variant="body2" align="center"></Typography>
+                  <Typography
+                    variant="body2"
+                    align="center"
+                  >{`${salarySlip.employee.firstName} ${salarySlip.employee.lastName}`}</Typography>
                 </CustomTableCell>
               </TableRow>
             </TableBody>
@@ -688,7 +662,7 @@ const ThreeRowTable = () => {
           maxRows={15}
         />
       </Paper>
-{/* 
+      {/* 
       <Button
         onClick={exportAsPDF}
         variant="contained"
@@ -701,4 +675,4 @@ const ThreeRowTable = () => {
   );
 };
 
-export default ThreeRowTable;
+export default SalarySlipPrint;
