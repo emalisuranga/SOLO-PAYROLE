@@ -8,6 +8,7 @@ import AddEmployee from '../Page/Employee/AddEmployee';
 import AddSalaryDetails from '../Page/Payroll/AddSalaryDetails';
 import SalaryDetails from '../Page/Payroll/SalaryDetails';
 import Payslip from '../Page/Payroll/Payslip2';
+// import Payslip from '../Page/Reports/MainComponent';
 import EmployeeDetails from '../Page/Employee/EmployeeDetails';
 import EditEmployee from "../Page/Employee/EditEmployee";
 import ViewSalaryDetails from '../Page/Payroll/ViewSalaryDetails';

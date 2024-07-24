@@ -9,23 +9,18 @@ import {
   Grid,
   Button,
   Typography,
-  TextField,
+  TextField
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
-import SalarySlip from "../Reports/SalarySlipDetails";
 
 const CustomTableCell = styled(TableCell)({
-  border: '2px solid black',
-  width: '150px',
-  padding: '8px',
-  boxSizing: 'border-box',
-  fontSize: '50px',
-});
-
-const SmallTypography = styled(Typography)({
-  fontSize: '10px',
+  border: "2px solid black",
+  width: "150px",
+  padding: "8px",
+  boxSizing: "border-box",
+  height: "50px"
 });
 
 const ThreeRowTable = () => {
@@ -74,18 +69,15 @@ const ThreeRowTable = () => {
         flexDirection: "column",
         alignItems: "center",
         width: "100%",
-        height: "100vh",
-        overflow: "hidden",
         mt: 4,
       }}
     >
       <Paper
-        id="salary-slip2"
+        id="salary-slip"
         sx={{
           width: "100%",
           maxWidth: "100%",
           p: 2,
-          overflowY: "auto",
         }}
       >
         <Table sx={{ width: "450px", height: 50 }}>
@@ -106,8 +98,8 @@ const ThreeRowTable = () => {
                     alignItems: "center",
                   }}
                 >
-                  <SmallTypography variant="body2">令和6年6月支給分</SmallTypography>
-                  <SmallTypography variant="body2">給料明細書</SmallTypography>
+                  <Typography variant="body2">令和6年6月支給分</Typography>
+                  <Typography variant="body2">給料明細書</Typography>
                 </Box>
               </CustomTableCell>
             </TableRow>
@@ -120,69 +112,69 @@ const ThreeRowTable = () => {
                     alignItems: "center",
                   }}
                 >
-                  <SmallTypography variant="body1">ガヤシャン</SmallTypography>
-                  <SmallTypography variant="body1">殿</SmallTypography>
+                  <Typography variant="body1">ガヤシャン</Typography>
+                  <Typography variant="body1">殿</Typography>
                 </Box>
               </CustomTableCell>
             </TableRow>
           </TableBody>
         </Table>
 
-        <Box sx={{ mt: 1 }}>
+        <Box sx={{ mt: 4 }}>
           <Table sx={{ width: "250px" }}>
             <TableBody>
               <TableRow>
                 <CustomTableCell>
-                  <SmallTypography variant="body2" align="center">
+                  <Typography variant="body2" align="center">
                     部門名
-                  </SmallTypography>
+                  </Typography>
                 </CustomTableCell>
                 <CustomTableCell>
-                  <SmallTypography variant="body2" align="center"></SmallTypography>
+                  <Typography variant="body2" align="center"></Typography>
                 </CustomTableCell>
               </TableRow>
               <TableRow>
                 <CustomTableCell>
-                  <SmallTypography variant="body2" align="center">
+                  <Typography variant="body2" align="center">
                     役職名
-                  </SmallTypography>
+                  </Typography>
                 </CustomTableCell>
                 <CustomTableCell>
-                  <SmallTypography variant="body2" align="center"></SmallTypography>
+                  <Typography variant="body2" align="center"></Typography>
                 </CustomTableCell>
               </TableRow>
               <TableRow>
                 <CustomTableCell>
-                  <SmallTypography variant="body2" align="center">
+                  <Typography variant="body2" align="center">
                     社員NO
-                  </SmallTypography>
+                  </Typography>
                 </CustomTableCell>
                 <CustomTableCell>
-                  <SmallTypography variant="body2" align="center">
+                  <Typography variant="body2" align="center">
                     12
-                  </SmallTypography>
+                  </Typography>
                 </CustomTableCell>
               </TableRow>
             </TableBody>
           </Table>
         </Box>
 
-        <Grid container spacing={2} sx={{ mt: 1 }}>
+        <Grid container spacing={2} sx={{ mt: 6 }}>
           <Grid item xs={5}>
-            <SmallTypography variant="body2" align="left">
+            <Typography variant="body2" align="left">
               令和6年6月支給分
-            </SmallTypography>
+            </Typography>
           </Grid>
-          <Grid item xs={3}>
-            <SmallTypography variant="h5" align="left">
+          <Grid item xs={6}>
+            <Typography variant="h5" align="left">
               給料明細書
-            </SmallTypography>
+            </Typography>
           </Grid>
         </Grid>
 
         <Box
           sx={{
-            mt: 2,
+            mt: 4,
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
@@ -192,28 +184,28 @@ const ThreeRowTable = () => {
             <TableBody>
               <TableRow>
                 <CustomTableCell>
-                  <SmallTypography variant="body2" align="center">
+                  <Typography variant="body2" align="center">
                     部門名
-                  </SmallTypography>
+                  </Typography>
                 </CustomTableCell>
                 <CustomTableCell>
-                  <SmallTypography variant="body2" align="center"></SmallTypography>
+                  <Typography variant="body2" align="center"></Typography>
                 </CustomTableCell>
                 <CustomTableCell>
-                  <SmallTypography variant="body2" align="center">
+                  <Typography variant="body2" align="center">
                     部門名
-                  </SmallTypography>
+                  </Typography>
                 </CustomTableCell>
                 <CustomTableCell>
-                  <SmallTypography variant="body2" align="center"></SmallTypography>
+                  <Typography variant="body2" align="center"></Typography>
                 </CustomTableCell>
                 <CustomTableCell>
-                  <SmallTypography variant="body2" align="center">
+                  <Typography variant="body2" align="center">
                     部門名
-                  </SmallTypography>
+                  </Typography>
                 </CustomTableCell>
                 <CustomTableCell>
-                  <SmallTypography variant="body2" align="center"></SmallTypography>
+                  <Typography variant="body2" align="center"></Typography>
                 </CustomTableCell>
               </TableRow>
             </TableBody>
@@ -226,90 +218,90 @@ const ThreeRowTable = () => {
               <TableBody>
                 <TableRow>
                   <CustomTableCell rowSpan={4}>
-                    <SmallTypography variant="body2" align="center">
+                    <Typography variant="body2" align="center">
                       Row 1, Col 1
-                    </SmallTypography>
+                    </Typography>
                   </CustomTableCell>
                   <CustomTableCell>
-                    <SmallTypography variant="body2" align="center">
+                    <Typography variant="body2" align="center">
                       Row 1, Col 2
-                    </SmallTypography>
+                    </Typography>
                   </CustomTableCell>
                   <CustomTableCell>
-                    <SmallTypography variant="body2" align="center">
+                    <Typography variant="body2" align="center">
                       Row 1, Col 3
-                    </SmallTypography>
+                    </Typography>
                   </CustomTableCell>
                   <CustomTableCell>
-                    <SmallTypography variant="body2" align="center">
+                    <Typography variant="body2" align="center">
                       Row 1, Col 4
-                    </SmallTypography>
+                    </Typography>
                   </CustomTableCell>
                   <CustomTableCell>
-                    <SmallTypography variant="body2" align="center">
+                    <Typography variant="body2" align="center">
                       Row 1, Col 5
-                    </SmallTypography>
+                    </Typography>
                   </CustomTableCell>
                   <CustomTableCell>
-                    <SmallTypography variant="body2" align="center">
+                    <Typography variant="body2" align="center">
                       Row 1, Col 6
-                    </SmallTypography>
+                    </Typography>
                   </CustomTableCell>
                 </TableRow>
 
                 <TableRow>
                   <CustomTableCell>
-                    <SmallTypography variant="body2" align="center">
+                    <Typography variant="body2" align="center">
                       Row 2, Col 2
-                    </SmallTypography>
+                    </Typography>
                   </CustomTableCell>
                   <CustomTableCell>
-                    <SmallTypography variant="body2" align="center">
+                    <Typography variant="body2" align="center">
                       Row 2, Col 3
-                    </SmallTypography>
+                    </Typography>
                   </CustomTableCell>
                   <CustomTableCell>
-                    <SmallTypography variant="body2" align="center">
+                    <Typography variant="body2" align="center">
                       Row 2, Col 4
-                    </SmallTypography>
+                    </Typography>
                   </CustomTableCell>
                   <CustomTableCell>
-                    <SmallTypography variant="body2" align="center">
+                    <Typography variant="body2" align="center">
                       Row 2, Col 5
-                    </SmallTypography>
+                    </Typography>
                   </CustomTableCell>
                   <CustomTableCell>
-                    <SmallTypography variant="body2" align="center">
+                    <Typography variant="body2" align="center">
                       Row 2, Col 6
-                    </SmallTypography>
+                    </Typography>
                   </CustomTableCell>
                 </TableRow>
 
                 <TableRow>
                   <CustomTableCell>
-                    <SmallTypography variant="body2" align="center">
+                    <Typography variant="body2" align="center">
                       Row 3, Col 2
-                    </SmallTypography>
+                    </Typography>
                   </CustomTableCell>
                   <CustomTableCell>
-                    <SmallTypography variant="body2" align="center">
+                    <Typography variant="body2" align="center">
                       Row 3, Col 3
-                    </SmallTypography>
+                    </Typography>
                   </CustomTableCell>
                   <CustomTableCell>
-                    <SmallTypography variant="body2" align="center">
+                    <Typography variant="body2" align="center">
                       Row 3, Col 4
-                    </SmallTypography>
+                    </Typography>
                   </CustomTableCell>
                   <CustomTableCell>
-                    <SmallTypography variant="body2" align="center">
+                    <Typography variant="body2" align="center">
                       Row 3, Col 5
-                    </SmallTypography>
+                    </Typography>
                   </CustomTableCell>
                   <CustomTableCell>
-                    <SmallTypography variant="body2" align="center">
+                    <Typography variant="body2" align="center">
                       Row 3, Col 6
-                    </SmallTypography>
+                    </Typography>
                   </CustomTableCell>
                 </TableRow>
               </TableBody>
@@ -323,32 +315,32 @@ const ThreeRowTable = () => {
                 {/* First Row */}
                 <TableRow>
                   <CustomTableCell rowSpan={3}>
-                    <SmallTypography variant="body2" align="center">
+                    <Typography variant="body2" align="center">
                       Row 1, Col 1
-                    </SmallTypography>
+                    </Typography>
                   </CustomTableCell>
                   <CustomTableCell>
-                    <SmallTypography variant="body2" align="center">
+                    <Typography variant="body2" align="center">
                       Row 1, Col 2
-                    </SmallTypography>
+                    </Typography>
                   </CustomTableCell>
                 </TableRow>
 
                 {/* Second Row */}
                 <TableRow>
                   <CustomTableCell>
-                    <SmallTypography variant="body2" align="center">
+                    <Typography variant="body2" align="center">
                       Row 2, Col 2
-                    </SmallTypography>
+                    </Typography>
                   </CustomTableCell>
                 </TableRow>
 
                 {/* Third Row */}
                 <TableRow>
                   <CustomTableCell>
-                    <SmallTypography variant="body2" align="center">
+                    <Typography variant="body2" align="center">
                       Row 3, Col 2
-                    </SmallTypography>
+                    </Typography>
                   </CustomTableCell>
                 </TableRow>
               </TableBody>
@@ -356,165 +348,165 @@ const ThreeRowTable = () => {
           </Grid>
         </Grid>
 
-        <Grid sx={{ mt: 1 }}>
+        <Grid sx={{ mt: 2 }}>
           <Table sx={{ height: 100 }}>
             <TableBody>
               {/* First Row */}
               <TableRow>
                 <CustomTableCell rowSpan={4}>
-                  <SmallTypography variant="body2" align="center">
+                  <Typography variant="body2" align="center">
                     Row 1, Col 1
-                  </SmallTypography>
+                  </Typography>
                 </CustomTableCell>
                 <CustomTableCell>
-                  <SmallTypography variant="body2" align="center">
+                  <Typography variant="body2" align="center">
                     Row 1, Col 2
-                  </SmallTypography>
+                  </Typography>
                 </CustomTableCell>
                 <CustomTableCell>
-                  <SmallTypography variant="body2" align="center">
+                  <Typography variant="body2" align="center">
                     Row 1, Col 3
-                  </SmallTypography>
+                  </Typography>
                 </CustomTableCell>
                 <CustomTableCell>
-                  <SmallTypography variant="body2" align="center">
+                  <Typography variant="body2" align="center">
                     Row 1, Col 4
-                  </SmallTypography>
+                  </Typography>
                 </CustomTableCell>
                 <CustomTableCell>
-                  <SmallTypography variant="body2" align="center">
+                  <Typography variant="body2" align="center">
                     Row 1, Col 5
-                  </SmallTypography>
+                  </Typography>
                 </CustomTableCell>
                 <CustomTableCell>
-                  <SmallTypography variant="body2" align="center">
+                  <Typography variant="body2" align="center">
                     Row 1, Col 6
-                  </SmallTypography>
+                  </Typography>
                 </CustomTableCell>
                 <CustomTableCell>
-                  <SmallTypography variant="body2" align="center">
+                  <Typography variant="body2" align="center">
                     Row 1, Col 5
-                  </SmallTypography>
+                  </Typography>
                 </CustomTableCell>
                 <CustomTableCell>
-                  <SmallTypography variant="body2" align="center">
+                  <Typography variant="body2" align="center">
                     Row 1, Col 6
-                  </SmallTypography>
+                  </Typography>
                 </CustomTableCell>
               </TableRow>
 
               {/* Second Row */}
               <TableRow>
                 <CustomTableCell>
-                  <SmallTypography variant="body2" align="center">
+                  <Typography variant="body2" align="center">
                     Row 2, Col 2
-                  </SmallTypography>
+                  </Typography>
                 </CustomTableCell>
                 <CustomTableCell>
-                  <SmallTypography variant="body2" align="center">
+                  <Typography variant="body2" align="center">
                     Row 2, Col 3
-                  </SmallTypography>
+                  </Typography>
                 </CustomTableCell>
                 <CustomTableCell>
-                  <SmallTypography variant="body2" align="center">
+                  <Typography variant="body2" align="center">
                     Row 2, Col 4
-                  </SmallTypography>
+                  </Typography>
                 </CustomTableCell>
                 <CustomTableCell>
-                  <SmallTypography variant="body2" align="center">
+                  <Typography variant="body2" align="center">
                     Row 2, Col 5
-                  </SmallTypography>
+                  </Typography>
                 </CustomTableCell>
                 <CustomTableCell>
-                  <SmallTypography variant="body2" align="center">
+                  <Typography variant="body2" align="center">
                     Row 2, Col 6
-                  </SmallTypography>
+                  </Typography>
                 </CustomTableCell>
                 <CustomTableCell>
-                  <SmallTypography variant="body2" align="center">
+                  <Typography variant="body2" align="center">
                     Row 1, Col 5
-                  </SmallTypography>
+                  </Typography>
                 </CustomTableCell>
                 <CustomTableCell>
-                  <SmallTypography variant="body2" align="center">
+                  <Typography variant="body2" align="center">
                     Row 1, Col 6
-                  </SmallTypography>
+                  </Typography>
                 </CustomTableCell>
               </TableRow>
 
               {/* Third Row */}
               <TableRow>
                 <CustomTableCell>
-                  <SmallTypography variant="body2" align="center">
+                  <Typography variant="body2" align="center">
                     Row 3, Col 2
-                  </SmallTypography>
+                  </Typography>
                 </CustomTableCell>
                 <CustomTableCell>
-                  <SmallTypography variant="body2" align="center">
+                  <Typography variant="body2" align="center">
                     Row 3, Col 3
-                  </SmallTypography>
+                  </Typography>
                 </CustomTableCell>
                 <CustomTableCell>
-                  <SmallTypography variant="body2" align="center">
+                  <Typography variant="body2" align="center">
                     Row 3, Col 4
-                  </SmallTypography>
+                  </Typography>
                 </CustomTableCell>
                 <CustomTableCell>
-                  <SmallTypography variant="body2" align="center">
+                  <Typography variant="body2" align="center">
                     Row 3, Col 5
-                  </SmallTypography>
+                  </Typography>
                 </CustomTableCell>
                 <CustomTableCell>
-                  <SmallTypography variant="body2" align="center">
+                  <Typography variant="body2" align="center">
                     Row 3, Col 6
-                  </SmallTypography>
+                  </Typography>
                 </CustomTableCell>
                 <CustomTableCell>
-                  <SmallTypography variant="body2" align="center">
+                  <Typography variant="body2" align="center">
                     Row 1, Col 5
-                  </SmallTypography>
+                  </Typography>
                 </CustomTableCell>
                 <CustomTableCell>
-                  <SmallTypography variant="body2" align="center">
+                  <Typography variant="body2" align="center">
                     Row 1, Col 6
-                  </SmallTypography>
+                  </Typography>
                 </CustomTableCell>
               </TableRow>
               <TableRow>
                 <CustomTableCell>
-                  <SmallTypography variant="body2" align="center">
+                  <Typography variant="body2" align="center">
                     Row 2, Col 2
-                  </SmallTypography>
+                  </Typography>
                 </CustomTableCell>
                 <CustomTableCell>
-                  <SmallTypography variant="body2" align="center">
+                  <Typography variant="body2" align="center">
                     Row 2, Col 3
-                  </SmallTypography>
+                  </Typography>
                 </CustomTableCell>
                 <CustomTableCell>
-                  <SmallTypography variant="body2" align="center">
+                  <Typography variant="body2" align="center">
                     Row 2, Col 4
-                  </SmallTypography>
+                  </Typography>
                 </CustomTableCell>
                 <CustomTableCell>
-                  <SmallTypography variant="body2" align="center">
+                  <Typography variant="body2" align="center">
                     Row 2, Col 5
-                  </SmallTypography>
+                  </Typography>
                 </CustomTableCell>
                 <CustomTableCell>
-                  <SmallTypography variant="body2" align="center">
+                  <Typography variant="body2" align="center">
                     Row 2, Col 6
-                  </SmallTypography>
+                  </Typography>
                 </CustomTableCell>
                 <CustomTableCell>
-                  <SmallTypography variant="body2" align="center">
+                  <Typography variant="body2" align="center">
                     Row 1, Col 5
-                  </SmallTypography>
+                  </Typography>
                 </CustomTableCell>
                 <CustomTableCell>
-                  <SmallTypography variant="body2" align="center">
+                  <Typography variant="body2" align="center">
                     Row 1, Col 6
-                  </SmallTypography>
+                  </Typography>
                 </CustomTableCell>
               </TableRow>
             </TableBody>
@@ -527,159 +519,159 @@ const ThreeRowTable = () => {
               {/* First Row */}
               <TableRow>
                 <CustomTableCell rowSpan={4}>
-                  <SmallTypography variant="body2" align="center">
+                  <Typography variant="body2" align="center">
                     Row 1, Col 1
-                  </SmallTypography>
+                  </Typography>
                 </CustomTableCell>
                 <CustomTableCell>
-                  <SmallTypography variant="body2" align="center">
+                  <Typography variant="body2" align="center">
                     Row 1, Col 2
-                  </SmallTypography>
+                  </Typography>
                 </CustomTableCell>
                 <CustomTableCell>
-                  <SmallTypography variant="body2" align="center">
+                  <Typography variant="body2" align="center">
                     Row 1, Col 3
-                  </SmallTypography>
+                  </Typography>
                 </CustomTableCell>
                 <CustomTableCell>
-                  <SmallTypography variant="body2" align="center">
+                  <Typography variant="body2" align="center">
                     Row 1, Col 4
-                  </SmallTypography>
+                  </Typography>
                 </CustomTableCell>
                 <CustomTableCell>
-                  <SmallTypography variant="body2" align="center">
+                  <Typography variant="body2" align="center">
                     Row 1, Col 5
-                  </SmallTypography>
+                  </Typography>
                 </CustomTableCell>
                 <CustomTableCell>
-                  <SmallTypography variant="body2" align="center">
+                  <Typography variant="body2" align="center">
                     Row 1, Col 6
-                  </SmallTypography>
+                  </Typography>
                 </CustomTableCell>
                 <CustomTableCell>
-                  <SmallTypography variant="body2" align="center">
+                  <Typography variant="body2" align="center">
                     Row 1, Col 5
-                  </SmallTypography>
+                  </Typography>
                 </CustomTableCell>
                 <CustomTableCell>
-                  <SmallTypography variant="body2" align="center">
+                  <Typography variant="body2" align="center">
                     Row 1, Col 6
-                  </SmallTypography>
+                  </Typography>
                 </CustomTableCell>
               </TableRow>
 
               {/* Second Row */}
               <TableRow>
                 <CustomTableCell>
-                  <SmallTypography variant="body2" align="center">
+                  <Typography variant="body2" align="center">
                     Row 2, Col 2
-                  </SmallTypography>
+                  </Typography>
                 </CustomTableCell>
                 <CustomTableCell>
-                  <SmallTypography variant="body2" align="center">
+                  <Typography variant="body2" align="center">
                     Row 2, Col 3
-                  </SmallTypography>
+                  </Typography>
                 </CustomTableCell>
                 <CustomTableCell>
-                  <SmallTypography variant="body2" align="center">
+                  <Typography variant="body2" align="center">
                     Row 2, Col 4
-                  </SmallTypography>
+                  </Typography>
                 </CustomTableCell>
                 <CustomTableCell>
-                  <SmallTypography variant="body2" align="center">
+                  <Typography variant="body2" align="center">
                     Row 2, Col 5
-                  </SmallTypography>
+                  </Typography>
                 </CustomTableCell>
                 <CustomTableCell>
-                  <SmallTypography variant="body2" align="center">
+                  <Typography variant="body2" align="center">
                     Row 2, Col 6
-                  </SmallTypography>
+                  </Typography>
                 </CustomTableCell>
                 <CustomTableCell>
-                  <SmallTypography variant="body2" align="center">
+                  <Typography variant="body2" align="center">
                     Row 1, Col 5
-                  </SmallTypography>
+                  </Typography>
                 </CustomTableCell>
                 <CustomTableCell>
-                  <SmallTypography variant="body2" align="center">
+                  <Typography variant="body2" align="center">
                     Row 1, Col 6
-                  </SmallTypography>
+                  </Typography>
                 </CustomTableCell>
               </TableRow>
 
               {/* Third Row */}
               <TableRow>
                 <CustomTableCell>
-                  <SmallTypography variant="body2" align="center">
+                  <Typography variant="body2" align="center">
                     Row 3, Col 2
-                  </SmallTypography>
+                  </Typography>
                 </CustomTableCell>
                 <CustomTableCell>
-                  <SmallTypography variant="body2" align="center">
+                  <Typography variant="body2" align="center">
                     Row 3, Col 3
-                  </SmallTypography>
+                  </Typography>
                 </CustomTableCell>
                 <CustomTableCell>
-                  <SmallTypography variant="body2" align="center">
+                  <Typography variant="body2" align="center">
                     Row 3, Col 4
-                  </SmallTypography>
+                  </Typography>
                 </CustomTableCell>
                 <CustomTableCell>
-                  <SmallTypography variant="body2" align="center">
+                  <Typography variant="body2" align="center">
                     Row 3, Col 5
-                  </SmallTypography>
+                  </Typography>
                 </CustomTableCell>
                 <CustomTableCell>
-                  <SmallTypography variant="body2" align="center">
+                  <Typography variant="body2" align="center">
                     Row 3, Col 6
-                  </SmallTypography>
+                  </Typography>
                 </CustomTableCell>
                 <CustomTableCell>
-                  <SmallTypography variant="body2" align="center">
+                  <Typography variant="body2" align="center">
                     Row 1, Col 5
-                  </SmallTypography>
+                  </Typography>
                 </CustomTableCell>
                 <CustomTableCell>
-                  <SmallTypography variant="body2" align="center">
+                  <Typography variant="body2" align="center">
                     Row 1, Col 6
-                  </SmallTypography>
+                  </Typography>
                 </CustomTableCell>
               </TableRow>
               <TableRow>
                 <CustomTableCell>
-                  <SmallTypography variant="body2" align="center">
+                  <Typography variant="body2" align="center">
                     Row 2, Col 2
-                  </SmallTypography>
+                  </Typography>
                 </CustomTableCell>
                 <CustomTableCell>
-                  <SmallTypography variant="body2" align="center">
+                  <Typography variant="body2" align="center">
                     Row 2, Col 3
-                  </SmallTypography>
+                  </Typography>
                 </CustomTableCell>
                 <CustomTableCell>
-                  <SmallTypography variant="body2" align="center">
+                  <Typography variant="body2" align="center">
                     Row 2, Col 4
-                  </SmallTypography>
+                  </Typography>
                 </CustomTableCell>
                 <CustomTableCell>
-                  <SmallTypography variant="body2" align="center">
+                  <Typography variant="body2" align="center">
                     Row 2, Col 5
-                  </SmallTypography>
+                  </Typography>
                 </CustomTableCell>
                 <CustomTableCell>
-                  <SmallTypography variant="body2" align="center">
+                  <Typography variant="body2" align="center">
                     Row 2, Col 6
-                  </SmallTypography>
+                  </Typography>
                 </CustomTableCell>
                 <CustomTableCell>
-                  <SmallTypography variant="body2" align="center">
+                  <Typography variant="body2" align="center">
                     Row 1, Col 5
-                  </SmallTypography>
+                  </Typography>
                 </CustomTableCell>
                 <CustomTableCell>
-                  <SmallTypography variant="body2" align="center">
+                  <Typography variant="body2" align="center">
                     Row 1, Col 6
-                  </SmallTypography>
+                  </Typography>
                 </CustomTableCell>
               </TableRow>
             </TableBody>
@@ -689,19 +681,14 @@ const ThreeRowTable = () => {
           type="text"
           label="備考"
           name="remarks"
+          value=""
           fullWidth
-          sx={{ mt: 2 }}
-          multiline
-          rows={10}
+          sx={{ mt: 4 }}
+          rows={15}
           maxRows={15}
         />
       </Paper>
-      <Box
-        id="salary-slip"
-        sx={{ position: "absolute", top: "-10000px", left: "-10000px" }}
-      >
-        <SalarySlip />
-      </Box>
+{/* 
       <Button
         onClick={exportAsPDF}
         variant="contained"
@@ -709,7 +696,7 @@ const ThreeRowTable = () => {
         sx={{ mt: 4 }}
       >
         Export as PDF
-      </Button>
+      </Button> */}
     </Box>
   );
 };
