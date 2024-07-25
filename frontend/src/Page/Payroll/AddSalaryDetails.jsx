@@ -36,10 +36,6 @@ const AddSalary = () => {
     <React.Fragment>
       <EmployeeHeader titleKey="addSalaryForm" />
       <EmployeeSearch onSearch={handleSearch} />
-      {/* <CustomTabs sections={sections} onSubmit={handleSubmit} /> */}
-      {/* {selectedEmployee && (
-        <CustomTabsForSalary sections={sections} onSubmit={handleSubmit} initialData={selectedEmployee} />
-      )} */}
 
       {selectedEmployee ? (
         <Box sx={{ p: 3 }}>

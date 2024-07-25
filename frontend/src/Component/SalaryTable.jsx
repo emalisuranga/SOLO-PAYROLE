@@ -56,6 +56,12 @@ const SalaryTable = ({ salaries, onDelete }) => {
     handleActionClose();
   };
 
+  const handlePrintPDF = (row) => {
+    // onView(row.id);
+    navigate(`/salary-slip/${row.employeeId}/${row.id}`);
+    handleActionClose();
+  };
+
   const handleDialogClose = () => {
     setOpenDialog(false);
     setCurrentRow(null);
@@ -120,6 +126,9 @@ const SalaryTable = ({ salaries, onDelete }) => {
                     </MenuItem>
                     <MenuItem onClick={() => handleEdit(currentRow)}>
                       {t("Edit")}
+                    </MenuItem>
+                    <MenuItem onClick={() => handlePrintPDF(currentRow)}>
+                      {t("printPDF")}
                     </MenuItem>
                     <MenuItem onClick={() => setOpenDialog(true)}>
                       {t("Delete")}

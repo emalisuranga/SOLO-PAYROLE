@@ -26,6 +26,7 @@
   "pleaseSelectEmployee": "Please select an employee to continue and make salary details.",
   "Month": "Month",
   "Year": "Year",
+  "printPDF": "Print PDF",
   "actions": {
     "add_success": "Employee added successfully",
     "update_success": "Employee updated successfully",
@@ -124,5 +125,9 @@
     "bankName": "Bank Name",
     "basicSalary": "Basic Salary",
     "totalAllowance": "Total Allowance"
+  },
+  "button": {
+    "exportAsPDF": "Export as PDF",
+    "backToSalaryDetails": "Back to Salary Details"
   }
 }

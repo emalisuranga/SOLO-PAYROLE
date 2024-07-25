@@ -46,6 +46,7 @@ function CustomTabs({ sections, mode = 'add', initialData = {} }) {
       setErrors(validationErrors);
       return;
     }
+    setErrors({});
 
     try {
       if (mode === 'edit') {

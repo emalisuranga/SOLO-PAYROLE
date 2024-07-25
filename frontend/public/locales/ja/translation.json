@@ -28,6 +28,8 @@
   "pleaseSelectEmployee": "給与詳細を作成するには従業員を選択してください。",
   "Month": "月",
   "Year": "年",
+  "printPDF": "PDFを印刷",
+  "exportAsPDF": "PDFとしてエクスポート",
   "actions": {
     "add_success": "データが正常に追加されました",
     "update_success": "データが正常に更新されました",
@@ -126,5 +128,9 @@
     "bankName": "銀行名",
     "basicSalary": "基本給",
     "totalAllowance": "総手当"
+  },
+  "button": {
+    "exportAsPDF": "PDFとしてエクスポート",
+    "backToSalaryDetails": "給料明細に戻る"
   }
 }

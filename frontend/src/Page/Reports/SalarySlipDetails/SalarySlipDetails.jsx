@@ -9,6 +9,7 @@ import {
   Button,
   Typography,
   TextField,
+  Stack,
 } from "@mui/material";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
@@ -22,8 +23,13 @@ import {
 } from "./SalarySlipDetails.styles";
 import { generatePaymentText } from "../../../utils/dateUtils";
 import SalarySlipPrint from "../SalarySlipPrint";
+import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 
 const SalarySlipDetails = () => {
+  const { t } = useTranslation();
+  const navigate = useNavigate();
+
   const { employeeId, paymentDetailsId } = useParams();
   const { salarySlip, loading, error, fetchSalarySlipDetails } =
     useSalarySlipStore();
@@ -39,26 +45,26 @@ const SalarySlipDetails = () => {
     ? generatePaymentText(salarySlip.year, salarySlip.month)
     : "";
 
-    const exportAsPDF = async () => {
-      const input = document.getElementById("salary-slip");
-    
-      // Reduce the scale for lower resolution and smaller size
-      const canvas = await html2canvas(input, { scale: 1.5, useCORS: true }); 
-      let imgData = canvas.toDataURL("image/jpeg", 0.8); // Use JPEG format and reduce quality to 80%
-    
-      const pdf = new jsPDF({
-        orientation: "portrait",
-        unit: "pt",
-        format: "a4",
-      });
-    
-      const imgProps = pdf.getImageProperties(imgData);
-      const pdfWidth = pdf.internal.pageSize.getWidth();
-      const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
-    
-      pdf.addImage(imgData, "JPEG", 0, 0, pdfWidth, pdfHeight); // Use JPEG instead of PNG
-      pdf.save("salary-slip.pdf");
-    };
+  const exportAsPDF = async () => {
+    const input = document.getElementById("salary-slip");
+
+    // Reduce the scale for lower resolution and smaller size
+    const canvas = await html2canvas(input, { scale: 1.5, useCORS: true });
+    let imgData = canvas.toDataURL("image/jpeg", 0.8); // Use JPEG format and reduce quality to 80%
+
+    const pdf = new jsPDF({
+      orientation: "portrait",
+      unit: "pt",
+      format: "a4",
+    });
+
+    const imgProps = pdf.getImageProperties(imgData);
+    const pdfWidth = pdf.internal.pageSize.getWidth();
+    const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+
+    pdf.addImage(imgData, "JPEG", 0, 0, pdfWidth, pdfHeight); // Use JPEG instead of PNG
+    pdf.save("salary-slip.pdf");
+  };
 
   if (loading) {
     return (
@@ -437,7 +443,7 @@ const SalarySlipDetails = () => {
               <TableRow>
                 <CustomTableCell>
                   <SmallTypography variant="body2" align="center">
-                  {`${salarySlip.earnings.basicSalary}`}
+                    {`${salarySlip.earnings.basicSalary}`}
                   </SmallTypography>
                 </CustomTableCell>
                 <CustomTableCell>
@@ -745,8 +751,9 @@ const SalarySlipDetails = () => {
           value=""
           fullWidth
           sx={{ mt: 4 }}
-          rows={15}
-          maxRows={15}
+          multiline
+          minRows={10}
+          maxRows={10}
         />
       </Paper>
 
@@ -757,14 +764,18 @@ const SalarySlipDetails = () => {
         <SalarySlipPrint salarySlip={salarySlip} />
       </Box>
 
-      <Button
-        onClick={exportAsPDF}
-        variant="contained"
-        color="primary"
-        sx={{ mt: 4 }}
-      >
-        Export as PDF
-      </Button>
+      <Stack direction="row" spacing={2} sx={{ mt: 4 }}>
+        <Button onClick={exportAsPDF} variant="contained" color="primary">
+          {t("button.exportAsPDF")}
+        </Button>
+        <Button
+          onClick={() => navigate("/salary-details")}
+          variant="outlined"
+          color="primary"
+        >
+          {t("button.backToSalaryDetails")}
+        </Button>
+      </Stack>
     </Box>
   );
 };
