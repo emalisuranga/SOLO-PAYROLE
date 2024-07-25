@@ -1,47 +1,52 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Table,
   TableBody,
   TableRow,
-  TableCell,
   Box,
   Paper,
   Grid,
-  Button,
   Typography,
   TextField,
 } from "@mui/material";
-import { styled } from "@mui/material/styles";
-import jsPDF from "jspdf";
-import html2canvas from "html2canvas";
+import {
+  CustomTableCell,
+  VerticalTableCell,
+} from "./SalarySlipDetails/SalarySlipDetails.styles";
 import { generatePaymentText } from "../../utils/dateUtils";
 
-const CustomTableCell = styled(TableCell)({
-  border: "2px solid black",
-  width: "150px",
-  padding: "8px",
-  boxSizing: "border-box",
-  height: "50px",
-});
-
 const SalarySlipPrint = ({ salarySlip }) => {
-  const paymentText = generatePaymentText(salarySlip.year, salarySlip.month);
+
+  useEffect(() => {
+    const adjustScale = () => {
+      const content = document.getElementById('salary-slip');
+      const scale = Math.min(window.innerWidth / content.offsetWidth, 1);
+      content.style.transform = `scale(${scale})`;
+    };
+
+    window.addEventListener('resize', adjustScale);
+    adjustScale();
+
+    return () => window.removeEventListener('resize', adjustScale);
+  }, );
+
+  const paymentText = salarySlip
+    ? generatePaymentText(salarySlip.year, salarySlip.month)
+    : "";
+
+  if (!salarySlip) {
+    return null;
+  }
 
   return (
     <Box
       sx={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        width: "100%",
         mt: 4,
       }}
     >
       <Paper
         id="salary-slip"
         sx={{
-          width: "100%",
-          maxWidth: "100%",
           p: 2,
         }}
       >
@@ -85,7 +90,7 @@ const SalarySlipPrint = ({ salarySlip }) => {
           </TableBody>
         </Table>
 
-        <Box sx={{ mt: 4 }}>
+        <Box sx={{ mt: 1 }}>
           <Table sx={{ width: "250px" }}>
             <TableBody>
               <TableRow>
@@ -124,13 +129,13 @@ const SalarySlipPrint = ({ salarySlip }) => {
           </Table>
         </Box>
 
-        <Grid container spacing={2} sx={{ mt: 6 }}>
+        <Grid container spacing={2} sx={{ mt: 10 }}>
           <Grid item xs={5}>
             <Typography variant="body2" align="left">
               {paymentText}
             </Typography>
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={3}>
             <Typography variant="h5" align="left">
               給料明細書
             </Typography>
@@ -139,7 +144,7 @@ const SalarySlipPrint = ({ salarySlip }) => {
 
         <Box
           sx={{
-            mt: 4,
+            mt: 2,
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
@@ -161,7 +166,7 @@ const SalarySlipPrint = ({ salarySlip }) => {
                 </CustomTableCell>
                 <CustomTableCell>
                   <Typography variant="body2" align="center">
-                    部門名
+                    社員NO
                   </Typography>
                 </CustomTableCell>
                 <CustomTableCell>
@@ -172,7 +177,7 @@ const SalarySlipPrint = ({ salarySlip }) => {
                 </CustomTableCell>
                 <CustomTableCell>
                   <Typography variant="body2" align="center">
-                    部門名
+                    氏名
                   </Typography>
                 </CustomTableCell>
                 <CustomTableCell>
@@ -186,95 +191,104 @@ const SalarySlipPrint = ({ salarySlip }) => {
           </Table>
         </Box>
 
-        <Grid container spacing={2} sx={{ mt: 1 }}>
+        <Grid container columnSpacing={{ md: 30 }} sx={{ mt: 1 }}>
           <Grid item xs={8}>
-            <Table sx={{ height: 100 }}>
+            <Table sx={{ height: 100, width: "100%" }}>
               <TableBody>
                 <TableRow>
-                  <CustomTableCell rowSpan={4}>
+                  <VerticalTableCell rowSpan={4}>
                     <Typography variant="body2" align="center">
-                      Row 1, Col 1
+                      勤怠
+                    </Typography>
+                  </VerticalTableCell>
+                  <CustomTableCell>
+                    <Typography variant="body2" align="center">
+                      {/* 所定労働日数/Scheduled working days */}
+                      所定労働日数
                     </Typography>
                   </CustomTableCell>
                   <CustomTableCell>
                     <Typography variant="body2" align="center">
-                      Row 1, Col 2
+                      出勤日数
                     </Typography>
                   </CustomTableCell>
                   <CustomTableCell>
                     <Typography variant="body2" align="center">
-                      Row 1, Col 3
+                      {/* 法定時間外/Overtime */}
+                      法定時間外
                     </Typography>
                   </CustomTableCell>
                   <CustomTableCell>
                     <Typography variant="body2" align="center">
-                      Row 1, Col 4
-                    </Typography>
-                  </CustomTableCell>
-                  <CustomTableCell>
-                    <Typography variant="body2" align="center">
-                      Row 1, Col 5
-                    </Typography>
-                  </CustomTableCell>
-                  <CustomTableCell>
-                    <Typography variant="body2" align="center">
-                      Row 1, Col 6
+                      遅刻時間
                     </Typography>
                   </CustomTableCell>
                 </TableRow>
-
                 <TableRow>
                   <CustomTableCell>
                     <Typography variant="body2" align="center">
-                      Row 2, Col 2
+                      {`${salarySlip.workDetails.scheduledWorkingDays}`}
                     </Typography>
                   </CustomTableCell>
                   <CustomTableCell>
                     <Typography variant="body2" align="center">
-                      Row 2, Col 3
+                      {`${salarySlip.workDetails.numberOfWorkingDays}`}
                     </Typography>
                   </CustomTableCell>
                   <CustomTableCell>
                     <Typography variant="body2" align="center">
-                      Row 2, Col 4
+                      {`${salarySlip.workDetails.overtime}`}
                     </Typography>
                   </CustomTableCell>
                   <CustomTableCell>
                     <Typography variant="body2" align="center">
-                      Row 2, Col 5
-                    </Typography>
-                  </CustomTableCell>
-                  <CustomTableCell>
-                    <Typography variant="body2" align="center">
-                      Row 2, Col 6
+                      {`${salarySlip.workDetails.timeLate}`}
                     </Typography>
                   </CustomTableCell>
                 </TableRow>
-
                 <TableRow>
                   <CustomTableCell>
                     <Typography variant="body2" align="center">
-                      Row 3, Col 2
+                      早退時間
                     </Typography>
                   </CustomTableCell>
                   <CustomTableCell>
                     <Typography variant="body2" align="center">
-                      Row 3, Col 3
+                      {/* 控除時間/Deductions */}
+                      控除時間
                     </Typography>
                   </CustomTableCell>
                   <CustomTableCell>
                     <Typography variant="body2" align="center">
-                      Row 3, Col 4
+                      {/* 有給休暇日数/Number of paid holidays */}
+                      有給休暇日数
                     </Typography>
                   </CustomTableCell>
                   <CustomTableCell>
                     <Typography variant="body2" align="center">
-                      Row 3, Col 5
+                      残有給日数
+                    </Typography>
+                  </CustomTableCell>
+                </TableRow>
+                <TableRow>
+                  <CustomTableCell>
+                    <Typography variant="body2" align="center">
+                      {`${salarySlip.workDetails.timeLeavingEarly}`}
                     </Typography>
                   </CustomTableCell>
                   <CustomTableCell>
                     <Typography variant="body2" align="center">
-                      Row 3, Col 6
+                      {`${salarySlip.workDetails.timeLeavingEarly}`}
+                    </Typography>
+                  </CustomTableCell>
+                  <CustomTableCell>
+                    <Typography variant="body2" align="center">
+                      {`${salarySlip.workDetails.numberOfPaidHolidays}`}
+                    </Typography>
+                  </CustomTableCell>
+                  <CustomTableCell>
+                    <Typography variant="body2" align="center">
+                      {`${salarySlip.workDetails.remainingPaidVacationDays}`}
                     </Typography>
                   </CustomTableCell>
                 </TableRow>
@@ -282,38 +296,20 @@ const SalarySlipPrint = ({ salarySlip }) => {
             </Table>
           </Grid>
 
-          {/* Second Table */}
           <Grid item xs={4}>
-            <Table>
+            <Table sx={{ height: 100, width: "100%" }}>
               <TableBody>
-                {/* First Row */}
                 <TableRow>
-                  <CustomTableCell rowSpan={3}>
-                    <Typography variant="body2" align="center">
-                      Row 1, Col 1
-                    </Typography>
-                  </CustomTableCell>
                   <CustomTableCell>
-                    <Typography variant="body2" align="center">
-                      Row 1, Col 2
+                    <Typography variant="h4" align="center">
+                      差引支給額
                     </Typography>
                   </CustomTableCell>
                 </TableRow>
-
-                {/* Second Row */}
                 <TableRow>
                   <CustomTableCell>
-                    <Typography variant="body2" align="center">
-                      Row 2, Col 2
-                    </Typography>
-                  </CustomTableCell>
-                </TableRow>
-
-                {/* Third Row */}
-                <TableRow>
-                  <CustomTableCell>
-                    <Typography variant="body2" align="center">
-                      Row 3, Col 2
+                    <Typography variant="h4" align="center">
+                      {`${salarySlip.netSalary}`}
                     </Typography>
                   </CustomTableCell>
                 </TableRow>
@@ -322,50 +318,49 @@ const SalarySlipPrint = ({ salarySlip }) => {
           </Grid>
         </Grid>
 
-        <Grid sx={{ mt: 2 }}>
+        <Grid sx={{ mt: 1 }}>
           <Table sx={{ height: 100 }}>
             <TableBody>
               {/* First Row */}
               <TableRow>
-                <CustomTableCell rowSpan={4}>
+                <VerticalTableCell rowSpan={4}>
                   <Typography variant="body2" align="center">
-                    Row 1, Col 1
+                    支給
+                  </Typography>
+                </VerticalTableCell>
+                <CustomTableCell>
+                  <Typography variant="body2" align="center">
+                    役員報酬
                   </Typography>
                 </CustomTableCell>
                 <CustomTableCell>
                   <Typography variant="body2" align="center">
-                    Row 1, Col 2
+                    {/* 残業手当/overtime pay */}
+                    残業手当
                   </Typography>
                 </CustomTableCell>
                 <CustomTableCell>
                   <Typography variant="body2" align="center">
-                    Row 1, Col 3
+                    {/* 交通費/Transportation costs */}
+                    交通費
                   </Typography>
                 </CustomTableCell>
                 <CustomTableCell>
                   <Typography variant="body2" align="center">
-                    Row 1, Col 4
+                    {/* 家族手当/Family allowance */}
+                    家族手当
                   </Typography>
                 </CustomTableCell>
                 <CustomTableCell>
                   <Typography variant="body2" align="center">
-                    Row 1, Col 5
+                    精勤手当
                   </Typography>
                 </CustomTableCell>
                 <CustomTableCell>
-                  <Typography variant="body2" align="center">
-                    Row 1, Col 6
-                  </Typography>
+                  <Typography variant="body2" align="center"></Typography>
                 </CustomTableCell>
                 <CustomTableCell>
-                  <Typography variant="body2" align="center">
-                    Row 1, Col 5
-                  </Typography>
-                </CustomTableCell>
-                <CustomTableCell>
-                  <Typography variant="body2" align="center">
-                    Row 1, Col 6
-                  </Typography>
+                  <Typography variant="body2" align="center"></Typography>
                 </CustomTableCell>
               </TableRow>
 
@@ -373,113 +368,95 @@ const SalarySlipPrint = ({ salarySlip }) => {
               <TableRow>
                 <CustomTableCell>
                   <Typography variant="body2" align="center">
-                    Row 2, Col 2
+                  {`${salarySlip.earnings.basicSalary}`}
                   </Typography>
                 </CustomTableCell>
                 <CustomTableCell>
                   <Typography variant="body2" align="center">
-                    Row 2, Col 3
+                    {`${salarySlip.earnings.overtimePay}`}
                   </Typography>
                 </CustomTableCell>
                 <CustomTableCell>
                   <Typography variant="body2" align="center">
-                    Row 2, Col 4
+                    {`${salarySlip.earnings.transportationCosts}`}
                   </Typography>
                 </CustomTableCell>
                 <CustomTableCell>
                   <Typography variant="body2" align="center">
-                    Row 2, Col 5
+                    {`${salarySlip.earnings.familyAllowance}`}
                   </Typography>
                 </CustomTableCell>
                 <CustomTableCell>
                   <Typography variant="body2" align="center">
-                    Row 2, Col 6
+                    {`${salarySlip.earnings.attendanceAllowance}`}
                   </Typography>
                 </CustomTableCell>
                 <CustomTableCell>
-                  <Typography variant="body2" align="center">
-                    Row 1, Col 5
-                  </Typography>
+                  <Typography variant="body2" align="center"></Typography>
                 </CustomTableCell>
                 <CustomTableCell>
-                  <Typography variant="body2" align="center">
-                    Row 1, Col 6
-                  </Typography>
+                  <Typography variant="body2" align="center"></Typography>
                 </CustomTableCell>
               </TableRow>
 
               {/* Third Row */}
               <TableRow>
                 <CustomTableCell>
+                  <Typography variant="body2" align="center"></Typography>
+                </CustomTableCell>
+                <CustomTableCell>
+                  <Typography variant="body2" align="center"></Typography>
+                </CustomTableCell>
+                <CustomTableCell>
+                  <Typography variant="body2" align="center"></Typography>
+                </CustomTableCell>
+                <CustomTableCell>
+                  <Typography variant="body2" align="center"></Typography>
+                </CustomTableCell>
+                <CustomTableCell>
                   <Typography variant="body2" align="center">
-                    Row 3, Col 2
+                    {/* 特別手当/Special allowance */}
+                    特別手当
                   </Typography>
                 </CustomTableCell>
                 <CustomTableCell>
                   <Typography variant="body2" align="center">
-                    Row 3, Col 3
+                    {/* 不就労控除/Non-employment deduction */}
+                    不就労控除
                   </Typography>
                 </CustomTableCell>
                 <CustomTableCell>
                   <Typography variant="body2" align="center">
-                    Row 3, Col 4
-                  </Typography>
-                </CustomTableCell>
-                <CustomTableCell>
-                  <Typography variant="body2" align="center">
-                    Row 3, Col 5
-                  </Typography>
-                </CustomTableCell>
-                <CustomTableCell>
-                  <Typography variant="body2" align="center">
-                    Row 3, Col 6
-                  </Typography>
-                </CustomTableCell>
-                <CustomTableCell>
-                  <Typography variant="body2" align="center">
-                    Row 1, Col 5
-                  </Typography>
-                </CustomTableCell>
-                <CustomTableCell>
-                  <Typography variant="body2" align="center">
-                    Row 1, Col 6
+                    総支給額
                   </Typography>
                 </CustomTableCell>
               </TableRow>
               <TableRow>
                 <CustomTableCell>
+                  <Typography variant="body2" align="center"></Typography>
+                </CustomTableCell>
+                <CustomTableCell>
+                  <Typography variant="body2" align="center"></Typography>
+                </CustomTableCell>
+                <CustomTableCell>
+                  <Typography variant="body2" align="center"></Typography>
+                </CustomTableCell>
+                <CustomTableCell>
+                  <Typography variant="body2" align="center"></Typography>
+                </CustomTableCell>
+                <CustomTableCell>
                   <Typography variant="body2" align="center">
-                    Row 2, Col 2
+                    {`${salarySlip.earnings.specialAllowance}`}
                   </Typography>
                 </CustomTableCell>
                 <CustomTableCell>
                   <Typography variant="body2" align="center">
-                    Row 2, Col 3
+                    不就労控除/Non-employment deduction
                   </Typography>
                 </CustomTableCell>
                 <CustomTableCell>
                   <Typography variant="body2" align="center">
-                    Row 2, Col 4
-                  </Typography>
-                </CustomTableCell>
-                <CustomTableCell>
-                  <Typography variant="body2" align="center">
-                    Row 2, Col 5
-                  </Typography>
-                </CustomTableCell>
-                <CustomTableCell>
-                  <Typography variant="body2" align="center">
-                    Row 2, Col 6
-                  </Typography>
-                </CustomTableCell>
-                <CustomTableCell>
-                  <Typography variant="body2" align="center">
-                    Row 1, Col 5
-                  </Typography>
-                </CustomTableCell>
-                <CustomTableCell>
-                  <Typography variant="body2" align="center">
-                    Row 1, Col 6
+                    {`${salarySlip.totalEarnings}`}
                   </Typography>
                 </CustomTableCell>
               </TableRow>
@@ -492,44 +469,40 @@ const SalarySlipPrint = ({ salarySlip }) => {
             <TableBody>
               {/* First Row */}
               <TableRow>
-                <CustomTableCell rowSpan={4}>
+                <VerticalTableCell rowSpan={4}>
                   <Typography variant="body2" align="center">
-                    Row 1, Col 1
+                    控除
+                  </Typography>
+                </VerticalTableCell>
+                <CustomTableCell>
+                  <Typography variant="body2" align="center">
+                    介護保険
                   </Typography>
                 </CustomTableCell>
                 <CustomTableCell>
                   <Typography variant="body2" align="center">
-                    Row 1, Col 2
+                    健康保険
                   </Typography>
                 </CustomTableCell>
                 <CustomTableCell>
                   <Typography variant="body2" align="center">
-                    Row 1, Col 3
+                    厚生年金
                   </Typography>
                 </CustomTableCell>
                 <CustomTableCell>
                   <Typography variant="body2" align="center">
-                    Row 1, Col 4
+                    雇用保険
                   </Typography>
                 </CustomTableCell>
                 <CustomTableCell>
-                  <Typography variant="body2" align="center">
-                    Row 1, Col 5
-                  </Typography>
+                  <Typography variant="body2" align="center"></Typography>
+                </CustomTableCell>
+                <CustomTableCell>
+                  <Typography variant="body2" align="center"></Typography>
                 </CustomTableCell>
                 <CustomTableCell>
                   <Typography variant="body2" align="center">
-                    Row 1, Col 6
-                  </Typography>
-                </CustomTableCell>
-                <CustomTableCell>
-                  <Typography variant="body2" align="center">
-                    Row 1, Col 5
-                  </Typography>
-                </CustomTableCell>
-                <CustomTableCell>
-                  <Typography variant="body2" align="center">
-                    Row 1, Col 6
+                    社会保険料計
                   </Typography>
                 </CustomTableCell>
               </TableRow>
@@ -538,37 +511,36 @@ const SalarySlipPrint = ({ salarySlip }) => {
               <TableRow>
                 <CustomTableCell>
                   <Typography variant="body2" align="center">
-                    Row 2, Col 2
+                    {`${salarySlip.deductions.longTermCareInsurance}`}
                   </Typography>
                 </CustomTableCell>
                 <CustomTableCell>
                   <Typography variant="body2" align="center">
-                    Row 2, Col 3
+                    {`${salarySlip.deductions.healthInsurance}`}
                   </Typography>
                 </CustomTableCell>
                 <CustomTableCell>
                   <Typography variant="body2" align="center">
-                    Row 2, Col 4
+                    {`${salarySlip.deductions.employeePensionInsurance}`}
                   </Typography>
                 </CustomTableCell>
                 <CustomTableCell>
                   <Typography variant="body2" align="center">
-                    Row 2, Col 5
+                    {`${salarySlip.deductions.employmentInsurance}`}
                   </Typography>
                 </CustomTableCell>
                 <CustomTableCell>
-                  <Typography variant="body2" align="center">
-                    Row 2, Col 6
-                  </Typography>
+                  <Typography variant="body2" align="center"></Typography>
+                </CustomTableCell>
+                <CustomTableCell>
+                  <Typography variant="body2" align="center"></Typography>
                 </CustomTableCell>
                 <CustomTableCell>
                   <Typography variant="body2" align="center">
-                    Row 1, Col 5
-                  </Typography>
-                </CustomTableCell>
-                <CustomTableCell>
-                  <Typography variant="body2" align="center">
-                    Row 1, Col 6
+                    {salarySlip.deductions.longTermCareInsurance +
+                      salarySlip.deductions.healthInsurance +
+                      salarySlip.deductions.employeePensionInsurance +
+                      salarySlip.deductions.employmentInsurance}
                   </Typography>
                 </CustomTableCell>
               </TableRow>
@@ -576,75 +548,75 @@ const SalarySlipPrint = ({ salarySlip }) => {
               {/* Third Row */}
               <TableRow>
                 <CustomTableCell>
+                  <Typography variant="body2" align="center"></Typography>
+                </CustomTableCell>
+                <CustomTableCell>
                   <Typography variant="body2" align="center">
-                    Row 3, Col 2
+                    年末調整
                   </Typography>
                 </CustomTableCell>
                 <CustomTableCell>
                   <Typography variant="body2" align="center">
-                    Row 3, Col 3
+                    住民税
                   </Typography>
                 </CustomTableCell>
                 <CustomTableCell>
                   <Typography variant="body2" align="center">
-                    Row 3, Col 4
+                    前払金
                   </Typography>
                 </CustomTableCell>
                 <CustomTableCell>
                   <Typography variant="body2" align="center">
-                    Row 3, Col 5
+                    還付金等
                   </Typography>
                 </CustomTableCell>
                 <CustomTableCell>
                   <Typography variant="body2" align="center">
-                    Row 3, Col 6
+                    所得税
                   </Typography>
                 </CustomTableCell>
                 <CustomTableCell>
                   <Typography variant="body2" align="center">
-                    Row 1, Col 5
-                  </Typography>
-                </CustomTableCell>
-                <CustomTableCell>
-                  <Typography variant="body2" align="center">
-                    Row 1, Col 6
+                    控除計
                   </Typography>
                 </CustomTableCell>
               </TableRow>
               <TableRow>
                 <CustomTableCell>
+                  <Typography variant="body2" align="center"></Typography>
+                </CustomTableCell>
+                <CustomTableCell>
                   <Typography variant="body2" align="center">
-                    Row 2, Col 2
+                    {`${salarySlip.deductions.yearEndAdjustment}`}
                   </Typography>
                 </CustomTableCell>
                 <CustomTableCell>
                   <Typography variant="body2" align="center">
-                    Row 2, Col 3
+                    {`${salarySlip.deductions.residentTax}`}
                   </Typography>
                 </CustomTableCell>
                 <CustomTableCell>
                   <Typography variant="body2" align="center">
-                    Row 2, Col 4
+                    {`${salarySlip.deductions.advancePayment}`}
                   </Typography>
                 </CustomTableCell>
                 <CustomTableCell>
                   <Typography variant="body2" align="center">
-                    Row 2, Col 5
+                    {`${salarySlip.deductions.yearEndAdjustment}`}
                   </Typography>
                 </CustomTableCell>
                 <CustomTableCell>
                   <Typography variant="body2" align="center">
-                    Row 2, Col 6
+                    {`${salarySlip.deductions.incomeTax}`}
                   </Typography>
                 </CustomTableCell>
                 <CustomTableCell>
                   <Typography variant="body2" align="center">
-                    Row 1, Col 5
-                  </Typography>
-                </CustomTableCell>
-                <CustomTableCell>
-                  <Typography variant="body2" align="center">
-                    Row 1, Col 6
+                    {salarySlip.deductions.yearEndAdjustment +
+                      salarySlip.deductions.residentTax +
+                      salarySlip.deductions.advancePayment +
+                      salarySlip.deductions.yearEndAdjustment +
+                      salarySlip.deductions.incomeTax}
                   </Typography>
                 </CustomTableCell>
               </TableRow>
@@ -655,15 +627,21 @@ const SalarySlipPrint = ({ salarySlip }) => {
           type="text"
           label="備考"
           name="remarks"
-          value=""
+          value="test"
           fullWidth
           sx={{ mt: 4 }}
-          rows={15}
-          maxRows={15}
+          multiline
+          minRows={10}
+          maxRows={10}
         />
       </Paper>
-      {/* 
-      <Button
+      {/* <Box
+        id="salary-slip"
+        sx={{ position: "absolute", top: "-10000px", left: "-10000px" }}
+      >
+        <SalarySlip />
+      </Box> */}
+      {/* <Button
         onClick={exportAsPDF}
         variant="contained"
         color="primary"

@@ -13,6 +13,7 @@ import EditEmployee from "../Page/Employee/EditEmployee";
 import ViewSalaryDetails from '../Page/Payroll/ViewSalaryDetails';
 import EditSalary from '../Page/Payroll/EditSalary';
 import SalarySlipDetails from '../Page/Reports/SalarySlipDetails/SalarySlipDetails';
+import SalarySlipPrint from '../Page/Reports/SalarySlipPrint';
 
 const AppRoutes = () => (
   <Routes>
@@ -27,6 +28,7 @@ const AppRoutes = () => (
     <Route path="/salary-details" element={<SalaryDetails />} />
     <Route path="/salary-details/edit/:paymentId" element={<EditSalary />} />
     <Route path="/salary-slip/:employeeId/:paymentDetailsId" element={<SalarySlipDetails />} />
+    <Route path="/salary-slip-print/:employeeId/:paymentDetailsId" element={<SalarySlipPrint />} />
     {/* <Route path="/salary-slip" element={<SalarySlipDetails />} /> */}
     
   </Routes>

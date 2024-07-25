@@ -39,57 +39,26 @@ const SalarySlipDetails = () => {
     ? generatePaymentText(salarySlip.year, salarySlip.month)
     : "";
 
-  // const exportAsPDF = async () => {
-  //   const input = document.getElementById("salary-slip");
-
-  //   // Capture the element as a canvas
-  //   const canvas = await html2canvas(input, {
-  //     scale: 2,
-  //   });
-
-  //   const imgData = canvas.toDataURL("image/png");
-
-  //   // A4 size in points (1 point = 1/72 inch)
-  //   const a4Width = 595.28;
-  //   const a4Height = 841.89;
-
-  //   // Get the dimensions of the input element
-  //   const rect = input.getBoundingClientRect();
-  //   const elementWidth = rect.width;
-  //   const elementHeight = rect.height;
-
-  //   // Calculate scale to fit the element within A4 dimensions
-  //   const scaleX = a4Width / elementWidth;
-  //   const scaleY = a4Height / elementHeight;
-  //   const scale = Math.min(scaleX, scaleY);
-
-  //   const pdfWidth = elementWidth * scale;
-  //   const pdfHeight = elementHeight * scale;
-
-  //   // Create a new PDF document with A4 dimensions
-  //   const pdf = new jsPDF({
-  //     orientation: "portrait",
-  //     unit: "pt",
-  //     format: [a4Width, a4Height],
-  //   });
-
-  //   pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
-  //   pdf.save("salary-slip.pdf");
-  // };
-
-  const exportAsPDF = async () => {
-    const input = document.getElementById("salary-slip");
-    const canvas = await html2canvas(input, { scale: 2 });
-    const imgData = canvas.toDataURL("image/png");
-    const pdf = new jsPDF({
-      orientation: "portrait",
-      unit: "pt",
-      format: "a4",
-    });
-
-    pdf.addImage(imgData, "PNG", 0, 0, 595.28, 841.89); // A4 dimensions
-    pdf.save("salary-slip.pdf");
-  };
+    const exportAsPDF = async () => {
+      const input = document.getElementById("salary-slip");
+    
+      // Reduce the scale for lower resolution and smaller size
+      const canvas = await html2canvas(input, { scale: 1.5, useCORS: true }); 
+      let imgData = canvas.toDataURL("image/jpeg", 0.8); // Use JPEG format and reduce quality to 80%
+    
+      const pdf = new jsPDF({
+        orientation: "portrait",
+        unit: "pt",
+        format: "a4",
+      });
+    
+      const imgProps = pdf.getImageProperties(imgData);
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+    
+      pdf.addImage(imgData, "JPEG", 0, 0, pdfWidth, pdfHeight); // Use JPEG instead of PNG
+      pdf.save("salary-slip.pdf");
+    };
 
   if (loading) {
     return (
@@ -137,7 +106,7 @@ const SalarySlipDetails = () => {
       }}
     >
       <Paper
-        id="salary-slip"
+        id="salary-slip1"
         sx={{
           width: "100%",
           maxWidth: "100%",
@@ -468,7 +437,7 @@ const SalarySlipDetails = () => {
               <TableRow>
                 <CustomTableCell>
                   <SmallTypography variant="body2" align="center">
-                    Executive Remuneration
+                  {`${salarySlip.earnings.basicSalary}`}
                   </SmallTypography>
                 </CustomTableCell>
                 <CustomTableCell>
