@@ -58,9 +58,9 @@ const useEmployeeStore = create((set) => ({
       throw error;
     }
   },
-  deleteEmployee: async (id) => {
+  softDeleteEmployee: async (id) => {
     try {
-      const response = await api.delete(`/employees/${id}`);
+      const response = await api.delete(`/employees/soft-delete/${id}`);
       return response.data;
     } catch (error) {
       console.error("Error deleting employee:", error);

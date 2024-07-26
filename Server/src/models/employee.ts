@@ -13,6 +13,7 @@ export const createEmployee = async (employee: Employee) => {
       dateOfBirth: new Date(employee.dateOfBirth),
       joinDate: new Date(employee.joinDate),
       department: employee.department,
+      isDeleted: false, 
       bankDetails: {
         create: {
           bankAccountNumber: employee.bankAccountNumber,
@@ -38,6 +39,7 @@ export const createEmployee = async (employee: Employee) => {
 
 export const getAllEmployees = async () => {
   const result = await prisma.personalInfo.findMany({
+    where: { isDeleted: false }, 
     include: {
       bankDetails: true,
       salaryDetails: true,
@@ -50,8 +52,8 @@ export const getAllEmployees = async () => {
 };
 
 export const getEmployeeById = async (id: number) => {
-  const employee = await prisma.personalInfo.findUnique({
-    where: { id },
+  const employee = await prisma.personalInfo.findFirst({
+    where: { id, isDeleted: false }, 
     include: {
       bankDetails: true,
       salaryDetails: true,
@@ -125,8 +127,17 @@ export const deleteEmployee = async (id: number) => {
   return result;
 };
 
+export const softDeleteEmployee = async (id: number) => {
+  const employee = await prisma.personalInfo.update({
+    where: { id },
+    data: { isDeleted: true },
+  });
+  return employee;
+};
+
 export const getEmployeeNamesAndIds = async () => {
   const employees = await prisma.personalInfo.findMany({
+    where: { isDeleted: false }, 
     select: {
       id: true,
       firstName: true,

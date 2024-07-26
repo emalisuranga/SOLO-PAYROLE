@@ -145,7 +145,7 @@ const SalaryTable = ({ salaries, onDelete }) => {
         <DialogTitle>{t("Confirm Delete")}</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            {t("DeleteConfirmationMessage")}
+            {t("actions.deleteConfirmationMessageSalary")}
           </DialogContentText>
         </DialogContent>
         <DialogActions>

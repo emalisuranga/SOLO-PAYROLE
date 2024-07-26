@@ -26,7 +26,7 @@ import CustomSnackbar from "../../Component/CustomSnackbar";
 const EmployeeTable = ({ data }) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { deleteEmployee, fetchEmployees } = useEmployeeStore();
+  const { softDeleteEmployee, fetchEmployees } = useEmployeeStore();
   const [anchorEl, setAnchorEl] = useState(null);
   const [currentRow, setCurrentRow] = useState(null);
   const [openDialog, setOpenDialog] = useState(false);
@@ -71,7 +71,7 @@ const EmployeeTable = ({ data }) => {
   const handleDeleteConfirm = async () => {
     if (currentRow) {
       try {
-        await deleteEmployee(currentRow.id);
+        await softDeleteEmployee(currentRow.id);
         setSnackbarMessage(t("actions.delete_success"));
         setSnackbarSeverity("success");
         setSnackbarOpen(true);
@@ -156,7 +156,7 @@ const EmployeeTable = ({ data }) => {
         <DialogTitle>{t("Confirm Delete")}</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            {t("DeleteConfirmationMessage")}
+            {t("action.deleteConfirmationMessageEmployee")}
           </DialogContentText>
         </DialogContent>
         <DialogActions>

@@ -40,7 +40,9 @@
     "salaryDataSaved": "データが正常に保存されました！",
     "salaryDataSaveFailed": "データの保存に失敗しました",
     "salaryDetailsExist": "この従業員の今月の給与明細は既に存在します。",
-     "salaryDataUpdated": "給与データが正常に更新されました"
+    "salaryDataUpdated": "給与データが正常に更新されました",
+    "deleteConfirmationMessageEmployee": "この従業員を無効にしますか？ 後で再有効化することができます。",
+    "deleteConfirmationMessageSalary": "この給与明細を削除してもよろしいですか？ この操作は元に戻せません。"
   },
   "fields": {
     "firstName": "名前",

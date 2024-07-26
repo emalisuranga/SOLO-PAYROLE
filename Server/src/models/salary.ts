@@ -46,7 +46,7 @@ const calculateTotalDeductions = (deductions: Salary['deductions']): number => {
  */
 export const addSalaryDetails = async (salary: Salary) => {
     const employeeExists = await prisma.personalInfo.findUnique({
-        where: { id: salary.employeeId },
+        where: { id: salary.employeeId, isDeleted: false },
     });
 
     if (!employeeExists) {
@@ -126,8 +126,9 @@ export const addSalaryDetails = async (salary: Salary) => {
 export const getSalaryDetailsByMonth = async (month: number, year: number) => {
     return await prisma.paymentDetails.findMany({
         where: {
-            month: month,
-            year: year,
+            month,
+            year,
+            employee: { isDeleted: false },
         },
         include: {
             workDetails: true,
@@ -144,6 +145,11 @@ export const getSalaryDetailsByMonth = async (month: number, year: number) => {
     });
 };
 
+/**
+ * Get salary details by payment ID.
+ * @param paymentId - The payment ID.
+ * @returns The salary details.
+ */
 export const getSalaryDetailsByPaymentId = async (paymentId: number) => {
     return await prisma.paymentDetails.findUnique({
         where: { id: paymentId },
@@ -162,6 +168,12 @@ export const getSalaryDetailsByPaymentId = async (paymentId: number) => {
     });
 };
 
+/**
+ * Update salary details.
+ * @param id - The payment details ID.
+ * @param salary - The salary details.
+ * @returns The updated payment details.
+ */
 export const updateSalaryDetails = async (id: number, salary: Salary) => {
     const totalEarnings = calculateTotalEarnings(salary.earnings);
     const totalDeductions = calculateTotalDeductions(salary.deductions);
