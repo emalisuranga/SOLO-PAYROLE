@@ -71,18 +71,19 @@ function CustomTabsForSalary({ sections, initialData }) {
     const transformedData = transformFormDataForSalary(formData, initialData);
 
     try {
+      let savedSalaryId = initialData?.id;
       if (initialData?.employeeId) {
         await updateSalary(initialData.id, transformedData);
         setSnackbarSeverity("success");
         setSnackbarMessage(t("actions.salaryDataUpdated"));
       } else {
-        await saveSalary(transformedData);
+        const response = await saveSalary(transformedData);
+        savedSalaryId = response.data.id;
         setSnackbarSeverity("success");
         setSnackbarMessage(t("actions.salaryDataSaved"));
       }
       setSnackbarOpen(true);
-      // setTimeout(() => navigate("/salary-details"), 2000);
-      setTimeout(() =>navigate(`/salary-slip/${initialData.employeeId}/${initialData.id}`));
+      setTimeout(() => navigate(`/salary-slip/${initialData.employeeId}/${savedSalaryId}`), 2000);
     } catch (error) {
       if (error.response.data.error.message.includes("Salary details for employee 4 for month 6 and year 2024 already exist.")) {
         setSnackbarSeverity("error");

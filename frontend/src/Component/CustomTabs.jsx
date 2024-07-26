@@ -44,6 +44,9 @@ function CustomTabs({ sections, mode = 'add', initialData = {} }) {
 
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
+      setSnackbarSeverity('error');
+      setSnackbarMessage(t("actions.validationError"));
+      setSnackbarOpen(true);
       return;
     }
     setErrors({});

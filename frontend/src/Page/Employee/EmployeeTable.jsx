@@ -156,7 +156,7 @@ const EmployeeTable = ({ data }) => {
         <DialogTitle>{t("Confirm Delete")}</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            {t("action.deleteConfirmationMessageEmployee")}
+            {t("actions.deleteConfirmationMessageEmployee")}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
