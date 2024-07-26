@@ -1,5 +1,6 @@
 import getValidationSchema from "./validationSchema";
 import { getSalaryValidationSchema } from "./validationSchemaForSalary";
+import getSections from '../utils/sections';
 
 const formatDate = (dateString) => {
   if (!dateString) return "";
@@ -7,43 +8,61 @@ const formatDate = (dateString) => {
   return date.toISOString().split("T")[0];
 };
 
+const getFieldValue = (initialData, field) => {
+  const nestedValue = initialData[field.name];
+
+  if (field.type === "date") {
+    return nestedValue ? formatDate(nestedValue) : "";
+  } else {
+    if (nestedValue !== undefined) {
+      return nestedValue;
+    } else if (
+      initialData.bankDetails &&
+      initialData.bankDetails[field.name] !== undefined
+    ) {
+      return initialData.bankDetails[field.name];
+    } else if (
+      initialData.salaryDetails &&
+      initialData.salaryDetails[field.name] !== undefined
+    ) {
+      return initialData.salaryDetails[field.name];
+    } else {
+      return [
+        "overtimePay",
+        "transportationCosts",
+        "familyAllowance",
+        "attendanceAllowance",
+        "leaveAllowance",
+        "specialAllowance",
+      ].includes(field.name)
+        ? "0"
+        : "";
+    }
+  }
+};
+
 export const initializeFormData = (sections, initialData = {}) => {
   const formData = {};
 
   sections.forEach((section) => {
     section.fields.forEach((field) => {
-      const nestedValue = initialData[field.name];
-
-      if (field.type === "date") {
-        formData[field.name] = nestedValue ? formatDate(nestedValue) : "";
-      } else {
-        if (nestedValue !== undefined) {
-          formData[field.name] = nestedValue;
-        } else if (
-          initialData.bankDetails &&
-          initialData.bankDetails[field.name] !== undefined
-        ) {
-          formData[field.name] = initialData.bankDetails[field.name];
-        } else if (
-          initialData.salaryDetails &&
-          initialData.salaryDetails[field.name] !== undefined
-        ) {
-          formData[field.name] = initialData.salaryDetails[field.name];
-        } else {
-          formData[field.name] = [
-            "overtimePay",
-            "transportationCosts",
-            "familyAllowance",
-            "attendanceAllowance",
-            "leaveAllowance",
-            "specialAllowance",
-          ].includes(field.name)
-            ? "0"
-            : "";
-        }
-      }
+      formData[field.name] = getFieldValue(initialData, field);
     });
   });
+
+  return formData;
+};
+
+export const cleanInitializeFormData = () => {
+  const sections = getSections({});
+  const formData = {};
+
+  sections.forEach((section) => {
+    section.fields.forEach((field) => {
+      formData[field.name] = field.type === "date" ? "" : "";
+    });
+  });
+
   return formData;
 };
 
@@ -171,11 +190,11 @@ export const salaryValidation = async (formData, t) => {
 
 export const transformFormDataForSalary = (formData,initialData ) => {
   const now = new Date();
-  let month = now.getMonth(); // JavaScript months are 0-based, so this gets the last month.
+  let month = now.getMonth(); 
   let year = now.getFullYear();
 
   if (month === 0) {
-    month = 12; // December of the previous year
+    month = 12; 
     year -= 1;
   }
 
@@ -213,4 +232,8 @@ export const transformFormDataForSalary = (formData,initialData ) => {
       yearEndAdjustment: parseFloat(formData.yearEndAdjustment),
     }
   };
+};
+
+export const getInitialFormData = (employeeData = {}) => {
+  return cleanInitializeFormData(employeeData);
 };

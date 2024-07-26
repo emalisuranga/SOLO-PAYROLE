@@ -143,6 +143,9 @@ export const getEmployeeNamesAndIds = async () => {
       firstName: true,
       lastName: true,
     },
+    orderBy: {
+      id: 'asc',
+    },
   });
   return employees;
 };
