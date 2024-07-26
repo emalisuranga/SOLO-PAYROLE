@@ -38,7 +38,8 @@
     "salaryDetailsExist": "Salary details for this employee for the current month already exist.",
     "salaryDataUpdated": "Salary Data Updated successfully",
     "deleteConfirmationMessageEmployee": "Are you sure you want to deactivate this employee? You can reactivate them later if needed.",
-    "deleteConfirmationMessageSalary": "Are you sure you want to delete this Salary Details? This action cannot be undone."
+    "deleteConfirmationMessageSalary": "Are you sure you want to delete this Salary Details? This action cannot be undone.",
+    "validationError": "Your application has validation errors, please check."
   },
   "fields": {
     "firstName": "First Name",
@@ -91,7 +92,8 @@
     "lettersOnly": "{{field}} can only contain letters",
     "phoneDigits": "Phone must be an 11 digit number",
     "number": "{{field}} must be a number",
-    "required": "{{field}} is required"
+    "required": "{{field}} is required",
+    "invalidDate": "{{field}} must be a valid date."
   },
   "months": {
     "january": "January",
