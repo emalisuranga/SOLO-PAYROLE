@@ -22,6 +22,8 @@ model PersonalInfo {
   bankDetails    BankDetails?
   salaryDetails  SalaryDetails?
   paymentDetails PaymentDetails[]
+  paidHolidays   PaidHolidays[]
+  LeaveRequests  LeaveRequests[]
 }
 
 model BankDetails {
@@ -102,4 +104,28 @@ model Deductions {
   residentTax              Float
   advancePayment           Float
   yearEndAdjustment        Float
+}
+
+model PaidHolidays {
+  id              Int          @id @default(autoincrement())
+  employee        PersonalInfo @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  employeeId      Int
+  totalLeave      Int
+  usedLeave       Int
+  remainingLeave  Int
+  leaveStart      DateTime
+  leaveEnd        DateTime
+  lastUpdated     DateTime     @updatedAt @default(now())
+  isValid         Boolean      @default(true)
+}
+
+model LeaveRequests {
+  id              Int          @id @default(autoincrement())
+  employee        PersonalInfo @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  employeeId      Int
+  initialDays     Int
+  adjustedDays    Int
+  totalDays       Int
+  requestDate     DateTime      @default(now())
+  createdAt       DateTime      @default(now())
 }

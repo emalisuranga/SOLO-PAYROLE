@@ -1,5 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import { Employee } from '../types/employee';
+import { updatePaidHolidaysForNewJoinDate } from '../models/leaveManagement';
 
 const prisma = new PrismaClient();
 
@@ -13,7 +14,7 @@ export const createEmployee = async (employee: Employee) => {
       dateOfBirth: new Date(employee.dateOfBirth),
       joinDate: new Date(employee.joinDate),
       department: employee.department,
-      isDeleted: false, 
+      isDeleted: false,
       bankDetails: {
         create: {
           bankAccountNumber: employee.bankAccountNumber,
@@ -39,7 +40,7 @@ export const createEmployee = async (employee: Employee) => {
 
 export const getAllEmployees = async () => {
   const result = await prisma.personalInfo.findMany({
-    where: { isDeleted: false }, 
+    where: { isDeleted: false },
     include: {
       bankDetails: true,
       salaryDetails: true,
@@ -53,7 +54,7 @@ export const getAllEmployees = async () => {
 
 export const getEmployeeById = async (id: number) => {
   const employee = await prisma.personalInfo.findFirst({
-    where: { id, isDeleted: false }, 
+    where: { id, isDeleted: false },
     include: {
       bankDetails: true,
       salaryDetails: true,
@@ -73,6 +74,19 @@ export const updateEmployee = async (id: number, employee: Employee) => {
 
   if (!bankDetailsExists || !salaryDetailsExists) {
     throw new Error("Related records not found");
+  }
+  const existingEmployee = await prisma.personalInfo.findUnique({
+    where: { id: id, isDeleted: false },
+  });
+
+  if (!existingEmployee) {
+    throw new Error(`Employee with ID ${id} does not exist.`);
+  }
+
+  const { joinDate, ...otherDetails } = employee;
+
+  if (joinDate && new Date(joinDate).getTime() !== existingEmployee.joinDate.getTime()) {
+    await updatePaidHolidaysForNewJoinDate(id, new Date(joinDate));
   }
 
   const result = await prisma.personalInfo.update({
@@ -137,7 +151,7 @@ export const softDeleteEmployee = async (id: number) => {
 
 export const getEmployeeNamesAndIds = async () => {
   const employees = await prisma.personalInfo.findMany({
-    where: { isDeleted: false }, 
+    where: { isDeleted: false },
     select: {
       id: true,
       firstName: true,
