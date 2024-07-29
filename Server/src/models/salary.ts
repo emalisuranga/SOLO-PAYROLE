@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import { Salary } from '../types/salary';
-import { createInitialLeaveRequest } from '../models/leaveManagement';
+import { createInitialLeaveRequest, adjustLeaveRequest } from '../models/leaveManagement';
 
 const prisma = new PrismaClient();
 
@@ -121,6 +121,8 @@ export const addSalaryDetails = async (salary: Salary) => {
         await createInitialLeaveRequest({
             employeeId: salary.employeeId,
             totalDays: salary.workDetails.numberOfPaidHolidays,
+            salaryMonth: salary.month,
+            salaryYear: salary.year
         });
     }
 
@@ -190,7 +192,7 @@ export const updateSalaryDetails = async (id: number, salary: Salary) => {
     const basicSalary = salary.earnings.basicSalary;
     const netSalary = (basicSalary + totalEarnings) - totalDeductions;
 
-    return await prisma.paymentDetails.update({
+    const updatedSalaryDetails = await prisma.paymentDetails.update({
         where: { id },
         data: {
             workDetails: {
@@ -233,4 +235,14 @@ export const updateSalaryDetails = async (id: number, salary: Salary) => {
             netSalary,
         },
     });
+
+    // Adjust the leave request for the updated salary
+    await adjustLeaveRequest({
+        employeeId: salary.employeeId,
+        newTotalDays: salary.workDetails.numberOfPaidHolidays,
+        salaryMonth: salary.month,
+        salaryYear: salary.year,
+    });
+
+    return updatedSalaryDetails;
 };

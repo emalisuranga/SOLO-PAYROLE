@@ -128,4 +128,6 @@ model LeaveRequests {
   totalDays       Int
   requestDate     DateTime      @default(now())
   createdAt       DateTime      @default(now())
+  salaryMonth     Int
+  salaryYear      Int
 }
