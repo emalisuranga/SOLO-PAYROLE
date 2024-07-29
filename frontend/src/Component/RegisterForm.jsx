@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { TextField, Grid } from '@mui/material';
+import { TextField, Grid , InputAdornment} from '@mui/material';
 
 const RegisterForm = ({ fields, formData, onChange, errors }) => {
   return (
@@ -21,6 +21,8 @@ const RegisterForm = ({ fields, formData, onChange, errors }) => {
             margin="normal"
             variant="outlined"
             InputLabelProps={field.type === 'date' ? { shrink: true } : {}}
+            InputProps={field.InputProps || {}}
+            // disabled="true"// Add disabled property
           />
         </Grid>
       ))}

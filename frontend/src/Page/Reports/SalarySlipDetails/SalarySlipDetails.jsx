@@ -554,7 +554,7 @@ const SalarySlipDetails = () => {
                 </CustomTableCell>
                 <CustomTableCell>
                   <SmallTypography variant="body2" align="center">
-                    不就労控除/Non-employment deduction
+                  {`${salarySlip.deductions.nonEmploymentDeduction}`}
                   </SmallTypography>
                 </CustomTableCell>
                 <CustomTableCell>

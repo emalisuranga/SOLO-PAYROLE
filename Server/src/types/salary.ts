@@ -37,4 +37,5 @@ export interface Salary {
     residentTax: number;
     advancePayment: number;
     yearEndAdjustment: number;
+    nonEmploymentDeduction: number
   }

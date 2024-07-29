@@ -35,8 +35,21 @@ const calculateTotalDeductions = (deductions: Salary['deductions']): number => {
         deductions.incomeTax +
         deductions.residentTax +
         deductions.advancePayment +
-        deductions.yearEndAdjustment
+        deductions.yearEndAdjustment +
+        deductions.nonEmploymentDeduction // Add this line
     );
+};
+
+/**
+ * Calculate non-employment deduction.
+ * @param workDetails - The work details.
+ * @param basicSalary - The basic salary.
+ * @returns The non-employment deduction.
+ */
+const calculateNonEmploymentDeduction = (workDetails: Salary['workDetails'], basicSalary: number): number => {
+    const { scheduledWorkingDays, numberOfWorkingDays, numberOfPaidHolidays } = workDetails;
+    const deduction = ((scheduledWorkingDays - numberOfWorkingDays - numberOfPaidHolidays) * basicSalary) / scheduledWorkingDays;
+    return Math.round(deduction);
 };
 
 /**
@@ -67,7 +80,8 @@ export const addSalaryDetails = async (salary: Salary) => {
     }
 
     const totalEarnings = calculateTotalEarnings(salary.earnings);
-    const totalDeductions = calculateTotalDeductions(salary.deductions);
+    const nonEmploymentDeduction = calculateNonEmploymentDeduction(salary.workDetails, salary.earnings.basicSalary); // Calculate non-employment deduction
+    const totalDeductions = calculateTotalDeductions({ ...salary.deductions, nonEmploymentDeduction });
     const basicSalary = salary.earnings.basicSalary;
     const netSalary = (basicSalary + totalEarnings) - totalDeductions;
 
@@ -109,6 +123,7 @@ export const addSalaryDetails = async (salary: Salary) => {
                     residentTax: salary.deductions.residentTax,
                     advancePayment: salary.deductions.advancePayment,
                     yearEndAdjustment: salary.deductions.yearEndAdjustment,
+                    nonEmploymentDeduction: nonEmploymentDeduction
                 },
             },
             totalEarnings: totalEarnings,
@@ -188,7 +203,8 @@ export const getSalaryDetailsByPaymentId = async (paymentId: number) => {
  */
 export const updateSalaryDetails = async (id: number, salary: Salary) => {
     const totalEarnings = calculateTotalEarnings(salary.earnings);
-    const totalDeductions = calculateTotalDeductions(salary.deductions);
+    const nonEmploymentDeduction = calculateNonEmploymentDeduction(salary.workDetails, salary.earnings.basicSalary); 
+    const totalDeductions = calculateTotalDeductions({ ...salary.deductions, nonEmploymentDeduction });
     const basicSalary = salary.earnings.basicSalary;
     const netSalary = (basicSalary + totalEarnings) - totalDeductions;
 
@@ -228,6 +244,7 @@ export const updateSalaryDetails = async (id: number, salary: Salary) => {
                     residentTax: salary.deductions.residentTax,
                     advancePayment: salary.deductions.advancePayment,
                     yearEndAdjustment: salary.deductions.yearEndAdjustment,
+                    nonEmploymentDeduction: nonEmploymentDeduction
                 },
             },
             totalEarnings,

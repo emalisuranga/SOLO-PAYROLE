@@ -45,7 +45,6 @@ const EmployeeTable = ({ data }) => {
   };
 
   const handleView = (row) => {
-    console.log("handleView",row.id)
     navigate(`/employee/${row.id}`);
   };
 

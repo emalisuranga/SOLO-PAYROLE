@@ -104,6 +104,7 @@ model Deductions {
   residentTax              Float
   advancePayment           Float
   yearEndAdjustment        Float
+  nonEmploymentDeduction   Float          @default(0) 
 }
 
 model PaidHolidays {

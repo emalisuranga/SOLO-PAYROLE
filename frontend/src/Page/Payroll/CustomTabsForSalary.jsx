@@ -71,8 +71,10 @@ function CustomTabsForSalary({ sections, initialData }) {
 
     try {
       let savedSalaryId = initialData?.id;
+      let employeeId = initialData?.id;
       if (initialData?.employeeId) {
         await updateSalary(initialData.id, transformedData);
+        employeeId = initialData?.employeeId;
         setSnackbarSeverity("success");
         setSnackbarMessage(t("actions.salaryDataUpdated"));
       } else {
@@ -82,7 +84,7 @@ function CustomTabsForSalary({ sections, initialData }) {
         setSnackbarMessage(t("actions.salaryDataSaved"));
       }
       setSnackbarOpen(true);
-      setTimeout(() => navigate(`/salary-slip/${initialData.employeeId}/${savedSalaryId}`), 2000);
+      setTimeout(() => navigate(`/salary-slip/${employeeId}/${savedSalaryId}`), 2000);
     } catch (error) {
       if (error.response.data.error.message.includes("already exist.")) {
         setSnackbarSeverity("error");
