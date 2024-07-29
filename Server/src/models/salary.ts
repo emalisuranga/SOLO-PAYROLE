@@ -1,5 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import { Salary } from '../types/salary';
+import { createInitialLeaveRequest } from '../models/leaveManagement';
 
 const prisma = new PrismaClient();
 
@@ -70,7 +71,7 @@ export const addSalaryDetails = async (salary: Salary) => {
     const basicSalary = salary.earnings.basicSalary;
     const netSalary = (basicSalary + totalEarnings) - totalDeductions;
 
-    return await prisma.paymentDetails.create({
+    const salaryDetails = await prisma.paymentDetails.create({
         data: {
             employeeId: salary.employeeId,
             month: salary.month,
@@ -115,6 +116,15 @@ export const addSalaryDetails = async (salary: Salary) => {
             netSalary: netSalary,
         },
     });
+
+    if (salary.workDetails.numberOfPaidHolidays > 0) {
+        await createInitialLeaveRequest({
+            employeeId: salary.employeeId,
+            totalDays: salary.workDetails.numberOfPaidHolidays,
+        });
+    }
+
+    return salaryDetails;
 };
 
 /**

@@ -66,29 +66,29 @@ export const cleanInitializeFormData = () => {
   return formData;
 };
 
-export const initializeSalaryFormData = (sections, initialData = {}) => {
-  const formData = {};
+// export const initializeSalaryFormData = (sections, initialData = {}) => {
+//   const formData = {};
 
-  sections.forEach((section) => {
-    section.fields.forEach((field) => {
-      let nestedValue;
+//   sections.forEach((section) => {
+//     section.fields.forEach((field) => {
+//       let nestedValue;
 
-      if (section.label === "Earnings") {
-        nestedValue = initialData.salaryDetails && initialData.salaryDetails[field.name];
-      } else if (section.label === "Attendance and Work Details") {
-        nestedValue = initialData.workDetails && initialData.workDetails[field.name];
-      } else if (section.label === "Deductions") {
-        nestedValue = initialData.deductions && initialData.deductions[field.name];
-      } else {
-        nestedValue = initialData[field.name];
-      }
+//       if (section.label === "Earnings") {
+//         nestedValue = initialData.salaryDetails && initialData.salaryDetails[field.name];
+//       } else if (section.label === "Attendance and Work Details") {
+//         nestedValue = initialData.workDetails && initialData.workDetails[field.name];
+//       } else if (section.label === "Deductions") {
+//         nestedValue = initialData.deductions && initialData.deductions[field.name];
+//       } else {
+//         nestedValue = initialData[field.name];
+//       }
 
-      formData[field.name] = nestedValue !== undefined ? nestedValue : field.defaultValue || 0;
-    });
-  });
+//       formData[field.name] = nestedValue !== undefined ? nestedValue : field.defaultValue || 0;
+//     });
+//   });
 
-  return formData;
-};
+//   return formData;
+// };
 
 export const initializeAddSalaryFormData = (sections, employeeData = {}) => {
   const formData = {};

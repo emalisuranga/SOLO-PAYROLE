@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import { Employee } from '../types/employee';
-import { updatePaidHolidaysForNewJoinDate } from '../models/leaveManagement';
+import { createOrUpdatePaidHolidays } from '../models/leaveManagement';
 
 const prisma = new PrismaClient();
 
@@ -35,6 +35,8 @@ export const createEmployee = async (employee: Employee) => {
       },
     },
   });
+
+  await createOrUpdatePaidHolidays(result.id, new Date(employee.joinDate));
   return result;
 };
 
@@ -58,9 +60,23 @@ export const getEmployeeById = async (id: number) => {
     include: {
       bankDetails: true,
       salaryDetails: true,
+      paidHolidays: {
+        select: {
+          remainingLeave: true,
+        },
+        where: {
+          isValid: true,
+        },
+      },
     },
   });
-  return employee;
+
+  if (employee) {
+    const remainingPaidVacationDays = employee.paidHolidays.reduce((acc, holiday) => acc + holiday.remainingLeave, 0);
+    return { ...employee, remainingPaidVacationDays };
+  }
+
+  return null;
 };
 
 export const updateEmployee = async (id: number, employee: Employee) => {
@@ -86,7 +102,13 @@ export const updateEmployee = async (id: number, employee: Employee) => {
   const { joinDate, ...otherDetails } = employee;
 
   if (joinDate && new Date(joinDate).getTime() !== existingEmployee.joinDate.getTime()) {
-    await updatePaidHolidaysForNewJoinDate(id, new Date(joinDate));
+    const currentPaidHoliday = await prisma.paidHolidays.findFirst({
+      where: { employeeId: id, isValid: true },
+    });
+
+    const currentUsedLeave = currentPaidHoliday ? currentPaidHoliday.usedLeave : 0;
+
+    await createOrUpdatePaidHolidays(id, new Date(joinDate), currentUsedLeave);
   }
 
   const result = await prisma.personalInfo.update({

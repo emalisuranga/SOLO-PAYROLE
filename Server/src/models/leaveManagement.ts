@@ -20,8 +20,29 @@ const calculateLeaveValidity = (joinDate: Date) => {
     }
 };
 
+export const createOrUpdatePaidHolidays = async (employeeId: number, joinDate: Date, currentUsedLeave: number = 0) => {
+    const leaveValidity = calculateLeaveValidity(joinDate);
+
+    await prisma.paidHolidays.updateMany({
+        where: { employeeId: employeeId, isValid: true },
+        data: { isValid: false },
+    });
+
+    await prisma.paidHolidays.create({
+        data: {
+            employeeId: employeeId,
+            totalLeave: leaveValidity.totalLeave,
+            usedLeave: currentUsedLeave,
+            remainingLeave: leaveValidity.totalLeave - currentUsedLeave,
+            leaveStart: leaveValidity.startDate,
+            leaveEnd: leaveValidity.endDate,
+            lastUpdated: new Date(),
+            isValid: leaveValidity.isValid,
+        },
+    });
+};
+
 const checkAndUpdateLeaveValidity = async (employeeId: number) => {
-    // Find the current valid PaidHolidays entry for the employee
     let paidHoliday = await prisma.paidHolidays.findFirst({
         where: { employeeId: employeeId, isValid: true },
     });
@@ -29,7 +50,6 @@ const checkAndUpdateLeaveValidity = async (employeeId: number) => {
     const now = new Date();
 
     if (!paidHoliday) {
-        // Calculate leave validity based on the employee's join date
         const employee = await prisma.personalInfo.findUnique({
             where: { id: employeeId },
         });
@@ -37,7 +57,6 @@ const checkAndUpdateLeaveValidity = async (employeeId: number) => {
 
         const leaveValidity = calculateLeaveValidity(employee.joinDate);
 
-        // Create a new PaidHolidays entry
         paidHoliday = await prisma.paidHolidays.create({
             data: {
                 employeeId: employeeId,
@@ -51,13 +70,11 @@ const checkAndUpdateLeaveValidity = async (employeeId: number) => {
             },
         });
     } else if (paidHoliday.leaveEnd < now) {
-        // Update the current row to set isValid to false
         await prisma.paidHolidays.update({
             where: { id: paidHoliday.id },
             data: { isValid: false },
         });
 
-        // Calculate leave validity based on the employee's join date
         const employee = await prisma.personalInfo.findUnique({
             where: { id: employeeId },
         });
@@ -65,7 +82,6 @@ const checkAndUpdateLeaveValidity = async (employeeId: number) => {
 
         const leaveValidity = calculateLeaveValidity(employee.joinDate);
 
-        // Create a new PaidHolidays entry
         paidHoliday = await prisma.paidHolidays.create({
             data: {
                 employeeId: employeeId,
@@ -83,35 +99,7 @@ const checkAndUpdateLeaveValidity = async (employeeId: number) => {
     return paidHoliday.id;
 };
 
-export const updatePaidHolidaysForNewJoinDate = async (employeeId: number, newJoinDate: Date) => {
-    const currentPaidHoliday = await prisma.paidHolidays.findFirst({
-        where: { employeeId: employeeId, isValid: true },
-    });
-
-    const currentUsedLeave = currentPaidHoliday ? currentPaidHoliday.usedLeave : 0;
-
-    await prisma.paidHolidays.updateMany({
-        where: { employeeId: employeeId, isValid: true },
-        data: { isValid: false },
-    });
-
-    const leaveValidity = calculateLeaveValidity(newJoinDate);
-
-    await prisma.paidHolidays.create({
-        data: {
-            employeeId: employeeId,
-            totalLeave: leaveValidity.totalLeave,
-            usedLeave: currentUsedLeave,
-            remainingLeave: leaveValidity.totalLeave - currentUsedLeave,
-            leaveStart: leaveValidity.startDate,
-            leaveEnd: leaveValidity.endDate,
-            lastUpdated: new Date(),
-            isValid: leaveValidity.isValid,
-        },
-    });
-};
-
-export const createInitialLeaveRequest = async (leaveRequest: LeaveRequests) => {
+export const createInitialLeaveRequest = async (leaveRequest: { employeeId: number; totalDays: number }) => {
     const employee = await prisma.personalInfo.findUnique({
         where: { id: leaveRequest.employeeId, isDeleted: false },
     });
@@ -121,7 +109,16 @@ export const createInitialLeaveRequest = async (leaveRequest: LeaveRequests) => 
     }
 
     const paidHolidayId = await checkAndUpdateLeaveValidity(leaveRequest.employeeId);
-    const newLeaveRequest = await prisma.leaveRequests.create({ data: leaveRequest });
+    const newLeaveRequest = await prisma.leaveRequests.create({
+        data: {
+            employeeId: leaveRequest.employeeId,
+            initialDays: leaveRequest.totalDays,
+            adjustedDays: leaveRequest.totalDays,
+            totalDays: leaveRequest.totalDays,
+            requestDate: new Date(),
+            createdAt: new Date(),
+        },
+    });
 
     const updatedPaidHolidays = await prisma.paidHolidays.update({
         where: { id: paidHolidayId },
