@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import {
-    addEmployee,
-    getEmployees,
+    createEmployeeHandler,
+    getAllEmployeesHandler,
     updateEmployeeHandler,
     getEmployeeByIdHandler,
     deleteEmployeeHandler,
@@ -11,8 +11,8 @@ import {
 
 const router = Router();
 
-router.post('/save', addEmployee);
-router.get('/', getEmployees);
+router.post('/save', createEmployeeHandler);
+router.get('/', getAllEmployeesHandler);
 router.get('/employee-names-ids', getEmployeeNamesAndIdsHandler);
 router.get('/:id', getEmployeeByIdHandler);
 router.put('/:id', updateEmployeeHandler);

@@ -72,29 +72,42 @@ function CustomTabsForSalary({ sections, initialData }) {
     try {
       let savedSalaryId = initialData?.id;
       let employeeId = initialData?.id;
+      let response;
       if (initialData?.employeeId) {
-        await updateSalary(initialData.id, transformedData);
-        employeeId = initialData?.employeeId;
-        setSnackbarSeverity("success");
-        setSnackbarMessage(t("actions.salaryDataUpdated"));
+        response = await updateSalary(initialData.id, transformedData);
+        if (response && !response.error) {
+          employeeId = initialData?.employeeId;
+        }
       } else {
-        const response = await saveSalary(transformedData);
-        savedSalaryId = response.data.id;
-        setSnackbarSeverity("success");
-        setSnackbarMessage(t("actions.salaryDataSaved"));
+        response = await saveSalary(transformedData);
+        if (response && !response.error) {
+          savedSalaryId = response.data.id;
+        }
       }
+
+      if (response.error) {
+        throw new Error(response.error);
+      }
+      setSnackbarSeverity("success");
+      setSnackbarMessage(
+        initialData?.employeeId
+          ? t("actions.salaryDataUpdated")
+          : t("actions.salaryDataSaved")
+      );
       setSnackbarOpen(true);
-      setTimeout(() => navigate(`/salary-slip/${employeeId}/${savedSalaryId}`), 2000);
+      setTimeout(
+        () => navigate(`/salary-slip/${employeeId}/${savedSalaryId}`),
+        2000
+      );
     } catch (error) {
-      if (error.response.data.error.message.includes("already exist.")) {
-        setSnackbarSeverity("error");
-        setSnackbarMessage(t("actions.salaryDetailsExist"));
-      } else {
-        setSnackbarSeverity("error");
-        setSnackbarMessage(t("actions.salaryDataSaveFailed"));
-      }
-      setSnackbarOpen(true);
       console.error("Failed to save data", error);
+      setSnackbarSeverity("error");
+      setSnackbarMessage(
+        error.message.includes("already exist")
+          ? t("actions.salaryDetailsExist")
+          : t("actions.salaryDataSaveFailed")
+      );
+      setSnackbarOpen(true);
     }
   };
 

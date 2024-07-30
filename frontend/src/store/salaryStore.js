@@ -5,20 +5,29 @@ const api = axios.create({
   baseURL: "http://localhost:3000/api",
 });
 
+const handleError = (set, error, message) => {
+  console.error(message, error);
+  const errorMessage = error.response?.data?.message || error.message || message;
+  set({ error: errorMessage, loading: false });
+  return { error: errorMessage };
+};
+
 const useSalaryStore = create((set) => ({
   salaries: [],
   salary: null,
   loading: false,
   error: null,
+
   fetchSalaries: async () => {
     set({ loading: true, error: null });
     try {
       const response = await api.get("/salary-details");
       set({ salaries: response.data.data || [], loading: false });
     } catch (error) {
-      set({ error: "Error fetching data", loading: false });
+      handleError(set, error, "Error fetching salaries");
     }
   },
+
   fetchSalaryDetailsById: async (paymentId) => {
     set({ loading: true, error: null });
     try {
@@ -26,10 +35,10 @@ const useSalaryStore = create((set) => ({
       set({ salary: response.data.data, loading: false });
       return response.data.data;
     } catch (error) {
-      console.error("Error fetching salary details:", error);
-      set({ error: "Error fetching salary details", loading: false });
+      handleError(set, error, "Error fetching salary details by ID");
     }
   },
+
   fetchSalaryDetailsByMonth: async (month, year) => {
     set({ loading: true, error: null });
     try {
@@ -37,35 +46,39 @@ const useSalaryStore = create((set) => ({
       set({ salaries: response.data.data, loading: false });
       return response.data.data;
     } catch (error) {
-      console.error("Error fetching salary details:", error);
-      set({ error: "Error fetching salary details", loading: false });
+      handleError(set, error, "Error fetching salary details by month");
     }
   },
+
   saveSalary: async (data) => {
+    set({ error: null }); // Reset error state before making the request
     try {
       const response = await api.post("/salary-details/save", data);
       return response.data;
     } catch (error) {
-      console.error("Error saving salary data:", error);
-      throw error;
+      return handleError(set, error, "Error saving salary data");
     }
   },
+
   updateSalary: async (id, data) => {
+    set({ error: null }); // Reset error state before making the request
     try {
       const response = await api.put(`/salary-details/payment/${id}`, data);
       return response.data;
     } catch (error) {
-      console.error("Error updating salary data:", error);
-      throw error;
+      return handleError(set, error, "Error updating salary data");
+     // Return null to indicate an error occurred
     }
   },
+
   deleteSalary: async (id) => {
+    set({ error: null }); // Reset error state before making the request
     try {
       const response = await api.delete(`/salary-details/${id}`);
       return response.data;
     } catch (error) {
-      console.error("Error deleting salary data:", error);
-      throw error;
+      handleError(set, error, "Error deleting salary data");
+      return null; // Return null to indicate an error occurred
     }
   },
 }));

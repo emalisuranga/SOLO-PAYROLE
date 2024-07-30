@@ -8,6 +8,7 @@ import {
     calculateOvertimePayment,
     calculateSocialInsurance,
 } from '../utils/salaryCalculations';
+import { NotFoundError, BadRequestError } from '../errors/customError';
 
 const prisma = new PrismaClient();
 
@@ -23,7 +24,7 @@ export const addSalaryDetails = async (salary: Salary) => {
     });
 
     if (!employeeExists) {
-        throw new Error(`Employee with ID ${salary.employeeId} does not exist.`);
+        throw new NotFoundError(`Employee with ID ${salary.employeeId} does not exist.`);
     }
 
     const existingSalary = await prisma.paymentDetails.findFirst({
@@ -35,7 +36,7 @@ export const addSalaryDetails = async (salary: Salary) => {
     });
 
     if (existingSalary) {
-        throw new Error(`Salary details for employee ${salary.employeeId} for month ${salary.month} and year ${salary.year} already exist.`);
+        throw new BadRequestError(`Salary details for employee ${salary.employeeId} for month ${salary.month} and year ${salary.year} already exist.`);
     }
 
     const overtimePayment = calculateOvertimePayment(salary.workDetails, salary.earnings.basicSalary); 
@@ -138,7 +139,7 @@ export const getSalaryDetailsByMonth = async (month: number, year: number) => {
  * @returns The salary details.
  */
 export const getSalaryDetailsByPaymentId = async (paymentId: number) => {
-    return await prisma.paymentDetails.findUnique({
+    const salaryDetails = await prisma.paymentDetails.findUnique({
         where: { id: paymentId },
         include: {
             workDetails: true,
@@ -153,6 +154,12 @@ export const getSalaryDetailsByPaymentId = async (paymentId: number) => {
             },
         },
     });
+
+    if (!salaryDetails) {
+        throw new NotFoundError(`Salary details with ID ${paymentId} do not exist.`);
+    }
+
+    return salaryDetails;
 };
 
 /**
@@ -162,6 +169,14 @@ export const getSalaryDetailsByPaymentId = async (paymentId: number) => {
  * @returns The updated payment details.
  */
 export const updateSalaryDetails = async (id: number, salary: Salary) => {
+
+    const existingSalary = await prisma.paymentDetails.findUnique({
+        where: { id },
+    });
+
+    if (!existingSalary) {
+        throw new NotFoundError(`Salary details with ID ${id} do not exist.`);
+    }
 
     const overtimePayment = calculateOvertimePayment(salary.workDetails, salary.earnings.basicSalary); // Calculate overtime payment
     const totalEarnings = calculateTotalEarnings(salary.earnings, overtimePayment);
@@ -201,7 +216,7 @@ export const updateSalaryDetails = async (id: number, salary: Salary) => {
                     employeePensionInsurance: salary.deductions.employeePensionInsurance,
                     employmentInsurance: salary.deductions.employmentInsurance,
                     longTermCareInsurance: salary.deductions.longTermCareInsurance,
-                    socialInsurance: salary.deductions.socialInsurance,
+                    socialInsurance: calculateSocialInsurance(salary.deductions),
                     incomeTax: salary.deductions.incomeTax,
                     residentTax: salary.deductions.residentTax,
                     advancePayment: salary.deductions.advancePayment,

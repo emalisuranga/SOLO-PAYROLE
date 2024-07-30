@@ -1,6 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 import { Employee } from '../types/employee';
 import { createOrUpdatePaidHolidays } from '../models/leaveManagement';
+import { NotFoundError } from '../errors/customError';
 
 const prisma = new PrismaClient();
 
@@ -71,12 +72,12 @@ export const getEmployeeById = async (id: number) => {
     },
   });
 
-  if (employee) {
-    const remainingPaidVacationDays = employee.paidHolidays.reduce((acc, holiday) => acc + holiday.remainingLeave, 0);
-    return { ...employee, remainingPaidVacationDays };
+  if (!employee) {
+    throw new NotFoundError(`Employee with ID ${id} does not exist.`);
   }
 
-  return null;
+  const remainingPaidVacationDays = employee.paidHolidays.reduce((acc, holiday) => acc + holiday.remainingLeave, 0);
+  return { ...employee, remainingPaidVacationDays };
 };
 
 export const updateEmployee = async (id: number, employee: Employee) => {
@@ -89,14 +90,15 @@ export const updateEmployee = async (id: number, employee: Employee) => {
   });
 
   if (!bankDetailsExists || !salaryDetailsExists) {
-    throw new Error("Related records not found");
+    throw new NotFoundError("Related records not found");
   }
+
   const existingEmployee = await prisma.personalInfo.findUnique({
-    where: { id: id, isDeleted: false },
+    where: { id, isDeleted: false },
   });
 
   if (!existingEmployee) {
-    throw new Error(`Employee with ID ${id} does not exist.`);
+    throw new NotFoundError(`Employee with ID ${id} does not exist.`);
   }
 
   const { joinDate, ...otherDetails } = employee;
@@ -142,6 +144,7 @@ export const updateEmployee = async (id: number, employee: Employee) => {
     },
     include: { salaryDetails: true, bankDetails: true },
   });
+
   return result;
 };
 

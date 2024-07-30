@@ -29,7 +29,6 @@ export const calculateTotalDeductions = (deductions: Salary['deductions']): numb
         deductions.employeePensionInsurance +
         deductions.employmentInsurance +
         deductions.longTermCareInsurance +
-        deductions.socialInsurance +
         deductions.incomeTax +
         deductions.residentTax +
         deductions.advancePayment +
