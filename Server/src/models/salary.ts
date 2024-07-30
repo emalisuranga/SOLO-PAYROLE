@@ -1,56 +1,15 @@
 import { PrismaClient } from '@prisma/client';
 import { Salary } from '../types/salary';
 import { createInitialLeaveRequest, adjustLeaveRequest } from '../models/leaveManagement';
+import {
+    calculateTotalEarnings,
+    calculateTotalDeductions,
+    calculateNonEmploymentDeduction,
+    calculateOvertimePayment,
+    calculateSocialInsurance,
+} from '../utils/salaryCalculations';
 
 const prisma = new PrismaClient();
-
-/**
- * Calculate the total earnings.
- * @param earnings - The earnings details.
- * @returns The total earnings.
- */
-const calculateTotalEarnings = (earnings: Salary['earnings']): number => {
-    return (
-        earnings.overtimePay +
-        earnings.transportationCosts +
-        earnings.attendanceAllowance +
-        earnings.familyAllowance +
-        earnings.leaveAllowance +
-        earnings.specialAllowance
-    );
-};
-
-/**
- * Calculate the total deductions.
- * @param deductions - The deductions details.
- * @returns The total deductions.
- */
-const calculateTotalDeductions = (deductions: Salary['deductions']): number => {
-    return (
-        deductions.healthInsurance +
-        deductions.employeePensionInsurance +
-        deductions.employmentInsurance +
-        deductions.longTermCareInsurance +
-        deductions.socialInsurance +
-        deductions.incomeTax +
-        deductions.residentTax +
-        deductions.advancePayment +
-        deductions.yearEndAdjustment +
-        deductions.nonEmploymentDeduction // Add this line
-    );
-};
-
-/**
- * Calculate non-employment deduction.
- * @param workDetails - The work details.
- * @param basicSalary - The basic salary.
- * @returns The non-employment deduction.
- */
-const calculateNonEmploymentDeduction = (workDetails: Salary['workDetails'], basicSalary: number): number => {
-    const { scheduledWorkingDays, numberOfWorkingDays, numberOfPaidHolidays } = workDetails;
-    const deduction = ((scheduledWorkingDays - numberOfWorkingDays - numberOfPaidHolidays) * basicSalary) / scheduledWorkingDays;
-    return Math.round(deduction);
-};
 
 /**
  * Add salary details for an employee.
@@ -79,8 +38,9 @@ export const addSalaryDetails = async (salary: Salary) => {
         throw new Error(`Salary details for employee ${salary.employeeId} for month ${salary.month} and year ${salary.year} already exist.`);
     }
 
-    const totalEarnings = calculateTotalEarnings(salary.earnings);
-    const nonEmploymentDeduction = calculateNonEmploymentDeduction(salary.workDetails, salary.earnings.basicSalary); // Calculate non-employment deduction
+    const overtimePayment = calculateOvertimePayment(salary.workDetails, salary.earnings.basicSalary); 
+    const totalEarnings = calculateTotalEarnings(salary.earnings, overtimePayment);
+    const nonEmploymentDeduction = calculateNonEmploymentDeduction(salary.workDetails, salary.earnings.basicSalary);
     const totalDeductions = calculateTotalDeductions({ ...salary.deductions, nonEmploymentDeduction });
     const basicSalary = salary.earnings.basicSalary;
     const netSalary = (basicSalary + totalEarnings) - totalDeductions;
@@ -104,7 +64,7 @@ export const addSalaryDetails = async (salary: Salary) => {
             earnings: {
                 create: {
                     basicSalary: salary.earnings.basicSalary,
-                    overtimePay: salary.earnings.overtimePay,
+                    overtimePay: overtimePayment,
                     transportationCosts: salary.earnings.transportationCosts,
                     attendanceAllowance: salary.earnings.attendanceAllowance,
                     familyAllowance: salary.earnings.familyAllowance,
@@ -118,7 +78,7 @@ export const addSalaryDetails = async (salary: Salary) => {
                     employeePensionInsurance: salary.deductions.employeePensionInsurance,
                     employmentInsurance: salary.deductions.employmentInsurance,
                     longTermCareInsurance: salary.deductions.longTermCareInsurance,
-                    socialInsurance: salary.deductions.socialInsurance,
+                    socialInsurance: calculateSocialInsurance(salary.deductions),
                     incomeTax: salary.deductions.incomeTax,
                     residentTax: salary.deductions.residentTax,
                     advancePayment: salary.deductions.advancePayment,
@@ -202,7 +162,9 @@ export const getSalaryDetailsByPaymentId = async (paymentId: number) => {
  * @returns The updated payment details.
  */
 export const updateSalaryDetails = async (id: number, salary: Salary) => {
-    const totalEarnings = calculateTotalEarnings(salary.earnings);
+
+    const overtimePayment = calculateOvertimePayment(salary.workDetails, salary.earnings.basicSalary); // Calculate overtime payment
+    const totalEarnings = calculateTotalEarnings(salary.earnings, overtimePayment);
     const nonEmploymentDeduction = calculateNonEmploymentDeduction(salary.workDetails, salary.earnings.basicSalary); 
     const totalDeductions = calculateTotalDeductions({ ...salary.deductions, nonEmploymentDeduction });
     const basicSalary = salary.earnings.basicSalary;
@@ -225,7 +187,7 @@ export const updateSalaryDetails = async (id: number, salary: Salary) => {
             earnings: {
                 update: {
                     basicSalary: salary.earnings.basicSalary,
-                    overtimePay: salary.earnings.overtimePay,
+                    overtimePay: overtimePayment,
                     transportationCosts: salary.earnings.transportationCosts,
                     attendanceAllowance: salary.earnings.attendanceAllowance,
                     familyAllowance: salary.earnings.familyAllowance,
@@ -253,7 +215,6 @@ export const updateSalaryDetails = async (id: number, salary: Salary) => {
         },
     });
 
-    // Adjust the leave request for the updated salary
     await adjustLeaveRequest({
         employeeId: salary.employeeId,
         newTotalDays: salary.workDetails.numberOfPaidHolidays,

@@ -40,7 +40,7 @@ const getSalarySections = (data) => [
   {
     label: t("sections.earnings"),
     fields: createFields(data?.salaryDetails?.[0] || {}, [
-      { name: "overtimePay", type: "text", required: true },
+      // { name: "overtimePay", type: "text", required: true },
       { name: "transportationCosts", type: "text", required: true },
       { name: "attendanceAllowance", type: "text", required: true },
       { name: "familyAllowance", type: "text", required: true },
@@ -55,7 +55,7 @@ const getSalarySections = (data) => [
       { name: "employeePensionInsurance", type: "text", required: true, defaultValue: 0 },
       { name: "employmentInsurance", type: "text", required: true, defaultValue: 0 },
       { name: "longTermCareInsurance", type: "text", required: true, defaultValue: 0 },
-      { name: "socialInsurance", type: "text", required: true, defaultValue: 0 },
+      // { name: "socialInsurance", type: "text", required: true, defaultValue: 0 },
       { name: "incomeTax", type: "text", required: true, defaultValue: 0 },
       { name: "residentTax", type: "text", required: true, defaultValue: 0 },
       { name: "advancePayment", type: "text", required: true, defaultValue: 0 },

@@ -197,9 +197,8 @@ export const transformFormDataForSalary = (formData,initialData ) => {
     month = 12; 
     year -= 1;
   }
-
   return {
-    employeeId: initialData.id,
+    employeeId: initialData.employeeId? initialData.employeeId : initialData.id,
     month: month,
     year: year,
     workDetails: {
@@ -212,7 +211,7 @@ export const transformFormDataForSalary = (formData,initialData ) => {
       timeLeavingEarly: parseFloat(formData.timeLeavingEarly),
     },
     earnings: {
-      basicSalary: parseFloat(initialData.salaryDetails?.basicSalary || 0),
+      basicSalary: parseFloat(initialData.salaryDetails? initialData.salaryDetails.basicSalary : initialData.earnings.basicSalary),
       overtimePay: parseFloat(formData.overtimePay),
       transportationCosts: parseFloat(formData.transportationCosts),
       attendanceAllowance: parseFloat(formData.attendanceAllowance),
