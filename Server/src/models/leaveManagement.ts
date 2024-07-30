@@ -1,54 +1,21 @@
 import { PrismaClient } from '@prisma/client';
 import { LeaveRequests, AdjustLeaveRequestParams } from '../types/leaveManagementTypes';
+import {
+    calculateLeaveValidity,
+    calculateDifference
+} from '../utils/leaveCalculations';
+import {
+    findEmployeeById,
+    createPaidHoliday,
+    createLeaveRequest,
+    updatePaidHolidayValidity,
+    findLatestLeaveRequest,
+    updateLeaveRequest,
+    findValidPaidHoliday,
+    adjustPaidHolidays
+} from '../utils/leaveQueries';
 
 const prisma = new PrismaClient();
-
-const calculateLeaveValidity = (joinDate: Date) => {
-    const now = new Date();
-    const sixMonthsLater = new Date(joinDate);
-    sixMonthsLater.setMonth(sixMonthsLater.getMonth() + 6);
-
-    const oneYearLater = new Date(joinDate);
-    oneYearLater.setFullYear(oneYearLater.getFullYear() + 1);
-
-    if (now < sixMonthsLater) {
-        return { startDate: joinDate, endDate: sixMonthsLater, totalLeave: 10, isValid: true };
-    } else if (now < oneYearLater) {
-        return { startDate: sixMonthsLater, endDate: oneYearLater, totalLeave: 10, isValid: true };
-    } else {
-        return { startDate: oneYearLater, endDate: new Date(oneYearLater.getFullYear() + 1, oneYearLater.getMonth(), oneYearLater.getDate()), totalLeave: 20, isValid: true };
-    }
-};
-
-const getEmployee = async (employeeId: number) => {
-    const employee = await prisma.personalInfo.findUnique({
-        where: { id: employeeId },
-    });
-    if (!employee) throw new Error(`Employee with ID ${employeeId} does not exist.`);
-    return employee;
-};
-
-const createPaidHoliday = async (employeeId: number, leaveValidity: any) => {
-    return await prisma.paidHolidays.create({
-        data: {
-            employeeId,
-            totalLeave: leaveValidity.totalLeave,
-            usedLeave: 0,
-            remainingLeave: leaveValidity.totalLeave,
-            leaveStart: leaveValidity.startDate,
-            leaveEnd: leaveValidity.endDate,
-            lastUpdated: new Date(),
-            isValid: leaveValidity.isValid,
-        },
-    });
-};
-
-const updatePaidHolidayValidity = async (paidHolidayId: number) => {
-    await prisma.paidHolidays.update({
-        where: { id: paidHolidayId },
-        data: { isValid: false },
-    });
-};
 
 export const createOrUpdatePaidHolidays = async (employeeId: number, joinDate: Date, currentUsedLeave: number = 0) => {
     const leaveValidity = calculateLeaveValidity(joinDate);
@@ -80,12 +47,12 @@ export const checkAndUpdateLeaveValidity = async (employeeId: number) => {
     const now = new Date();
 
     if (!paidHoliday) {
-        const employee = await getEmployee(employeeId);
+        const employee = await findEmployeeById(employeeId);
         const leaveValidity = calculateLeaveValidity(employee.joinDate);
         paidHoliday = await createPaidHoliday(employeeId, leaveValidity);
     } else if (paidHoliday.leaveEnd < now) {
         await updatePaidHolidayValidity(paidHoliday.id);
-        const employee = await getEmployee(employeeId);
+        const employee = await findEmployeeById(employeeId);
         const leaveValidity = calculateLeaveValidity(employee.joinDate);
         paidHoliday = await createPaidHoliday(employeeId, leaveValidity);
     }
@@ -103,17 +70,11 @@ export const createInitialLeaveRequest = async (leaveRequest: { employeeId: numb
     }
 
     const paidHolidayId = await checkAndUpdateLeaveValidity(leaveRequest.employeeId);
-    const newLeaveRequest = await prisma.leaveRequests.create({
-        data: {
-            employeeId: leaveRequest.employeeId,
-            initialDays: leaveRequest.totalDays,
-            adjustedDays: leaveRequest.totalDays,
-            totalDays: leaveRequest.totalDays,
-            requestDate: new Date(),
-            createdAt: new Date(),
-            salaryMonth: leaveRequest.salaryMonth,
-            salaryYear: leaveRequest.salaryYear,
-        },
+    const newLeaveRequest = await createLeaveRequest({
+        employeeId: leaveRequest.employeeId,
+        newTotalDays: leaveRequest.totalDays,
+        salaryMonth: leaveRequest.salaryMonth,
+        salaryYear: leaveRequest.salaryYear,
     });
 
     const updatedPaidHolidays = await prisma.paidHolidays.update({
@@ -131,10 +92,10 @@ export const createInitialLeaveRequest = async (leaveRequest: { employeeId: numb
 export const adjustLeaveRequest = async (params: AdjustLeaveRequestParams) => {
     const { employeeId, newTotalDays, salaryMonth, salaryYear } = params;
 
-    const leaveRequest = await findLatestLeaveRequest(employeeId, salaryMonth, salaryYear);
+    let leaveRequest = await findLatestLeaveRequest(employeeId, salaryMonth, salaryYear);
 
     if (!leaveRequest) {
-        throw new Error('Leave request not found');
+        leaveRequest = await createLeaveRequest(params);
     }
 
     const difference = calculateDifference(newTotalDays, leaveRequest.totalDays);
@@ -151,58 +112,3 @@ export const adjustLeaveRequest = async (params: AdjustLeaveRequestParams) => {
     return updatedLeaveRequest;
 };
 
-const findLatestLeaveRequest = async (employeeId: number, salaryMonth: number, salaryYear: number) => {
-    return await prisma.leaveRequests.findFirst({
-        where: {
-            employeeId,
-            salaryMonth,
-            salaryYear,
-        },
-        orderBy: {
-            requestDate: 'desc',
-        },
-        take: 1,
-    });
-};
-
-const calculateDifference = (newTotalDays: number, previousTotalDays: number) => {
-    return newTotalDays - previousTotalDays;
-};
-
-const updateLeaveRequest = async (leaveRequestId: number, newTotalDays: number) => {
-    return await prisma.leaveRequests.update({
-        where: { id: leaveRequestId },
-        data: {
-            adjustedDays: newTotalDays,
-            totalDays: newTotalDays,
-        },
-    });
-};
-
-const findValidPaidHoliday = async (employeeId: number) => {
-    return await prisma.paidHolidays.findFirst({
-        where: { employeeId, isValid: true },
-    });
-};
-
-const adjustPaidHolidays = async (paidHolidayId: number, difference: number) => {
-    if (difference > 0) {
-        await prisma.paidHolidays.update({
-            where: { id: paidHolidayId },
-            data: {
-                usedLeave: { increment: difference },
-                remainingLeave: { decrement: difference },
-                lastUpdated: new Date(),
-            },
-        });
-    } else if (difference < 0) {
-        await prisma.paidHolidays.update({
-            where: { id: paidHolidayId },
-            data: {
-                usedLeave: { decrement: -difference },
-                remainingLeave: { increment: -difference },
-                lastUpdated: new Date(),
-            },
-        });
-    }
-};
