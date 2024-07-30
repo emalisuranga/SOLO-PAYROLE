@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { TextField, Grid , InputAdornment} from '@mui/material';
+import { TextField, Grid } from '@mui/material';
 
 const RegisterForm = ({ fields, formData, onChange, errors }) => {
   return (
