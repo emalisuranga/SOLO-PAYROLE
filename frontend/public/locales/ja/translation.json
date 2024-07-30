@@ -79,10 +79,13 @@
     "residentTax": "住民税",
     "advancePayment": "前払い",
     "yearEndAdjustment": "年末調整",
-    "salaryDetails": "給与の詳細",
     "totalEarnings": "総収入",
     "totalDeductions": "総控除",
-    "netSalary": "純給与"
+    "netSalary": "純給与",
+    "employeeDetails": "従業員の詳細",
+    "personalInformation": "個人情報",
+    "totalAllowance": "手当合計",
+    "totalCompensation": "総報酬"
   },
   "sections": {
     "personalInfo": "個人情報",
@@ -90,7 +93,8 @@
     "salaryDetails": "給与の詳細",
     "attendanceWorkDetails": "出勤および作業の詳細",
     "earnings": "収入",
-    "deductions": "控除"
+    "deductions": "控除",
+    "totalEarnings": "総収入"
   },
   "validation": {
     "lettersOnly": "{{field}} は文字のみ使用できます",

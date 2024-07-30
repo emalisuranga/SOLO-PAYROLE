@@ -75,10 +75,13 @@
     "residentTax": "Resident Tax",
     "advancePayment": "Advance Payment",
     "yearEndAdjustment": "Year-end Adjustment",
-    "salaryDetails": "Salary Details",
     "totalEarnings": "Total Earnings",
     "totalDeductions": "Total Deductions",
-    "netSalary": "Net Salary"
+    "netSalary": "Net Salary",
+    "employeeDetails": "Employee Details",
+    "personalInformation": "Personal Information",
+    "totalAllowance": "Total Allowance",
+    "totalCompensation": "Total Compensation"
   },
   "sections": {
     "personalInfo": "Employee Info",
@@ -86,7 +89,8 @@
     "salaryDetails": "Salary Details",
     "attendanceWorkDetails": "Attendance and Work Details",
     "earnings": "Earnings",
-    "deductions": "Deductions"
+    "deductions": "Deductions",
+    "totalEarnings": "Total Earnings"
   },
   "validation": {
     "lettersOnly": "{{field}} can only contain letters",
