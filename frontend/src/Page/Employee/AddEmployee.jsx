@@ -1,6 +1,6 @@
 import React from "react";
 import EmployeeHeader from '../../Page/Employee/EmployeeHeader';
-import CustomTabs from "../../Component/CustomTabs";
+import CustomTabs from "../../component/CustomTabs";
 import getSections from '../../utils/sections';
 
 const AddEmployee = () => {

@@ -2,7 +2,7 @@ import React, { lazy, Suspense } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import Dashboard from '../Page/Dashboard';
 import Settings from '../Page/Settings';
-import ErrorBoundary from '../Component/ErrorBoundary';
+import ErrorBoundary from '../component/ErrorBoundary';
 
 const Employee = lazy(() => import('../Page/Employee/Employee'));
 const AddEmployee = lazy(() => import('../Page/Employee/AddEmployee'));

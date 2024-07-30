@@ -8,7 +8,7 @@ import EmployeeHeader from "../../Page/Employee/EmployeeHeader";
 const ViewSalaryDetails = () => {
   const { t } = useTranslation();
   const { paymentId } = useParams();
-  const { fetchSalaryDetailsById, salary, loading, error } = useSalaryStore();
+  const { fetchSalaryDetailsById, loading, error } = useSalaryStore();
   const [salaryDetails, setSalaryDetails] = useState(null);
 
   useEffect(() => {

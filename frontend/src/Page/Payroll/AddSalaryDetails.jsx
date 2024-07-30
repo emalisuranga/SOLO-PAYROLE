@@ -5,7 +5,7 @@ import EmployeeSearch from "./EmployeeSearch";
 import { useNavigate } from "react-router-dom";
 import CustomTabsForSalary from "./CustomTabsForSalary";
 import getSalarySections from "../../utils/salarySections";
-import LoadingAnimation from "../../Component/LoadingAnimation";
+import LoadingAnimation from "../../component/LoadingAnimation";
 import styled from "styled-components";
 
 const EmployeeInfoContainer = styled(Box)`
