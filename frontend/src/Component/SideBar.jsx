@@ -175,7 +175,7 @@ export default function SideBar() {
                 <ListItemText primary="従業員" sx={{ opacity: open ? 1 : 0 }} />
               </ListItemButton>
             </ListItem>
-            <ListItem  disablePadding sx={{ display: 'block' }} onClick={()=>{navigate("/payroll")}}>
+            <ListItem  disablePadding sx={{ display: 'block' }} onClick={()=>{navigate("/salary-details")}}>
               <ListItemButton
                 sx={{
                   minHeight: 48,

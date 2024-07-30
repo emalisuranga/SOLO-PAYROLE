@@ -1,17 +1,16 @@
 import * as Yup from "yup";
 
 const getValidationSchema = (t) => {
-
   return Yup.object().shape({
     firstName: Yup.string()
       .matches(
-        /^[A-Za-z]+$/,
+        /^[A-Za-z\s]+$/,
         t("validation.lettersOnly", { field: t("fields.firstName") })
       )
       .required(t("validation.required", { field: t("fields.firstName") })),
     lastName: Yup.string()
       .matches(
-        /^[A-Za-z]+$/,
+        /^[A-Za-z\s]+$/,
         t("validation.lettersOnly", { field: t("fields.lastName") })
       )
       .required(t("validation.required", { field: t("fields.lastName") })),
@@ -21,14 +20,15 @@ const getValidationSchema = (t) => {
     address: Yup.string().required(
       t("validation.required", { field: t("fields.address") })
     ),
-    dateOfBirth: Yup.date().required(
-      t("validation.required", { field: t("fields.dateOfBirth") })
+    dateOfBirth: Yup.date()
+      .required(t("validation.required", { field: t("fields.dateOfBirth") }))
+      .typeError(t("validation.invalidDate", { field: t("fields.dateOfBirth") })),
+    joinDate: Yup.date()
+      .required(t("validation.required", { field: t("fields.joinDate") }))
+      .typeError(t("validation.invalidDate", { field: t("fields.joinDate") })),
+    department: Yup.string().required(
+      t("validation.required", { field: t("fields.department") })
     ),
-    joinDate: Yup.date().required(
-      t("validation.required", { field: t("fields.joinDate") })
-    ),
-    department: Yup.string()
-      .required(t("validation.required", { field: t("fields.department") })),
     bankAccountNumber: Yup.number()
       .typeError(
         t("validation.number", { field: t("fields.bankAccountNumber") })
@@ -38,7 +38,7 @@ const getValidationSchema = (t) => {
       ),
     bankName: Yup.string()
       .matches(
-        /^[A-Za-z]+$/,
+        /^[A-Za-z\s]+$/,
         t("validation.lettersOnly", { field: t("fields.bankName") })
       )
       .required(t("validation.required", { field: t("fields.bankName") })),
