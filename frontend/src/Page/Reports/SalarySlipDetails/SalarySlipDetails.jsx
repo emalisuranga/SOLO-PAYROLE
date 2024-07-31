@@ -27,7 +27,7 @@ import SalarySlipPrint from "../SalarySlipPrint";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { handleSuccess, handleError } from "../../../utils/responseHandlers";
-import CustomSnackbar from "../../../component/CustomSnackbar";
+import CustomSnackbar from "../../../component/Common/CustomSnackbar";
 
 const SalarySlipDetails = () => {
 

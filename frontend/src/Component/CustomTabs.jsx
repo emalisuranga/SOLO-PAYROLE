@@ -7,7 +7,7 @@ import useFormStore from "../store/formStore";
 import useEmployeeStore from '../store/employeeStore';
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import CustomSnackbar from "./CustomSnackbar";
+import CustomSnackbar from "./Common/CustomSnackbar";
 import { validateForm,initializeFormData, handleFormChange as handleChangeUtil } from "../utils/formUtils";
 
 function CustomTabs({ sections, mode = 'add', initialData = {} }) {

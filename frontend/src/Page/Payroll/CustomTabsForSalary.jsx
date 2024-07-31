@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { Stack, Button, Tab, Tabs, Box } from "@mui/material";
 import CustomTabPanel from "../../component/CustomTabPanel";
 import RegisterForm from "../../component/RegisterForm";
-import CustomSnackbar from "../../component/CustomSnackbar";
+import CustomSnackbar from "../../component/Common/CustomSnackbar";
 import useFormStore from "../../store/formStore";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";

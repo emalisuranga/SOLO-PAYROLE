@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Box, Button, Typography } from "@mui/material";
 import EmployeeHeader from "../../Page/Employee/EmployeeHeader";
-import EmployeeSearch from "./EmployeeSearch";
+import EmployeeSearch from "../Employee/EmployeeSearch";
 import { useNavigate } from "react-router-dom";
 import CustomTabsForSalary from "./CustomTabsForSalary";
 import getSalarySections from "../../utils/salarySections";

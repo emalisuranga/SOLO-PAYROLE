@@ -21,7 +21,7 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { useTranslation } from "react-i18next";
 import useEmployeeStore from "../../store/employeeStore";
 import { useNavigate } from "react-router-dom";
-import CustomSnackbar from "../../component/CustomSnackbar";
+import CustomSnackbar from "../../component/Common/CustomSnackbar";
 
 const EmployeeTable = ({ data }) => {
   const { t } = useTranslation();
