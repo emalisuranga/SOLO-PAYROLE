@@ -301,7 +301,7 @@ const SalarySlipPrint = ({ salarySlip }) => {
               <TableBody>
                 <TableRow>
                   <CustomTableCell>
-                    <Typography variant="h4" align="center">
+                    <Typography variant="h6" align="center">
                       差引支給額
                     </Typography>
                   </CustomTableCell>
@@ -627,7 +627,7 @@ const SalarySlipPrint = ({ salarySlip }) => {
           type="text"
           label="備考"
           name="remarks"
-          value="test"
+          value={salarySlip.remarks}
           fullWidth
           sx={{ mt: 4 }}
           multiline
@@ -635,20 +635,6 @@ const SalarySlipPrint = ({ salarySlip }) => {
           maxRows={10}
         />
       </Paper>
-      {/* <Box
-        id="salary-slip"
-        sx={{ position: "absolute", top: "-10000px", left: "-10000px" }}
-      >
-        <SalarySlip />
-      </Box> */}
-      {/* <Button
-        onClick={exportAsPDF}
-        variant="contained"
-        color="primary"
-        sx={{ mt: 4 }}
-      >
-        Export as PDF
-      </Button> */}
     </Box>
   );
 };

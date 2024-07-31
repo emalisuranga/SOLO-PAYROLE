@@ -2,7 +2,7 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import employeeRoutes from './routes/employeeRoutes';
 import salaryDetailsRouter from './routes/salaryDetailsRouter';
-import salarySlipRoutes from './routes/salarySlip';
+import salarySlipRoutes from './routes/salarySlipRoutes';
 import leaveManagementRoutes from './routes/leaveManagementRoutes';
 import dotenv from 'dotenv';
 import cors from 'cors';

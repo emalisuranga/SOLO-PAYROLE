@@ -44,6 +44,8 @@
   "fields": {
     "firstName": "First Name",
     "lastName": "Last Name",
+    "furiganaFirstName": "Furigana First Name",
+    "furiganaLastName": "Furigana Last Name",
     "phone": "Phone",
     "address": "Address",
     "dateOfBirth": "Date of Birth",
@@ -81,7 +83,8 @@
     "employeeDetails": "Employee Details",
     "personalInformation": "Personal Information",
     "totalAllowance": "Total Allowance",
-    "totalCompensation": "Total Compensation"
+    "totalCompensation": "Total Compensation",
+    "remarks": "remarks"
   },
   "sections": {
     "personalInfo": "Employee Info",
@@ -90,7 +93,8 @@
     "attendanceWorkDetails": "Attendance and Work Details",
     "earnings": "Earnings",
     "deductions": "Deductions",
-    "totalEarnings": "Total Earnings"
+    "totalEarnings": "Total Earnings",
+    "summary": "Summary"
   },
   "validation": {
     "lettersOnly": "{{field}} can only contain letters",

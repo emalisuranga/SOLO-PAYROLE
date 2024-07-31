@@ -66,14 +66,14 @@ const ViewSalaryDetails = () => {
 
   return (
     <React.Fragment>
-      <EmployeeHeader titleKey="fields.salaryDetails" />
+      <EmployeeHeader titleKey="sections.salaryDetails" />
       <Box sx={{ p: 3 }}>
         <Card>
           <CardContent>
             <Typography variant="h4" gutterBottom>{`${salaryDetails.employee.firstName} ${salaryDetails.employee.lastName}`}</Typography>
             <Grid container spacing={2}>
               <Grid item xs={12}>
-                <Typography variant="h6" gutterBottom>{t("sections.totalEarnings")}</Typography>
+                <Typography variant="h6" gutterBottom>{t("sections.summary")}</Typography>
               </Grid>
               {renderSalaryDetail(t("fields.totalEarnings"), salaryDetails.totalEarnings)}
               {renderSalaryDetail(t("fields.totalDeductions"), salaryDetails.totalDeductions)}

@@ -3,6 +3,8 @@ export interface Employee {
     bankDetails: any;
     firstName: string;
     lastName: string;
+    furiganaFirstName: string;
+    furiganaLastName: string;
     phone: string;
     address: string;
     dateOfBirth: string | Date;

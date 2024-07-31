@@ -63,6 +63,7 @@ model PaymentDetails {
   totalEarnings   Float
   totalDeductions Float
   netSalary       Float
+  remarks         String?      
 
   @@unique([employeeId, month, year])
 }

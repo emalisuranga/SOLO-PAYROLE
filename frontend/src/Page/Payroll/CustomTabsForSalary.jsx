@@ -49,7 +49,8 @@ function CustomTabsForSalary({ sections, initialData }) {
     };
 
     fetchData();
-  }, [sections, initialData, setFormData, fetchEmployeeDetails]);
+    setErrors({});
+  }, [sections, initialData, setFormData, fetchEmployeeDetails, setErrors]);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);

@@ -10,6 +10,8 @@ export const createEmployee = async (employee: Employee) => {
     data: {
       firstName: employee.firstName,
       lastName: employee.lastName,
+      furiganaFirstName: employee.furiganaFirstName,
+      furiganaLastName: employee.furiganaLastName,
       phone: employee.phone,
       address: employee.address,
       dateOfBirth: new Date(employee.dateOfBirth),
@@ -118,6 +120,8 @@ export const updateEmployee = async (id: number, employee: Employee) => {
     data: {
       firstName: employee.firstName,
       lastName: employee.lastName,
+      furiganaFirstName: employee.furiganaFirstName,
+      furiganaLastName: employee.furiganaLastName,
       phone: employee.phone,
       address: employee.address,
       dateOfBirth: new Date(employee.dateOfBirth),

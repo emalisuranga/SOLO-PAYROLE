@@ -30,7 +30,8 @@ function CustomTabs({ sections, mode = 'add', initialData = {} }) {
   useEffect(() => {
     const initialFormData = initializeFormData(sections, initialData);
     setFormData(initialFormData);
-  }, [sections, initialData, setFormData]);
+    setErrors({});
+  }, [sections, initialData, setFormData, setErrors]);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);

@@ -1,6 +1,6 @@
-import getValidationSchema from "./validationSchema";
+import getValidationSchema from "./validationSchemaForEmployee";
 import { getSalaryValidationSchema } from "./validationSchemaForSalary";
-import getSections from '../utils/sections';
+import getSections from './employeeSections';
 
 const formatDate = (dateString) => {
   if (!dateString) return "";

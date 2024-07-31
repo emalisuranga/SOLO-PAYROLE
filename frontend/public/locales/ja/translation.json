@@ -48,6 +48,8 @@
   "fields": {
     "firstName": "名前",
     "lastName": "姓",
+    "furiganaFirstName": "フリガナ名前",
+    "furiganaLastName": "フリガナ姓",
     "phone": "電話番号",
     "address": "住所",
     "dateOfBirth": "生年月日",
@@ -85,7 +87,8 @@
     "employeeDetails": "従業員の詳細",
     "personalInformation": "個人情報",
     "totalAllowance": "手当合計",
-    "totalCompensation": "総報酬"
+    "totalCompensation": "総報酬",
+    "remarks": "備考"
   },
   "sections": {
     "personalInfo": "個人情報",
@@ -94,7 +97,8 @@
     "attendanceWorkDetails": "出勤および作業の詳細",
     "earnings": "収入",
     "deductions": "控除",
-    "totalEarnings": "総収入"
+    "totalEarnings": "総収入",
+    "summary": "概要"
   },
   "validation": {
     "lettersOnly": "{{field}} は文字のみ使用できます",

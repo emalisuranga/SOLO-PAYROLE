@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Table,
   TableBody,
@@ -20,19 +20,25 @@ import {
   CustomTableCell,
   SmallTypography,
   VerticalTableCell,
+  ColoredTableCell
 } from "./SalarySlipDetails.styles";
 import { generatePaymentText } from "../../../utils/dateUtils";
 import SalarySlipPrint from "../SalarySlipPrint";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
+import { handleSuccess, handleError } from "../../../utils/responseHandlers";
+import CustomSnackbar from "../../../component/CustomSnackbar";
 
 const SalarySlipDetails = () => {
+
   const { t } = useTranslation();
   const navigate = useNavigate();
-
   const { employeeId, paymentDetailsId } = useParams();
-  const { salarySlip, loading, error, fetchSalarySlipDetails } =
-    useSalarySlipStore();
+  const { salarySlip, loading, error, fetchSalarySlipDetails, updateRemarks } = useSalarySlipStore();
+  const [remarks, setRemarks] = useState("");
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarSeverity, setSnackbarSeverity] = useState("success");
 
   useEffect(() => {
     fetchSalarySlipDetails(
@@ -41,6 +47,31 @@ const SalarySlipDetails = () => {
     );
   }, [employeeId, paymentDetailsId, fetchSalarySlipDetails]);
 
+  useEffect(() => {
+    if (salarySlip) {
+      setRemarks(salarySlip.remarks || "");
+    }
+  }, [salarySlip]);
+
+  const handleRemarksChange = (event) => {
+    setRemarks(event.target.value);
+  };
+
+  const handleSubmit = async () => {
+    try {
+      await updateRemarks(paymentDetailsId, remarks);
+      handleSuccess(setSnackbarMessage, setSnackbarSeverity, setSnackbarOpen, t("actions.update_success"));
+      exportAsPDF(); 
+    } catch (error) {
+      console.error("Error updating remarks:", error);
+      handleError(setSnackbarMessage, setSnackbarSeverity, setSnackbarOpen, error, t("actions.update_error"));
+    }
+  };
+
+  const handleCloseSnackbar = () => {
+    setSnackbarOpen(false);
+  };
+
   const paymentText = salarySlip
     ? generatePaymentText(salarySlip.year, salarySlip.month)
     : "";
@@ -48,9 +79,8 @@ const SalarySlipDetails = () => {
   const exportAsPDF = async () => {
     const input = document.getElementById("salary-slip");
 
-    // Reduce the scale for lower resolution and smaller size
     const canvas = await html2canvas(input, { scale: 1.5, useCORS: true });
-    let imgData = canvas.toDataURL("image/jpeg", 0.8); // Use JPEG format and reduce quality to 80%
+    let imgData = canvas.toDataURL("image/jpeg", 0.8);
 
     const pdf = new jsPDF({
       orientation: "portrait",
@@ -62,8 +92,9 @@ const SalarySlipDetails = () => {
     const pdfWidth = pdf.internal.pageSize.getWidth();
     const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
 
-    pdf.addImage(imgData, "JPEG", 0, 0, pdfWidth, pdfHeight); // Use JPEG instead of PNG
-    pdf.save("salary-slip.pdf");
+    pdf.addImage(imgData, "JPEG", 0, 0, pdfWidth, pdfHeight);
+    const fileName = `${paymentText}_${salarySlip.employee.firstName}_${salarySlip.employee.lastName}.pdf`;
+    pdf.save(fileName);
   };
 
   if (loading) {
@@ -230,32 +261,32 @@ const SalarySlipDetails = () => {
           <Table sx={{ width: 1000 }}>
             <TableBody>
               <TableRow>
-                <CustomTableCell>
+                <ColoredTableCell>
                   <SmallTypography variant="body2" align="center">
                     部門名
                   </SmallTypography>
-                </CustomTableCell>
+                </ColoredTableCell>
                 <CustomTableCell>
                   <SmallTypography variant="body2" align="center">
                     {`${salarySlip.employee.department}`}
                   </SmallTypography>
                 </CustomTableCell>
-                <CustomTableCell>
+                <ColoredTableCell>
                   <SmallTypography variant="body2" align="center">
                     社員NO
                   </SmallTypography>
-                </CustomTableCell>
+                </ColoredTableCell>
                 <CustomTableCell>
                   <SmallTypography
                     variant="body2"
                     align="center"
                   >{`${salarySlip.employeeId}`}</SmallTypography>
                 </CustomTableCell>
-                <CustomTableCell>
+                <ColoredTableCell>
                   <SmallTypography variant="body2" align="center">
                     氏名
                   </SmallTypography>
-                </CustomTableCell>
+                </ColoredTableCell>
                 <CustomTableCell>
                   <SmallTypography
                     variant="body2"
@@ -277,26 +308,26 @@ const SalarySlipDetails = () => {
                       勤怠
                     </SmallTypography>
                   </VerticalTableCell>
-                  <CustomTableCell>
+                  <ColoredTableCell>
                     <SmallTypography variant="body2" align="center">
                       所定労働日数/Scheduled working days
                     </SmallTypography>
-                  </CustomTableCell>
-                  <CustomTableCell>
+                  </ColoredTableCell>
+                  <ColoredTableCell>
                     <SmallTypography variant="body2" align="center">
                       出勤日数
                     </SmallTypography>
-                  </CustomTableCell>
-                  <CustomTableCell>
+                  </ColoredTableCell>
+                  <ColoredTableCell>
                     <SmallTypography variant="body2" align="center">
                       法定時間外/Overtime
                     </SmallTypography>
-                  </CustomTableCell>
-                  <CustomTableCell>
+                  </ColoredTableCell>
+                  <ColoredTableCell>
                     <SmallTypography variant="body2" align="center">
                       遅刻時間
                     </SmallTypography>
-                  </CustomTableCell>
+                  </ColoredTableCell>
                 </TableRow>
                 <TableRow>
                   <CustomTableCell>
@@ -321,26 +352,26 @@ const SalarySlipDetails = () => {
                   </CustomTableCell>
                 </TableRow>
                 <TableRow>
-                  <CustomTableCell>
+                  <ColoredTableCell>
                     <SmallTypography variant="body2" align="center">
                       早退時間
                     </SmallTypography>
-                  </CustomTableCell>
-                  <CustomTableCell>
+                  </ColoredTableCell>
+                  <ColoredTableCell>
                     <SmallTypography variant="body2" align="center">
                       控除時間/Deductions
                     </SmallTypography>
-                  </CustomTableCell>
-                  <CustomTableCell>
+                  </ColoredTableCell>
+                  <ColoredTableCell>
                     <SmallTypography variant="body2" align="center">
                       有給休暇日数/Number of paid holidays
                     </SmallTypography>
-                  </CustomTableCell>
-                  <CustomTableCell>
+                  </ColoredTableCell>
+                  <ColoredTableCell>
                     <SmallTypography variant="body2" align="center">
                       残有給日数
                     </SmallTypography>
-                  </CustomTableCell>
+                  </ColoredTableCell>
                 </TableRow>
                 <TableRow>
                   <CustomTableCell>
@@ -372,11 +403,11 @@ const SalarySlipDetails = () => {
             <Table sx={{ height: 100, width: "100%" }}>
               <TableBody>
                 <TableRow>
-                  <CustomTableCell>
+                  <ColoredTableCell>
                     <Typography variant="h6" align="center">
                       差引支給額
                     </Typography>
-                  </CustomTableCell>
+                  </ColoredTableCell>
                 </TableRow>
                 <TableRow>
                   <CustomTableCell>
@@ -400,31 +431,31 @@ const SalarySlipDetails = () => {
                     支給
                   </SmallTypography>
                 </VerticalTableCell>
-                <CustomTableCell>
+                <ColoredTableCell>
                   <SmallTypography variant="body2" align="center">
                     役員報酬
                   </SmallTypography>
-                </CustomTableCell>
-                <CustomTableCell>
+                </ColoredTableCell>
+                <ColoredTableCell>
                   <SmallTypography variant="body2" align="center">
                     残業手当/overtime pay
                   </SmallTypography>
-                </CustomTableCell>
-                <CustomTableCell>
+                </ColoredTableCell>
+                <ColoredTableCell>
                   <SmallTypography variant="body2" align="center">
                     交通費/Transportation costs
                   </SmallTypography>
-                </CustomTableCell>
-                <CustomTableCell>
+                </ColoredTableCell>
+                <ColoredTableCell>
                   <SmallTypography variant="body2" align="center">
                     家族手当/Family allowance
                   </SmallTypography>
-                </CustomTableCell>
-                <CustomTableCell>
+                </ColoredTableCell>
+                <ColoredTableCell>
                   <SmallTypography variant="body2" align="center">
                     精勤手当
                   </SmallTypography>
-                </CustomTableCell>
+                </ColoredTableCell>
                 <CustomTableCell>
                   <SmallTypography
                     variant="body2"
@@ -506,21 +537,21 @@ const SalarySlipDetails = () => {
                     align="center"
                   ></SmallTypography>
                 </CustomTableCell>
-                <CustomTableCell>
+                <ColoredTableCell>
                   <SmallTypography variant="body2" align="center">
                     特別手当/Special allowance
                   </SmallTypography>
-                </CustomTableCell>
-                <CustomTableCell>
+                </ColoredTableCell>
+                <ColoredTableCell>
                   <SmallTypography variant="body2" align="center">
                     不就労控除/Non-employment deduction
                   </SmallTypography>
-                </CustomTableCell>
-                <CustomTableCell>
+                </ColoredTableCell>
+                <ColoredTableCell>
                   <SmallTypography variant="body2" align="center">
                     総支給額
                   </SmallTypography>
-                </CustomTableCell>
+                </ColoredTableCell>
               </TableRow>
               <TableRow>
                 <CustomTableCell>
@@ -554,7 +585,7 @@ const SalarySlipDetails = () => {
                 </CustomTableCell>
                 <CustomTableCell>
                   <SmallTypography variant="body2" align="center">
-                  {`${salarySlip.deductions.nonEmploymentDeduction}`}
+                    {`${salarySlip.deductions.nonEmploymentDeduction}`}
                   </SmallTypography>
                 </CustomTableCell>
                 <CustomTableCell>
@@ -577,26 +608,26 @@ const SalarySlipDetails = () => {
                     控除
                   </SmallTypography>
                 </VerticalTableCell>
-                <CustomTableCell>
+                <ColoredTableCell>
                   <SmallTypography variant="body2" align="center">
                     介護保険
                   </SmallTypography>
-                </CustomTableCell>
-                <CustomTableCell>
+                </ColoredTableCell>
+                <ColoredTableCell>
                   <SmallTypography variant="body2" align="center">
                     健康保険
                   </SmallTypography>
-                </CustomTableCell>
-                <CustomTableCell>
+                </ColoredTableCell>
+                <ColoredTableCell>
                   <SmallTypography variant="body2" align="center">
                     厚生年金
                   </SmallTypography>
-                </CustomTableCell>
-                <CustomTableCell>
+                </ColoredTableCell>
+                <ColoredTableCell>
                   <SmallTypography variant="body2" align="center">
                     雇用保険
                   </SmallTypography>
-                </CustomTableCell>
+                </ColoredTableCell>
                 <CustomTableCell>
                   <SmallTypography
                     variant="body2"
@@ -609,11 +640,11 @@ const SalarySlipDetails = () => {
                     align="center"
                   ></SmallTypography>
                 </CustomTableCell>
-                <CustomTableCell>
+                <ColoredTableCell>
                   <SmallTypography variant="body2" align="center">
                     社会保険料計
                   </SmallTypography>
-                </CustomTableCell>
+                </ColoredTableCell>
               </TableRow>
 
               {/* Second Row */}
@@ -668,36 +699,36 @@ const SalarySlipDetails = () => {
                     align="center"
                   ></SmallTypography>
                 </CustomTableCell>
-                <CustomTableCell>
+                <ColoredTableCell>
                   <SmallTypography variant="body2" align="center">
                     年末調整
                   </SmallTypography>
-                </CustomTableCell>
-                <CustomTableCell>
+                </ColoredTableCell>
+                <ColoredTableCell>
                   <SmallTypography variant="body2" align="center">
                     住民税
                   </SmallTypography>
-                </CustomTableCell>
-                <CustomTableCell>
+                </ColoredTableCell>
+                <ColoredTableCell>
                   <SmallTypography variant="body2" align="center">
                     前払金
                   </SmallTypography>
-                </CustomTableCell>
-                <CustomTableCell>
+                </ColoredTableCell>
+                <ColoredTableCell>
                   <SmallTypography variant="body2" align="center">
                     還付金等
                   </SmallTypography>
-                </CustomTableCell>
-                <CustomTableCell>
+                </ColoredTableCell>
+                <ColoredTableCell>
                   <SmallTypography variant="body2" align="center">
                     所得税
                   </SmallTypography>
-                </CustomTableCell>
-                <CustomTableCell>
+                </ColoredTableCell>
+                <ColoredTableCell>
                   <SmallTypography variant="body2" align="center">
                     控除計
                   </SmallTypography>
-                </CustomTableCell>
+                </ColoredTableCell>
               </TableRow>
               <TableRow>
                 <CustomTableCell>
@@ -746,9 +777,10 @@ const SalarySlipDetails = () => {
         </Grid>
         <TextField
           type="text"
-          label="備考"
+          label={t("fields.remarks")}
           name="remarks"
-          value=""
+          value={remarks}
+          onChange={handleRemarksChange}
           fullWidth
           sx={{ mt: 4 }}
           multiline
@@ -765,7 +797,7 @@ const SalarySlipDetails = () => {
       </Box>
 
       <Stack direction="row" spacing={2} sx={{ mt: 4 }}>
-        <Button onClick={exportAsPDF} variant="contained" color="primary">
+        <Button onClick={handleSubmit} variant="contained" color="primary">
           {t("button.exportAsPDF")}
         </Button>
         <Button
@@ -776,6 +808,12 @@ const SalarySlipDetails = () => {
           {t("button.backToSalaryDetails")}
         </Button>
       </Stack>
+      <CustomSnackbar
+        open={snackbarOpen}
+        message={snackbarMessage}
+        severity={snackbarSeverity}
+        onClose={handleCloseSnackbar}
+      />
     </Box>
   );
 };

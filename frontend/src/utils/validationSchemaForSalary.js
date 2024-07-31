@@ -45,9 +45,6 @@ export const getSalaryValidationSchema = (t) => {
       .required(
         t("validation.required", { field: t("fields.timeLeavingEarly") })
       ),
-    // overtimePay: Yup.number()
-    //   .typeError(t("validation.number", { field: t("fields.overtimePay") }))
-    //   .required(t("validation.required", { field: t("fields.overtimePay") })),
     transportationCosts: Yup.number()
       .typeError(
         t("validation.number", { field: t("fields.transportationCosts") })
@@ -107,11 +104,6 @@ export const getSalaryValidationSchema = (t) => {
       .required(
         t("validation.required", { field: t("fields.longTermCareInsurance") })
       ),
-    // socialInsurance: Yup.number()
-    //   .typeError(t("validation.number", { field: t("fields.socialInsurance") }))
-    //   .required(
-    //     t("validation.required", { field: t("fields.socialInsurance") })
-    //   ),
     incomeTax: Yup.number()
       .typeError(t("validation.number", { field: t("fields.incomeTax") }))
       .required(t("validation.required", { field: t("fields.incomeTax") })),

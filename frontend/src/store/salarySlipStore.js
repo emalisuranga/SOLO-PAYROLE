@@ -21,6 +21,24 @@ const useSalarySlipStore = create((set) => ({
       });
     }
   },
+  updateRemarks: async (paymentDetailsId, remarks) => {
+    set({ loading: true, error: null });
+    try {
+      const response = await api.put(`/salary-slip/${paymentDetailsId}`, { remarks });
+      set((state) => ({
+        salarySlip: {
+          ...state.salarySlip,
+          remarks: response.data.data.remarks,
+        },
+        loading: false,
+      }));
+    } catch (error) {
+      set({
+        error: error.response?.data?.message || 'Failed to update remarks',
+        loading: false,
+      });
+    }
+  },
 }));
 
 export default useSalarySlipStore;
