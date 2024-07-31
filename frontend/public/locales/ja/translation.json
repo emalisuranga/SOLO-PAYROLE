@@ -139,7 +139,8 @@
     "bankAccountNumber": "銀行口座番号",
     "bankName": "銀行名",
     "basicSalary": "基本給",
-    "totalAllowance": "総手当"
+    "totalAllowance": "総手当",
+    "rowsPerPage": "ページごとの行数"
   },
   "button": {
     "exportAsPDF": "PDFとしてエクスポート",

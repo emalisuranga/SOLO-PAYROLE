@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import CustomSnackbar from "./Common/CustomSnackbar";
 import { validateForm,initializeFormData, handleFormChange as handleChangeUtil } from "../utils/formUtils";
+import { handleSuccess, handleError } from "../utils/responseHandlers";
 
 function CustomTabs({ sections, mode = 'add', initialData = {} }) {
   const navigate = useNavigate();
@@ -55,18 +56,14 @@ function CustomTabs({ sections, mode = 'add', initialData = {} }) {
     try {
       if (mode === 'edit') {
         await updateData({ ...formData, id: initialData.id,bankDetails: [{ id: initialData.bankDetails.id }], salaryDetails: [{ id: initialData.salaryDetails.id }] });
-        setSnackbarMessage(t("actions.update_success"));
+        handleSuccess(setSnackbarMessage, setSnackbarSeverity, setSnackbarOpen, t("actions.update_success"));
       } else {
         await saveData(formData);
-        setSnackbarMessage(t("actions.add_success"));
+        handleSuccess(setSnackbarMessage, setSnackbarSeverity, setSnackbarOpen, t("actions.add_success"));
       }
-      setSnackbarSeverity("success");
-      setSnackbarOpen(true);
       setTimeout(() => navigate("/employee"), 2000);
     } catch (error) {
-      setSnackbarSeverity("error");
-      setSnackbarMessage(t("actions.add_error"));
-      setSnackbarOpen(true);
+      handleError(setSnackbarMessage, setSnackbarSeverity, setSnackbarOpen, error, t("actions.add_error"));
       console.error("Failed to save data", error);
     }
   };

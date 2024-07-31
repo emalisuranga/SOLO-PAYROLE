@@ -56,17 +56,6 @@ const AddSalary = () => {
       ) : (
         <LoadingAnimation />
       )}
-
-      <Button
-        variant="contained"
-        onClick={() => {
-          const employeeId = 4;
-          const paymentDetailsId = 4
-          navigate(`/salary-slip/${employeeId}/${paymentDetailsId}`);
-        }}
-      >
-        Payslip1
-      </Button>
     </React.Fragment>
   );
 };

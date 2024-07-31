@@ -135,7 +135,8 @@
     "bankAccountNumber": "Bank Account Number",
     "bankName": "Bank Name",
     "basicSalary": "Basic Salary",
-    "totalAllowance": "Total Allowance"
+    "totalAllowance": "Total Allowance",
+    "rowsPerPage": "Rows per page"
   },
   "button": {
     "exportAsPDF": "Export as PDF",
