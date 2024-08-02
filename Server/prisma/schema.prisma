@@ -40,7 +40,6 @@ model BankDetails {
 model SalaryDetails {
   id                  Int          @id @default(autoincrement())
   basicSalary         Float
-  overtimePay         Float
   transportationCosts Float
   familyAllowance     Float
   attendanceAllowance Float
@@ -63,7 +62,7 @@ model PaymentDetails {
   totalEarnings   Float
   totalDeductions Float
   netSalary       Float
-  remarks         String?      
+  remarks         String?
 
   @@unique([employeeId, month, year])
 }
@@ -92,6 +91,7 @@ model Earnings {
   familyAllowance     Float
   leaveAllowance      Float
   specialAllowance    Float
+  holidayAllowance    Float          @default(0)
 }
 
 model Deductions {
@@ -108,6 +108,7 @@ model Deductions {
   advancePayment           Float
   yearEndAdjustment        Float
   nonEmploymentDeduction   Float          @default(0)
+  refundAmount             Float          @default(0)
 }
 
 model PaidHolidays {

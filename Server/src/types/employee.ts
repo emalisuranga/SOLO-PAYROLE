@@ -14,7 +14,6 @@ export interface Employee {
     bankName: string;
     branchCode: string;
     basicSalary: number;
-    overtimePay: number;
     transportationCosts: number;
     familyAllowance: number;
     attendanceAllowance: number;

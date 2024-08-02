@@ -25,6 +25,7 @@ export interface Salary {
     familyAllowance: number;
     leaveAllowance: number;
     specialAllowance: number;
+    holidayAllowance: number
   }
   
   export interface Deductions {
@@ -37,5 +38,6 @@ export interface Salary {
     residentTax: number;
     advancePayment: number;
     yearEndAdjustment: number;
-    nonEmploymentDeduction: number
+    nonEmploymentDeduction: number;
+    refundAmount: number;
   }

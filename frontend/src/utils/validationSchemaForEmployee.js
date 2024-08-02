@@ -48,27 +48,37 @@ const getValidationSchema = (t) => {
       t("validation.required", { field: t("fields.department") })
     ),
     bankAccountNumber: Yup.number()
+      .nullable()
+      .transform((value, originalValue) =>
+        originalValue.trim() === "" ? null : value
+      )
+      .notRequired()
       .typeError(
         t("validation.number", { field: t("fields.bankAccountNumber") })
-      )
-      .required(
-        t("validation.required", { field: t("fields.bankAccountNumber") })
       ),
     bankName: Yup.string()
+      .nullable()
+      .transform((value, originalValue) =>
+        originalValue.trim() === "" ? null : value
+      )
+      .notRequired()
       .matches(
         /^[A-Za-z\s\u3040-\u30FF\u4E00-\u9FFF]+$/,
         t("validation.lettersOnly", { field: t("fields.bankName") })
-      )
-      .required(t("validation.required", { field: t("fields.bankName") })),
+      ),
     branchCode: Yup.number()
-      .typeError(t("validation.number", { field: t("fields.branchCode") }))
-      .required(t("validation.required", { field: t("fields.branchCode") })),
+      .nullable()
+      .transform((value, originalValue) =>
+        originalValue.trim() === "" ? null : value
+      )
+      .notRequired()
+      .typeError(t("validation.number", { field: t("fields.branchCode") })),
     basicSalary: Yup.number()
       .typeError(t("validation.number", { field: t("fields.basicSalary") }))
       .required(t("validation.required", { field: t("fields.basicSalary") })),
-    overtimePay: Yup.number()
-      .typeError(t("validation.number", { field: t("fields.overtimePay") }))
-      .required(t("validation.required", { field: t("fields.overtimePay") })),
+    // overtimePay: Yup.number()
+    //   .typeError(t("validation.number", { field: t("fields.overtimePay") }))
+    //   .required(t("validation.required", { field: t("fields.overtimePay") })),
     transportationCosts: Yup.number()
       .typeError(
         t("validation.number", { field: t("fields.transportationCosts") })

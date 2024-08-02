@@ -68,9 +68,9 @@
     "overtime": "残業",
     "timeLate": "遅刻時間",
     "timeLeavingEarly": "早退時間",
-    "attendanceAllowance": "出勤手当",
+    "attendanceAllowance": "精勤手当",
     "familyAllowance": "家族手当",
-    "leaveAllowance": "休暇手当",
+    "leaveAllowance": "休業手当",
     "specialAllowance": "特別手当",
     "healthInsurance": "健康保険",
     "employeePensionInsurance": "従業員年金保険",
@@ -88,7 +88,10 @@
     "personalInformation": "個人情報",
     "totalAllowance": "手当合計",
     "totalCompensation": "総報酬",
-    "remarks": "備考"
+    "remarks": "備考",
+    "refundAmount": "還付金等",
+    "holidayAllowance": "休日手当",
+    "nonEmploymentDeduction": "非雇用控除"
   },
   "sections": {
     "personalInfo": "個人情報",

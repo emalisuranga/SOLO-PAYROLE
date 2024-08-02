@@ -84,7 +84,10 @@
     "personalInformation": "Personal Information",
     "totalAllowance": "Total Allowance",
     "totalCompensation": "Total Compensation",
-    "remarks": "remarks"
+    "remarks": "Remarks",
+    "refundAmount": "Refund Amount",
+    "holidayAllowance": "Holiday Allowance",
+    "nonEmploymentDeduction": "Non-Employment Deduction"
   },
   "sections": {
     "personalInfo": "Employee Info",

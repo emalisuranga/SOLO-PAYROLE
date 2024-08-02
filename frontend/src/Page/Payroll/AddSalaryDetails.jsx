@@ -1,8 +1,7 @@
 import React, { useState } from "react";
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import EmployeeHeader from "../../Page/Employee/EmployeeHeader";
 import EmployeeSearch from "../Employee/EmployeeSearch";
-import { useNavigate } from "react-router-dom";
 import CustomTabsForSalary from "./CustomTabsForSalary";
 import getSalarySections from "../../utils/salarySections";
 import LoadingAnimation from "../../component/LoadingAnimation";
@@ -24,7 +23,6 @@ const AddSalary = () => {
   const handleSubmit = (formData) => {
   };
 
-  const navigate = useNavigate();
   const [selectedEmployee, setSelectedEmployee] = useState(null);
 
   const handleSearch = (employee) => {

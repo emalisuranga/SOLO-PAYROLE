@@ -17,6 +17,14 @@ export const getSalarySlipDetails = async (employeeId: number, paymentDetailsId:
           firstName: true,
           lastName: true,
           department: true,
+          paidHolidays: {
+            select: {
+              remainingLeave: true,
+            },
+            where: {
+              isValid: true,
+            },
+          },
         },
       },
       workDetails: true,

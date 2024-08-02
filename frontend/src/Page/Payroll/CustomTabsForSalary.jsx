@@ -12,7 +12,7 @@ import {
   transformFormDataForSalary,
   initializeUpdateSalaryFormData,
   initializeAddSalaryFormData,
-  handleFormChange as handleChangeUtil,
+  handleFormChangeUtil
 } from "../../utils/formUtils";
 import useSalaryStore from "../../store/salaryStore";
 import useEmployeeStore from "../../store/employeeStore";
@@ -45,6 +45,7 @@ function CustomTabsForSalary({ sections, initialData }) {
       } else {
         initialFormData = initializeUpdateSalaryFormData(sections, initialData);
       }
+      console.log("initialFormData",initialFormData)
       setFormData(initialFormData);
     };
 
@@ -56,7 +57,9 @@ function CustomTabsForSalary({ sections, initialData }) {
     setValue(newValue);
   };
 
-  const handleFormChange = handleChangeUtil(formData, setFormData);
+  // const handleFormChange = handleChangeUtil(formData, setFormData);
+  const handleFormChange = handleFormChangeUtil(formData, setFormData);
+
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -112,9 +115,9 @@ function CustomTabsForSalary({ sections, initialData }) {
     }
   };
 
-  const handleCloseSnackbar = () => {
-    setSnackbarOpen(false);
-  };
+  // const handleCloseSnackbar = () => {
+  //   setSnackbarOpen(false);
+  // };
 
   const handleClear = () => {
     clearFormData();
@@ -159,7 +162,7 @@ function CustomTabsForSalary({ sections, initialData }) {
         open={snackbarOpen}
         message={snackbarMessage}
         severity={snackbarSeverity}
-        onClose={handleCloseSnackbar}
+        onClose={() => setSnackbarOpen(false)}
       />
     </form>
   );

@@ -16,19 +16,18 @@ import {
 import { generatePaymentText } from "../../utils/dateUtils";
 
 const SalarySlipPrint = ({ salarySlip }) => {
-
   useEffect(() => {
     const adjustScale = () => {
-      const content = document.getElementById('salary-slip');
+      const content = document.getElementById("salary-slip");
       const scale = Math.min(window.innerWidth / content.offsetWidth, 1);
       content.style.transform = `scale(${scale})`;
     };
 
-    window.addEventListener('resize', adjustScale);
+    window.addEventListener("resize", adjustScale);
     adjustScale();
 
-    return () => window.removeEventListener('resize', adjustScale);
-  }, );
+    return () => window.removeEventListener("resize", adjustScale);
+  });
 
   const paymentText = salarySlip
     ? generatePaymentText(salarySlip.year, salarySlip.month)
@@ -288,7 +287,7 @@ const SalarySlipPrint = ({ salarySlip }) => {
                   </CustomTableCell>
                   <CustomTableCell>
                     <Typography variant="body2" align="center">
-                      {`${salarySlip.workDetails.remainingPaidVacationDays}`}
+                      {`${salarySlip.employee.paidHolidays[0].remainingLeave}`}
                     </Typography>
                   </CustomTableCell>
                 </TableRow>
@@ -357,7 +356,9 @@ const SalarySlipPrint = ({ salarySlip }) => {
                   </Typography>
                 </CustomTableCell>
                 <CustomTableCell>
-                  <Typography variant="body2" align="center"></Typography>
+                  <Typography variant="body2" align="center">
+                    精勤手当
+                  </Typography>
                 </CustomTableCell>
                 <CustomTableCell>
                   <Typography variant="body2" align="center"></Typography>
@@ -368,7 +369,7 @@ const SalarySlipPrint = ({ salarySlip }) => {
               <TableRow>
                 <CustomTableCell>
                   <Typography variant="body2" align="center">
-                  {`${salarySlip.earnings.basicSalary}`}
+                    {`${salarySlip.earnings.basicSalary}`}
                   </Typography>
                 </CustomTableCell>
                 <CustomTableCell>
@@ -392,7 +393,9 @@ const SalarySlipPrint = ({ salarySlip }) => {
                   </Typography>
                 </CustomTableCell>
                 <CustomTableCell>
-                  <Typography variant="body2" align="center"></Typography>
+                  <Typography variant="body2" align="center">
+                  {`${salarySlip.earnings.holidayAllowance}`}
+                  </Typography>
                 </CustomTableCell>
                 <CustomTableCell>
                   <Typography variant="body2" align="center"></Typography>
@@ -451,7 +454,7 @@ const SalarySlipPrint = ({ salarySlip }) => {
                 </CustomTableCell>
                 <CustomTableCell>
                   <Typography variant="body2" align="center">
-                  {`${salarySlip.deductions.nonEmploymentDeduction}`}
+                    {`${salarySlip.deductions.nonEmploymentDeduction}`}
                   </Typography>
                 </CustomTableCell>
                 <CustomTableCell>
@@ -602,7 +605,7 @@ const SalarySlipPrint = ({ salarySlip }) => {
                 </CustomTableCell>
                 <CustomTableCell>
                   <Typography variant="body2" align="center">
-                    {`${salarySlip.deductions.yearEndAdjustment}`}
+                    {`${salarySlip.deductions.refundAmount}`}
                   </Typography>
                 </CustomTableCell>
                 <CustomTableCell>
@@ -612,11 +615,7 @@ const SalarySlipPrint = ({ salarySlip }) => {
                 </CustomTableCell>
                 <CustomTableCell>
                   <Typography variant="body2" align="center">
-                    {salarySlip.deductions.yearEndAdjustment +
-                      salarySlip.deductions.residentTax +
-                      salarySlip.deductions.advancePayment +
-                      salarySlip.deductions.yearEndAdjustment +
-                      salarySlip.deductions.incomeTax}
+                    {salarySlip.totalDeductions}
                   </Typography>
                 </CustomTableCell>
               </TableRow>

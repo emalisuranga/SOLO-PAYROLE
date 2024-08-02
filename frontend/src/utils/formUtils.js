@@ -1,6 +1,7 @@
 import getValidationSchema from "./validationSchemaForEmployee";
 import { getSalaryValidationSchema } from "./validationSchemaForSalary";
 import getSections from './employeeSections';
+import { calculateNonEmploymentDeduction } from './salaryCalculations';
 
 const formatDate = (dateString) => {
   if (!dateString) return "";
@@ -28,7 +29,7 @@ const getFieldValue = (initialData, field) => {
       return initialData.salaryDetails[field.name];
     } else {
       return [
-        "overtimePay",
+        // "overtimePay",
         "transportationCosts",
         "familyAllowance",
         "attendanceAllowance",
@@ -66,30 +67,6 @@ export const cleanInitializeFormData = () => {
   return formData;
 };
 
-// export const initializeSalaryFormData = (sections, initialData = {}) => {
-//   const formData = {};
-
-//   sections.forEach((section) => {
-//     section.fields.forEach((field) => {
-//       let nestedValue;
-
-//       if (section.label === "Earnings") {
-//         nestedValue = initialData.salaryDetails && initialData.salaryDetails[field.name];
-//       } else if (section.label === "Attendance and Work Details") {
-//         nestedValue = initialData.workDetails && initialData.workDetails[field.name];
-//       } else if (section.label === "Deductions") {
-//         nestedValue = initialData.deductions && initialData.deductions[field.name];
-//       } else {
-//         nestedValue = initialData[field.name];
-//       }
-
-//       formData[field.name] = nestedValue !== undefined ? nestedValue : field.defaultValue || 0;
-//     });
-//   });
-
-//   return formData;
-// };
-
 export const initializeAddSalaryFormData = (sections, employeeData = {}) => {
   const formData = {};
 
@@ -109,11 +86,19 @@ export const initializeAddSalaryFormData = (sections, employeeData = {}) => {
       }
     });
   });
+  if (employeeData.salaryDetails && employeeData.salaryDetails.basicSalary !== undefined) {
+    formData.basicSalary = employeeData.salaryDetails.basicSalary;
+  } else {
+    formData.basicSalary = 0;
+  }
 
   return formData;
 };
 
 export const initializeUpdateSalaryFormData = (sections, salaryData = {}) => {
+  // console.log("sections", JSON.stringify(sections))
+  // console.log("salaryData", JSON.stringify(salaryData))
+
   const formData = {};
 
   sections.forEach((section) => {
@@ -142,6 +127,12 @@ export const initializeUpdateSalaryFormData = (sections, salaryData = {}) => {
       }
     });
   });
+
+  if (salaryData.earnings && salaryData.earnings.basicSalary !== undefined) {
+    formData.basicSalary = salaryData.earnings.basicSalary;
+  } else {
+    formData.basicSalary = 0; 
+  }
 
   return formData;
 };
@@ -218,6 +209,7 @@ export const transformFormDataForSalary = (formData,initialData ) => {
       familyAllowance: parseFloat(formData.familyAllowance),
       leaveAllowance: parseFloat(formData.leaveAllowance),
       specialAllowance: parseFloat(formData.specialAllowance),
+      holidayAllowance: parseFloat(formData.holidayAllowance),
     },
     deductions: {
       healthInsurance: parseFloat(formData.healthInsurance),
@@ -229,10 +221,33 @@ export const transformFormDataForSalary = (formData,initialData ) => {
       residentTax: parseFloat(formData.residentTax),
       advancePayment: parseFloat(formData.advancePayment),
       yearEndAdjustment: parseFloat(formData.yearEndAdjustment),
+      nonEmploymentDeduction: parseFloat(formData.nonEmploymentDeduction),
+      refundAmount: parseFloat(formData.refundAmount),
     }
   };
 };
 
 export const getInitialFormData = (employeeData = {}) => {
   return cleanInitializeFormData(employeeData);
+};
+
+
+export const handleFormChangeUtil = (formData, setFormData) => (event) => {
+  console.log(formData)
+  const { name, value } = event.target;
+  const updatedFormData = { ...formData, [name]: value };
+
+    if (name === 'numberOfWorkingDays' || name === 'numberOfPaidHolidays') {
+      const { scheduledWorkingDays, numberOfWorkingDays, numberOfPaidHolidays, basicSalary } = updatedFormData;
+      console.log(scheduledWorkingDays, numberOfWorkingDays, numberOfPaidHolidays, basicSalary)
+          const nonEmploymentDeduction = calculateNonEmploymentDeduction({
+              scheduledWorkingDays,
+              numberOfWorkingDays,
+              numberOfPaidHolidays
+          }, basicSalary);
+
+          updatedFormData.nonEmploymentDeduction = nonEmploymentDeduction;
+  }
+
+  setFormData(updatedFormData);
 };

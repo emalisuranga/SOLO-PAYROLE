@@ -71,7 +71,6 @@ const EmployeeDetails = () => {
 
   const calculateTotalAllowance = () => {
     return [
-      employee.salaryDetails?.overtimePay,
       employee.salaryDetails?.transportationCosts,
       employee.salaryDetails?.familyAllowance,
       employee.salaryDetails?.attendanceAllowance,
@@ -113,7 +112,6 @@ const EmployeeDetails = () => {
               {renderEmployeeDetail(t("fields.basicSalary"), employee.salaryDetails?.basicSalary)}
               {renderEmployeeDetail(t("fields.totalAllowance"), totalAllowance)}
               {renderEmployeeDetail(t("fields.totalCompensation"), totalCompensation)}
-              {renderEmployeeDetail(t("fields.overtimePay"), employee.salaryDetails?.overtimePay)}
               {renderEmployeeDetail(t("fields.transportationCosts"), employee.salaryDetails?.transportationCosts)}
               {renderEmployeeDetail(t("fields.familyAllowance"), employee.salaryDetails?.familyAllowance)}
               {renderEmployeeDetail(t("fields.attendanceAllowance"), employee.salaryDetails?.attendanceAllowance)}

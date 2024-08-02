@@ -20,7 +20,7 @@ import {
   CustomTableCell,
   SmallTypography,
   VerticalTableCell,
-  ColoredTableCell
+  ColoredTableCell,
 } from "./SalarySlipDetails.styles";
 import { generatePaymentText } from "../../../utils/dateUtils";
 import SalarySlipPrint from "../SalarySlipPrint";
@@ -30,11 +30,11 @@ import { handleSuccess, handleError } from "../../../utils/responseHandlers";
 import CustomSnackbar from "../../../component/Common/CustomSnackbar";
 
 const SalarySlipDetails = () => {
-
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { employeeId, paymentDetailsId } = useParams();
-  const { salarySlip, loading, error, fetchSalarySlipDetails, updateRemarks } = useSalarySlipStore();
+  const { salarySlip, loading, error, fetchSalarySlipDetails, updateRemarks } =
+    useSalarySlipStore();
   const [remarks, setRemarks] = useState("");
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
@@ -60,11 +60,22 @@ const SalarySlipDetails = () => {
   const handleSubmit = async () => {
     try {
       await updateRemarks(paymentDetailsId, remarks);
-      handleSuccess(setSnackbarMessage, setSnackbarSeverity, setSnackbarOpen, t("actions.update_success"));
-      exportAsPDF(); 
+      handleSuccess(
+        setSnackbarMessage,
+        setSnackbarSeverity,
+        setSnackbarOpen,
+        t("actions.update_success")
+      );
+      exportAsPDF();
     } catch (error) {
       console.error("Error updating remarks:", error);
-      handleError(setSnackbarMessage, setSnackbarSeverity, setSnackbarOpen, error, t("actions.update_error"));
+      handleError(
+        setSnackbarMessage,
+        setSnackbarSeverity,
+        setSnackbarOpen,
+        error,
+        t("actions.update_error")
+      );
     }
   };
 
@@ -391,7 +402,7 @@ const SalarySlipDetails = () => {
                   </CustomTableCell>
                   <CustomTableCell>
                     <SmallTypography variant="body2" align="center">
-                      {`${salarySlip.workDetails.remainingPaidVacationDays}`}
+                      {`${salarySlip.employee.paidHolidays[0].remainingLeave}`}
                     </SmallTypography>
                   </CustomTableCell>
                 </TableRow>
@@ -456,12 +467,11 @@ const SalarySlipDetails = () => {
                     精勤手当
                   </SmallTypography>
                 </ColoredTableCell>
-                <CustomTableCell>
-                  <SmallTypography
-                    variant="body2"
-                    align="center"
-                  ></SmallTypography>
-                </CustomTableCell>
+                <ColoredTableCell>
+                  <SmallTypography variant="body2" align="center">
+                    精勤手当
+                  </SmallTypography>
+                </ColoredTableCell>
                 <CustomTableCell>
                   <SmallTypography
                     variant="body2"
@@ -498,10 +508,9 @@ const SalarySlipDetails = () => {
                   </SmallTypography>
                 </CustomTableCell>
                 <CustomTableCell>
-                  <SmallTypography
-                    variant="body2"
-                    align="center"
-                  ></SmallTypography>
+                  <SmallTypography variant="body2" align="center">
+                    {`${salarySlip.earnings.holidayAllowance}`}
+                  </SmallTypography>
                 </CustomTableCell>
                 <CustomTableCell>
                   <SmallTypography
@@ -590,7 +599,9 @@ const SalarySlipDetails = () => {
                 </CustomTableCell>
                 <CustomTableCell>
                   <SmallTypography variant="body2" align="center">
-                    {`${salarySlip.totalEarnings}`}
+                    {`${
+                      salarySlip.totalEarnings
+                    }`}
                   </SmallTypography>
                 </CustomTableCell>
               </TableRow>
@@ -754,7 +765,7 @@ const SalarySlipDetails = () => {
                 </CustomTableCell>
                 <CustomTableCell>
                   <SmallTypography variant="body2" align="center">
-                    {`${salarySlip.deductions.yearEndAdjustment}`}
+                    {`${salarySlip.deductions.refundAmount}`}
                   </SmallTypography>
                 </CustomTableCell>
                 <CustomTableCell>
@@ -764,11 +775,7 @@ const SalarySlipDetails = () => {
                 </CustomTableCell>
                 <CustomTableCell>
                   <SmallTypography variant="body2" align="center">
-                    {salarySlip.deductions.yearEndAdjustment +
-                      salarySlip.deductions.residentTax +
-                      salarySlip.deductions.advancePayment +
-                      salarySlip.deductions.yearEndAdjustment +
-                      salarySlip.deductions.incomeTax}
+                    {salarySlip.totalDeductions}
                   </SmallTypography>
                 </CustomTableCell>
               </TableRow>

@@ -6,15 +6,17 @@ import { Salary } from '../types/salary';
  * @param overtimePayment - The overtime payment.
  * @returns The total earnings.
  */
-export const calculateTotalEarnings = (earnings: Salary['earnings'], overtimePayment: number): number => {
+export const calculateTotalEarnings = (earnings: Salary['earnings'], overtimePayment: number, nonEmploymentDeduction: number): number => {
     return (
-        earnings.overtimePay +
+        earnings.basicSalary +
         earnings.transportationCosts +
         earnings.attendanceAllowance +
         earnings.familyAllowance +
         earnings.leaveAllowance +
         earnings.specialAllowance +
-        overtimePayment
+        earnings.holidayAllowance +
+        overtimePayment - 
+        nonEmploymentDeduction
     );
 };
 
@@ -33,7 +35,7 @@ export const calculateTotalDeductions = (deductions: Salary['deductions']): numb
         deductions.residentTax +
         deductions.advancePayment +
         deductions.yearEndAdjustment +
-        deductions.nonEmploymentDeduction
+        deductions.refundAmount
     );
 };
 
@@ -43,11 +45,11 @@ export const calculateTotalDeductions = (deductions: Salary['deductions']): numb
  * @param basicSalary - The basic salary.
  * @returns The non-employment deduction.
  */
-export const calculateNonEmploymentDeduction = (workDetails: Salary['workDetails'], basicSalary: number): number => {
-    const { scheduledWorkingDays, numberOfWorkingDays, numberOfPaidHolidays } = workDetails;
-    const deduction = ((scheduledWorkingDays - numberOfWorkingDays - numberOfPaidHolidays) * basicSalary) / scheduledWorkingDays;
-    return Math.round(deduction);
-};
+// export const calculateNonEmploymentDeduction = (workDetails: Salary['workDetails'], basicSalary: number): number => {
+//     const { scheduledWorkingDays, numberOfWorkingDays, numberOfPaidHolidays } = workDetails;
+//     const deduction = ((scheduledWorkingDays - numberOfWorkingDays - numberOfPaidHolidays) * basicSalary) / scheduledWorkingDays;
+//     return Math.floor(deduction) + (deduction % 1 !== 0 ? 1 : 0);
+// };
 
 /**
  * Calculate overtime payment.
@@ -57,7 +59,8 @@ export const calculateNonEmploymentDeduction = (workDetails: Salary['workDetails
  */
 export const calculateOvertimePayment = (workDetails: Salary['workDetails'], basicSalary: number): number => {
     const { scheduledWorkingDays, overtime } = workDetails;
-    return Math.round((((basicSalary / scheduledWorkingDays) / 8) * 1.25) * overtime);
+    const calculatedValue = (((basicSalary / scheduledWorkingDays) / 8) * 1.25) * overtime;
+    return Math.floor(calculatedValue) + (calculatedValue % 1 !== 0 ? 1 : 0);
 };
 
 /**
@@ -65,6 +68,10 @@ export const calculateOvertimePayment = (workDetails: Salary['workDetails'], bas
  * @param deductions - The deductions details.
  * @returns The social insurance.
  */
-export const calculateSocialInsurance = (deductions: { healthInsurance: number, employeePensionInsurance: number }): number => {
-    return deductions.healthInsurance + deductions.employeePensionInsurance;
+export const calculateSocialInsurance = (deductions: { healthInsurance: number, employeePensionInsurance: number, employmentInsurance: number, longTermCareInsurance: number }): number => {
+    return deductions.healthInsurance + deductions.employeePensionInsurance + deductions.employmentInsurance + deductions.longTermCareInsurance;
+};
+
+export const convertToNegative = (value: number): number => {
+    return -Math.abs(value);
 };

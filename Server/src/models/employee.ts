@@ -28,7 +28,6 @@ export const createEmployee = async (employee: Employee) => {
       salaryDetails: {
         create: {
           basicSalary: parseFloat(employee.basicSalary as unknown as string),
-          overtimePay: parseFloat(employee.overtimePay as unknown as string),
           transportationCosts: parseFloat(employee.transportationCosts as unknown as string),
           familyAllowance: parseFloat(employee.familyAllowance as unknown as string),
           attendanceAllowance: parseFloat(employee.attendanceAllowance as unknown as string),
@@ -137,7 +136,6 @@ export const updateEmployee = async (id: number, employee: Employee) => {
       salaryDetails: {
         update: {
           basicSalary: parseFloat(employee.basicSalary as unknown as string),
-          overtimePay: parseFloat(employee.overtimePay as unknown as string),
           transportationCosts: parseFloat(employee.transportationCosts as unknown as string),
           familyAllowance: parseFloat(employee.familyAllowance as unknown as string),
           attendanceAllowance: parseFloat(employee.attendanceAllowance as unknown as string),

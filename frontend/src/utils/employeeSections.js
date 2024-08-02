@@ -43,16 +43,16 @@ const createFields = (employee, fieldsConfig) =>
     {
       label: t("sections.bankDetails"),
       fields: createFields(employee?.bankDetails?.[0] || {}, [
-        { name: "bankAccountNumber", type: "text", required: true },
-        { name: "bankName", type: "text", required: true },
-        { name: "branchCode", type: "text", required: true },
+        { name: "bankAccountNumber", type: "text" },
+        { name: "bankName", type: "text" },
+        { name: "branchCode", type: "text" },
       ]),
     },
     {
       label: t("sections.salaryDetails"),
       fields: createFields(employee?.salaryDetails?.[0] || {}, [
         { name: "basicSalary", type: "text", required: true },
-        { name: "overtimePay", type: "text", required: true },
+        // { name: "overtimePay", type: "text", required: true },
         { name: "transportationCosts", type: "text", required: true },
         { name: "familyAllowance", type: "text", required: true },
         { name: "attendanceAllowance", type: "text", required: true },

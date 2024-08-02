@@ -43,6 +43,7 @@ function CustomTabs({ sections, mode = 'add', initialData = {} }) {
   const handleFormChange = handleChangeUtil(formData, setFormData);
 
   const validateAndSetErrors = useCallback(async () => {
+    console.log(formData)
     const validationErrors = await validateForm(formData, t);
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
@@ -77,6 +78,7 @@ function CustomTabs({ sections, mode = 'add', initialData = {} }) {
   }, [formData, t, updateData, saveData, setSnackbarMessage, setSnackbarSeverity, setSnackbarOpen, navigate]);
 
   const handleSubmit = useCallback(async (event) => {
+    console.log("formData")
     event.preventDefault();
     const isValid = await validateAndSetErrors();
     if (isValid) {

@@ -137,7 +137,6 @@ const EmployeeTable = ({ data }) => {
               <TableCell>{row.salaryDetails?.basicSalary}</TableCell>
               <TableCell>
                 {[
-                  row.salaryDetails?.overtimePay,
                   row.salaryDetails?.transportationCosts,
                   row.salaryDetails?.familyAllowance,
                   row.salaryDetails?.attendanceAllowance,
