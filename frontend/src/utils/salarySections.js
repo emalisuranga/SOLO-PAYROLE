@@ -1,4 +1,5 @@
 import { t } from 'i18next';
+import { generatePaymentText } from './dateUtils';
 
 const formatDate = (dateString) => {
   if (!dateString) return '';
@@ -35,17 +36,19 @@ const getSalarySections = (data) => [
       { name: "overtime", type: "text", required: true, defaultValue: 0 },
       { name: "timeLate", type: "text", required: true, defaultValue: 0 },
       { name: "timeLeavingEarly", type: "text", required: true, defaultValue: 0 },
+      { name: "slipName", type: "text", required: true, defaultValue: generatePaymentText() },
     ]),
   },
   {
     label: t("sections.earnings"),
     fields: createFields(data?.salaryDetails?.[0] || {}, [
-      { name: "overtimePay", type: "text", required: true },
       { name: "transportationCosts", type: "text", required: true },
       { name: "attendanceAllowance", type: "text", required: true },
       { name: "familyAllowance", type: "text", required: true },
       { name: "leaveAllowance", type: "text", required: true },
       { name: "specialAllowance", type: "text", required: true },
+      { name: "holidayAllowance", type: "text", required: true },
+      { name: "nonEmploymentDeduction", type: "text", required: true },
     ]),
   },
   {
@@ -55,11 +58,11 @@ const getSalarySections = (data) => [
       { name: "employeePensionInsurance", type: "text", required: true, defaultValue: 0 },
       { name: "employmentInsurance", type: "text", required: true, defaultValue: 0 },
       { name: "longTermCareInsurance", type: "text", required: true, defaultValue: 0 },
-      { name: "socialInsurance", type: "text", required: true, defaultValue: 0 },
       { name: "incomeTax", type: "text", required: true, defaultValue: 0 },
       { name: "residentTax", type: "text", required: true, defaultValue: 0 },
       { name: "advancePayment", type: "text", required: true, defaultValue: 0 },
       { name: "yearEndAdjustment", type: "text", required: true, defaultValue: 0 },
+      { name: "refundAmount", type: "text", required: true, defaultValue: 0 },
     ]),
   },
 ];

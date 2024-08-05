@@ -2,10 +2,10 @@ import React, { useEffect, useState } from "react";
 import { Box, Typography, Grid, Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import useSalaryStore from "../../store/salaryStore";
-import SalaryFilter from "../../Component/SalaryFilter";
-import SalaryTable from "../../Component/SalaryTable";
-import Loading from "../../Component/Common/Loading";
-import Error from "../../Component/Common/Error";
+import SalaryFilter from "./SalaryFilter";
+import SalaryTable from "../../Page/Payroll/SalaryTable";
+import Loading from "../../component/Common/Loading";
+import Error from "../../component/Common/Error";
 import { useTranslation } from 'react-i18next';
 
 const SalaryDetailsTable = () => {

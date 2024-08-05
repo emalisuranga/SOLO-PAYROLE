@@ -1,15 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Typography, Grid, Button, TextField, MenuItem, CircularProgress } from '@mui/material';
+import { Box, Typography, Grid, Button, CircularProgress } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import EmployeeTable from './EmployeeTable';
 import useEmployeeStore from '../../store/employeeStore';
+import EmployeeSearch from "./EmployeeSearch";
 
-const Employee = () => {
+const EmployeeDetails = () => {
   const { t } = useTranslation();
-  const [searchName, setSearchName] = useState("");
-  const [searchId, setSearchId] = useState("");
-  const [filteredEmployees, setFilteredEmployees] = useState([]);
+  const [selectedEmployee, setSelectedEmployee] = useState(null);
   const navigate = useNavigate();
 
   const { employees, loading, fetchEmployees } = useEmployeeStore((state) => ({
@@ -22,16 +21,8 @@ const Employee = () => {
     fetchEmployees();
   }, [fetchEmployees]);
 
-  useEffect(() => {
-    setFilteredEmployees(employees);
-  }, [employees]);
-
-  const handleSearch = () => {
-    const filteredData = employees.filter(item =>
-      (searchName === "" || item.firstName.toLowerCase().includes(searchName.toLowerCase()) || item.lastName.toLowerCase().includes(searchName.toLowerCase())) &&
-      (searchId === "" || item.id.toString() === searchId.toString())
-    );
-    setFilteredEmployees(filteredData);
+  const handleSearch = (employee) => {
+    setSelectedEmployee(employee);
   };
 
   if (loading) {
@@ -51,39 +42,22 @@ const Employee = () => {
             <Button variant="contained" onClick={() => navigate("/add-employee")}>{t('addEmployee')}</Button>
           </Box>
         </Grid>
-        <Grid item xs={12}>
-          <Box sx={{ display: 'flex', gap: 2, mb: 2 }}>
-            <TextField
-              label={t('name')}
-              variant="outlined"
-              value={searchName}
-              size="small"
-              onChange={(e) => setSearchName(e.target.value)}
-            />
-            <TextField
-              label={t('ID')}
-              variant="outlined"
-              value={searchId}
-              onChange={(e) => setSearchId(e.target.value)}
-              select
-              size="small"
-              sx={{ width: 100 }} 
-            >
-              {employees.map((item) => (
-                <MenuItem key={item.id} value={item.id}>
-                  {item.id}
-                </MenuItem>
-              ))}
-            </TextField>
-            <Button variant="contained" onClick={handleSearch} sx={{ height: 40 }}>{t('Search')}</Button>
-          </Box>
-        </Grid>
-        <Grid item xs={12}>
-          <EmployeeTable data={filteredEmployees} />
-        </Grid>
+        <EmployeeSearch onSearch={handleSearch} />
+        {selectedEmployee ? (
+          <Grid item xs={12}>
+            <Typography variant="h6">
+              {`${selectedEmployee.firstName} ${selectedEmployee.lastName} (ID: ${selectedEmployee.id})`}
+            </Typography>
+            <EmployeeTable data={[selectedEmployee]} />
+          </Grid>
+        ) : (
+          <Grid item xs={12}>
+            <EmployeeTable data={employees} />
+          </Grid>
+        )}
       </Grid>
     </Box>
   );
 };
 
-export default Employee;
+export default EmployeeDetails;

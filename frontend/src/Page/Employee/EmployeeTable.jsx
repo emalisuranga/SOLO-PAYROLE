@@ -16,12 +16,14 @@ import {
   DialogContentText,
   DialogTitle,
   Button,
+  TablePagination,
 } from "@mui/material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { useTranslation } from "react-i18next";
 import useEmployeeStore from "../../store/employeeStore";
 import { useNavigate } from "react-router-dom";
-import CustomSnackbar from "../../Component/CustomSnackbar";
+import CustomSnackbar from "../../component/Common/CustomSnackbar";
+import { handleSuccess, handleError } from "../../utils/responseHandlers";
 
 const EmployeeTable = ({ data }) => {
   const { t } = useTranslation();
@@ -33,6 +35,8 @@ const EmployeeTable = ({ data }) => {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [snackbarSeverity, setSnackbarSeverity] = useState("success");
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
 
   useEffect(() => {
     if (currentRow) {
@@ -45,7 +49,6 @@ const EmployeeTable = ({ data }) => {
   };
 
   const handleView = (row) => {
-    console.log("handleView",row.id)
     navigate(`/employee/${row.id}`);
   };
 
@@ -72,19 +75,29 @@ const EmployeeTable = ({ data }) => {
     if (currentRow) {
       try {
         await softDeleteEmployee(currentRow.id);
-        setSnackbarMessage(t("actions.delete_success"));
-        setSnackbarSeverity("success");
-        setSnackbarOpen(true);
+        handleSuccess(setSnackbarMessage, setSnackbarSeverity, setSnackbarOpen, t("actions.delete_success"));
         setTimeout(() => fetchEmployees(), 2000);
       } catch (error) {
-        setSnackbarMessage(t("actions.delete_error"));
-        setSnackbarSeverity("error");
-        setSnackbarOpen(true);
+        handleError(setSnackbarMessage, setSnackbarSeverity, setSnackbarOpen, error, t("actions.delete_error"));
         console.error("Failed to save data", error);
       }
       handleDialogClose();
     }
   };
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
+  const paginatedData = data.slice(
+    page * rowsPerPage,
+    page * rowsPerPage + rowsPerPage
+  );
 
   return (
     <TableContainer component={Paper}>
@@ -105,53 +118,66 @@ const EmployeeTable = ({ data }) => {
             <TableCell>{t("table.actions")}</TableCell>
           </TableRow>
         </TableHead>
-<TableBody>
-        {data.map((row) => (
-          <TableRow hover key={row.id}>
-            <TableCell>{row.id}</TableCell>
-            <TableCell>{`${row.firstName} ${row.lastName}`}</TableCell>
-            <TableCell>{row.phone}</TableCell>
-            <TableCell>{row.address}</TableCell>
-            <TableCell>{new Date(row.dateOfBirth).toLocaleDateString()}</TableCell>
-            <TableCell>{new Date(row.joinDate).toLocaleDateString()}</TableCell>
-            <TableCell>{row.department}</TableCell>
-            <TableCell>{row.bankDetails?.bankAccountNumber}</TableCell>
-            <TableCell>{row.bankDetails?.bankName}</TableCell>
-            <TableCell>{row.salaryDetails?.basicSalary}</TableCell>
-            <TableCell>
-              {[
-                row.salaryDetails?.overtimePay,
-                row.salaryDetails?.transportationCosts,
-                row.salaryDetails?.familyAllowance,
-                row.salaryDetails?.attendanceAllowance,
-                row.salaryDetails?.leaveAllowance,
-                row.salaryDetails?.specialAllowance,
-              ].reduce((acc, allowance) => acc + (allowance || 0), 0)}
-            </TableCell>
-            <TableCell>
-              <IconButton onClick={(e) => handleActionClick(e, row)}>
-                <MoreVertIcon />
-              </IconButton>
-              <Menu
-                anchorEl={anchorEl}
-                open={Boolean(anchorEl)}
-                onClose={handleActionClose}
-              >
-                <MenuItem onClick={() => handleView(currentRow)}>
-                  {t('View')}
-                </MenuItem>
-                <MenuItem onClick={() => handleEdit(currentRow)}>
-                  {t('Edit')}
-                </MenuItem>
-                <MenuItem onClick={() =>setOpenDialog(true)}>
-                  {t('Delete')}
-                </MenuItem>
-              </Menu>
-            </TableCell>
-          </TableRow>
-        ))}
-      </TableBody>
+        <TableBody>
+          {paginatedData.map((row) => (
+            <TableRow hover key={row.id}>
+              <TableCell>{row.id}</TableCell>
+              <TableCell>{`${row.firstName} ${row.lastName}`}</TableCell>
+              <TableCell>{row.phone}</TableCell>
+              <TableCell>{row.address}</TableCell>
+              <TableCell>
+                {new Date(row.dateOfBirth).toLocaleDateString()}
+              </TableCell>
+              <TableCell>
+                {new Date(row.joinDate).toLocaleDateString()}
+              </TableCell>
+              <TableCell>{row.department}</TableCell>
+              <TableCell>{row.bankDetails?.bankAccountNumber}</TableCell>
+              <TableCell>{row.bankDetails?.bankName}</TableCell>
+              <TableCell>{row.salaryDetails?.basicSalary}</TableCell>
+              <TableCell>
+                {[
+                  row.salaryDetails?.transportationCosts,
+                  row.salaryDetails?.familyAllowance,
+                  row.salaryDetails?.attendanceAllowance,
+                  row.salaryDetails?.leaveAllowance,
+                  row.salaryDetails?.specialAllowance,
+                ].reduce((acc, allowance) => acc + (allowance || 0), 0)}
+              </TableCell>
+              <TableCell>
+                <IconButton onClick={(e) => handleActionClick(e, row)}>
+                  <MoreVertIcon />
+                </IconButton>
+                <Menu
+                  anchorEl={anchorEl}
+                  open={Boolean(anchorEl)}
+                  onClose={handleActionClose}
+                >
+                  <MenuItem onClick={() => handleView(currentRow)}>
+                    {t("View")}
+                  </MenuItem>
+                  <MenuItem onClick={() => handleEdit(currentRow)}>
+                    {t("Edit")}
+                  </MenuItem>
+                  <MenuItem onClick={() => setOpenDialog(true)}>
+                    {t("Delete")}
+                  </MenuItem>
+                </Menu>
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
       </Table>
+      <TablePagination
+        rowsPerPageOptions={[5, 10]}
+        component="div"
+        count={data.length}
+        rowsPerPage={rowsPerPage}
+        page={page}
+        onPageChange={handleChangePage}
+        onRowsPerPageChange={handleChangeRowsPerPage}
+        labelRowsPerPage={t("table.rowsPerPage")}
+      />
       <Dialog open={openDialog} onClose={handleDialogClose}>
         <DialogTitle>{t("Confirm Delete")}</DialogTitle>
         <DialogContent>

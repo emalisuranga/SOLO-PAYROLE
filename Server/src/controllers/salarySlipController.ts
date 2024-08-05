@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
-import { getSalarySlipDetails } from '../models/salarySlip';
-import { sendSuccessResponse, sendErrorResponse } from '../utils/responseHandler';
+import { getSalarySlipDetails, updatePaymentDetailsRemarks } from '../models/salarySlip';
+import { sendSuccessResponse, sendErrorResponse, handleErrorResponse } from '../utils/responseHandler';
 
 /**
  * Get salary slip details for a given employee and payment details ID.
@@ -21,6 +21,24 @@ export const fetchSalarySlipDetailHandler = async (req: Request, res: Response):
     sendSuccessResponse(res, salarySlip, 'Salary slip fetched successfully');
   } catch (error: any) {
     console.error('Error fetching salary slip details:', error);
-    sendErrorResponse(res, error.message, 'Failed to fetch salary slip details');
+    handleErrorResponse(error, res);
+  }
+};
+
+/**
+ * Update remarks for a given payment details ID.
+ * @param req - Express request object
+ * @param res - Express response object
+ */
+export const updateRemarksHandler = async (req: Request, res: Response): Promise<void> => {
+  const { paymentDetailsId } = req.params;
+  const { remarks } = req.body;
+
+  try {
+    const updatedPaymentDetails = await updatePaymentDetailsRemarks(parseInt(paymentDetailsId, 10), remarks);
+    sendSuccessResponse(res, updatedPaymentDetails, 'Remarks updated successfully');
+  } catch (error: any) {
+    console.error('Error updating remarks:', error);
+    handleErrorResponse(error, res);
   }
 };

@@ -1,42 +1,16 @@
 import { PrismaClient } from '@prisma/client';
 import { Salary } from '../types/salary';
+import { createInitialLeaveRequest, adjustLeaveRequest } from '../models/leaveManagement';
+import {
+    calculateTotalEarnings,
+    calculateTotalDeductions,
+    calculateOvertimePayment,
+    calculateSocialInsurance,
+    convertToNegative
+} from '../utils/salaryCalculations';
+import { NotFoundError, BadRequestError } from '../errors/customError';
 
 const prisma = new PrismaClient();
-
-/**
- * Calculate the total earnings.
- * @param earnings - The earnings details.
- * @returns The total earnings.
- */
-const calculateTotalEarnings = (earnings: Salary['earnings']): number => {
-    return (
-        earnings.overtimePay +
-        earnings.transportationCosts +
-        earnings.attendanceAllowance +
-        earnings.familyAllowance +
-        earnings.leaveAllowance +
-        earnings.specialAllowance
-    );
-};
-
-/**
- * Calculate the total deductions.
- * @param deductions - The deductions details.
- * @returns The total deductions.
- */
-const calculateTotalDeductions = (deductions: Salary['deductions']): number => {
-    return (
-        deductions.healthInsurance +
-        deductions.employeePensionInsurance +
-        deductions.employmentInsurance +
-        deductions.longTermCareInsurance +
-        deductions.socialInsurance +
-        deductions.incomeTax +
-        deductions.residentTax +
-        deductions.advancePayment +
-        deductions.yearEndAdjustment
-    );
-};
 
 /**
  * Add salary details for an employee.
@@ -50,7 +24,7 @@ export const addSalaryDetails = async (salary: Salary) => {
     });
 
     if (!employeeExists) {
-        throw new Error(`Employee with ID ${salary.employeeId} does not exist.`);
+        throw new NotFoundError(`Employee with ID ${salary.employeeId} does not exist.`);
     }
 
     const existingSalary = await prisma.paymentDetails.findFirst({
@@ -62,19 +36,21 @@ export const addSalaryDetails = async (salary: Salary) => {
     });
 
     if (existingSalary) {
-        throw new Error(`Salary details for employee ${salary.employeeId} for month ${salary.month} and year ${salary.year} already exist.`);
+        throw new BadRequestError(`Salary details for employee ${salary.employeeId} for month ${salary.month} and year ${salary.year} already exist.`);
     }
 
-    const totalEarnings = calculateTotalEarnings(salary.earnings);
-    const totalDeductions = calculateTotalDeductions(salary.deductions);
-    const basicSalary = salary.earnings.basicSalary;
-    const netSalary = (basicSalary + totalEarnings) - totalDeductions;
+    const overtimePayment = calculateOvertimePayment(salary.workDetails, salary.earnings.basicSalary); 
+    const totalEarnings = calculateTotalEarnings(salary.earnings, overtimePayment, salary.deductions.nonEmploymentDeduction );
+    // const nonEmploymentDeduction = calculateNonEmploymentDeduction(salary.workDetails, salary.earnings.basicSalary);
+    const totalDeductions = calculateTotalDeductions({ ...salary.deductions, refundAmount:  convertToNegative(salary.deductions.refundAmount)  });
+    const netSalary = totalEarnings - totalDeductions;
 
-    return await prisma.paymentDetails.create({
+    const salaryDetails = await prisma.paymentDetails.create({
         data: {
             employeeId: salary.employeeId,
             month: salary.month,
             year: salary.year,
+            slipName: salary.slipName,
             workDetails: {
                 create: {
                     scheduledWorkingDays: salary.workDetails.scheduledWorkingDays,
@@ -89,12 +65,13 @@ export const addSalaryDetails = async (salary: Salary) => {
             earnings: {
                 create: {
                     basicSalary: salary.earnings.basicSalary,
-                    overtimePay: salary.earnings.overtimePay,
+                    overtimePay: overtimePayment,
                     transportationCosts: salary.earnings.transportationCosts,
                     attendanceAllowance: salary.earnings.attendanceAllowance,
                     familyAllowance: salary.earnings.familyAllowance,
                     leaveAllowance: salary.earnings.leaveAllowance,
                     specialAllowance: salary.earnings.specialAllowance,
+                    holidayAllowance: salary.earnings.holidayAllowance,
                 },
             },
             deductions: {
@@ -103,11 +80,13 @@ export const addSalaryDetails = async (salary: Salary) => {
                     employeePensionInsurance: salary.deductions.employeePensionInsurance,
                     employmentInsurance: salary.deductions.employmentInsurance,
                     longTermCareInsurance: salary.deductions.longTermCareInsurance,
-                    socialInsurance: salary.deductions.socialInsurance,
+                    socialInsurance: calculateSocialInsurance(salary.deductions),
                     incomeTax: salary.deductions.incomeTax,
                     residentTax: salary.deductions.residentTax,
                     advancePayment: salary.deductions.advancePayment,
                     yearEndAdjustment: salary.deductions.yearEndAdjustment,
+                    nonEmploymentDeduction: salary.deductions.nonEmploymentDeduction,
+                    refundAmount: convertToNegative(salary.deductions.refundAmount),
                 },
             },
             totalEarnings: totalEarnings,
@@ -115,6 +94,17 @@ export const addSalaryDetails = async (salary: Salary) => {
             netSalary: netSalary,
         },
     });
+
+    if (salary.workDetails.numberOfPaidHolidays > 0) {
+        await createInitialLeaveRequest({
+            employeeId: salary.employeeId,
+            totalDays: salary.workDetails.numberOfPaidHolidays,
+            salaryMonth: salary.month,
+            salaryYear: salary.year
+        });
+    }
+
+    return salaryDetails;
 };
 
 /**
@@ -151,7 +141,7 @@ export const getSalaryDetailsByMonth = async (month: number, year: number) => {
  * @returns The salary details.
  */
 export const getSalaryDetailsByPaymentId = async (paymentId: number) => {
-    return await prisma.paymentDetails.findUnique({
+    const salaryDetails = await prisma.paymentDetails.findUnique({
         where: { id: paymentId },
         include: {
             workDetails: true,
@@ -166,6 +156,12 @@ export const getSalaryDetailsByPaymentId = async (paymentId: number) => {
             },
         },
     });
+
+    if (!salaryDetails) {
+        throw new NotFoundError(`Salary details with ID ${paymentId} do not exist.`);
+    }
+
+    return salaryDetails;
 };
 
 /**
@@ -175,14 +171,25 @@ export const getSalaryDetailsByPaymentId = async (paymentId: number) => {
  * @returns The updated payment details.
  */
 export const updateSalaryDetails = async (id: number, salary: Salary) => {
-    const totalEarnings = calculateTotalEarnings(salary.earnings);
-    const totalDeductions = calculateTotalDeductions(salary.deductions);
-    const basicSalary = salary.earnings.basicSalary;
-    const netSalary = (basicSalary + totalEarnings) - totalDeductions;
 
-    return await prisma.paymentDetails.update({
+    const existingSalary = await prisma.paymentDetails.findUnique({
+        where: { id },
+    });
+
+    if (!existingSalary) {
+        throw new NotFoundError(`Salary details with ID ${id} do not exist.`);
+    }
+
+    const overtimePayment = calculateOvertimePayment(salary.workDetails, salary.earnings.basicSalary); 
+    const totalEarnings = calculateTotalEarnings(salary.earnings, overtimePayment, salary.deductions.nonEmploymentDeduction );
+    // const nonEmploymentDeduction = calculateNonEmploymentDeduction(salary.workDetails, salary.earnings.basicSalary);
+    const totalDeductions = calculateTotalDeductions({ ...salary.deductions, refundAmount:  convertToNegative(salary.deductions.refundAmount)  });
+    const netSalary = totalEarnings - totalDeductions;
+
+    const updatedSalaryDetails = await prisma.paymentDetails.update({
         where: { id },
         data: {
+            slipName: salary.slipName,
             workDetails: {
                 update: {
                     scheduledWorkingDays: salary.workDetails.scheduledWorkingDays,
@@ -197,12 +204,13 @@ export const updateSalaryDetails = async (id: number, salary: Salary) => {
             earnings: {
                 update: {
                     basicSalary: salary.earnings.basicSalary,
-                    overtimePay: salary.earnings.overtimePay,
+                    overtimePay: overtimePayment,
                     transportationCosts: salary.earnings.transportationCosts,
                     attendanceAllowance: salary.earnings.attendanceAllowance,
                     familyAllowance: salary.earnings.familyAllowance,
                     leaveAllowance: salary.earnings.leaveAllowance,
                     specialAllowance: salary.earnings.specialAllowance,
+                    holidayAllowance: salary.earnings.holidayAllowance,
                 },
             },
             deductions: {
@@ -211,16 +219,27 @@ export const updateSalaryDetails = async (id: number, salary: Salary) => {
                     employeePensionInsurance: salary.deductions.employeePensionInsurance,
                     employmentInsurance: salary.deductions.employmentInsurance,
                     longTermCareInsurance: salary.deductions.longTermCareInsurance,
-                    socialInsurance: salary.deductions.socialInsurance,
+                    socialInsurance: calculateSocialInsurance(salary.deductions),
                     incomeTax: salary.deductions.incomeTax,
                     residentTax: salary.deductions.residentTax,
                     advancePayment: salary.deductions.advancePayment,
                     yearEndAdjustment: salary.deductions.yearEndAdjustment,
+                    nonEmploymentDeduction: salary.deductions.nonEmploymentDeduction,
+                    refundAmount: convertToNegative(salary.deductions.refundAmount),
                 },
             },
-            totalEarnings,
-            totalDeductions,
-            netSalary,
+            totalEarnings: totalEarnings,
+            totalDeductions: totalDeductions,
+            netSalary: netSalary,
         },
     });
+
+    await adjustLeaveRequest({
+        employeeId: salary.employeeId,
+        newTotalDays: salary.workDetails.numberOfPaidHolidays,
+        salaryMonth: salary.month,
+        salaryYear: salary.year,
+    });
+
+    return updatedSalaryDetails;
 };

@@ -23,7 +23,7 @@ import {
 import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import CustomSnackbar from "./CustomSnackbar";
+import CustomSnackbar from "../../component/Common/CustomSnackbar";
 
 const SalaryTable = ({ salaries, onDelete }) => {
   const navigate = useNavigate();

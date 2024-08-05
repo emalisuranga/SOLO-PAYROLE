@@ -1,6 +1,8 @@
-import getValidationSchema from "./validationSchema";
+import getValidationSchema from "./validationSchemaForEmployee";
 import { getSalaryValidationSchema } from "./validationSchemaForSalary";
-import getSections from '../utils/sections';
+import getSections from './employeeSections';
+import { calculateNonEmploymentDeduction } from './salaryCalculations';
+import { generatePaymentText } from './dateUtils';
 
 const formatDate = (dateString) => {
   if (!dateString) return "";
@@ -28,7 +30,7 @@ const getFieldValue = (initialData, field) => {
       return initialData.salaryDetails[field.name];
     } else {
       return [
-        "overtimePay",
+        // "overtimePay",
         "transportationCosts",
         "familyAllowance",
         "attendanceAllowance",
@@ -66,82 +68,50 @@ export const cleanInitializeFormData = () => {
   return formData;
 };
 
-export const initializeSalaryFormData = (sections, initialData = {}) => {
-  const formData = {};
-
-  sections.forEach((section) => {
-    section.fields.forEach((field) => {
-      let nestedValue;
-
-      if (section.label === "Earnings") {
-        nestedValue = initialData.salaryDetails && initialData.salaryDetails[field.name];
-      } else if (section.label === "Attendance and Work Details") {
-        nestedValue = initialData.workDetails && initialData.workDetails[field.name];
-      } else if (section.label === "Deductions") {
-        nestedValue = initialData.deductions && initialData.deductions[field.name];
-      } else {
-        nestedValue = initialData[field.name];
-      }
-
-      formData[field.name] = nestedValue !== undefined ? nestedValue : field.defaultValue || 0;
-    });
-  });
-
-  return formData;
-};
-
 export const initializeAddSalaryFormData = (sections, employeeData = {}) => {
   const formData = {};
+  const { salaryDetails } = employeeData;
 
-  sections.forEach((section) => {
-    section.fields.forEach((field) => {
-      const nestedValue = employeeData[field.name];
-
-      if (nestedValue !== undefined) {
-        formData[field.name] = nestedValue;
-      } else if (
-        employeeData.salaryDetails &&
-        employeeData.salaryDetails[field.name] !== undefined
-      ) {
-        formData[field.name] = employeeData.salaryDetails[field.name];
+  sections.forEach(({ fields }) => {
+    fields.forEach(({ name, defaultValue }) => {
+      if (employeeData[name] !== undefined) {
+        formData[name] = employeeData[name];
+      } else if (salaryDetails && salaryDetails[name] !== undefined) {
+        formData[name] = salaryDetails[name];
       } else {
-        formData[field.name] = field.defaultValue || 0;
+        formData[name] = defaultValue || 0;
       }
     });
   });
+
+  formData.basicSalary = salaryDetails?.basicSalary !== undefined ? salaryDetails.basicSalary : 0;
+  formData.slipName = generatePaymentText();
 
   return formData;
 };
 
 export const initializeUpdateSalaryFormData = (sections, salaryData = {}) => {
   const formData = {};
+  const { workDetails, earnings, deductions, slipName } = salaryData;
 
-  sections.forEach((section) => {
-    section.fields.forEach((field) => {
-      const nestedValue = salaryData[field.name];
-
-      if (nestedValue !== undefined) {
-        formData[field.name] = nestedValue;
-      } else if (
-        salaryData.workDetails &&
-        salaryData.workDetails[field.name] !== undefined
-      ) {
-        formData[field.name] = salaryData.workDetails[field.name];
-      } else if (
-        salaryData.earnings &&
-        salaryData.earnings[field.name] !== undefined
-      ) {
-        formData[field.name] = salaryData.earnings[field.name];
-      } else if (
-        salaryData.deductions &&
-        salaryData.deductions[field.name] !== undefined
-      ) {
-        formData[field.name] = salaryData.deductions[field.name];
+  sections.forEach(({ fields }) => {
+    fields.forEach(({ name, defaultValue }) => {
+      if (salaryData[name] !== undefined) {
+        formData[name] = salaryData[name];
+      } else if (workDetails && workDetails[name] !== undefined) {
+        formData[name] = workDetails[name];
+      } else if (earnings && earnings[name] !== undefined) {
+        formData[name] = earnings[name];
+      } else if (deductions && deductions[name] !== undefined) {
+        formData[name] = deductions[name];
       } else {
-        formData[field.name] = field.defaultValue || 0;
+        formData[name] = defaultValue || 0;
       }
     });
   });
+
+  formData.basicSalary = earnings?.basicSalary !== undefined ? earnings.basicSalary : 0;
+  formData.slipName = slipName || generatePaymentText();
 
   return formData;
 };
@@ -193,15 +163,16 @@ export const transformFormDataForSalary = (formData,initialData ) => {
   let month = now.getMonth(); 
   let year = now.getFullYear();
 
+
   if (month === 0) {
     month = 12; 
     year -= 1;
   }
-
   return {
-    employeeId: initialData.id,
+    employeeId: initialData.employeeId? initialData.employeeId : initialData.id,
     month: month,
     year: year,
+    slipName: formData.slipName,
     workDetails: {
       scheduledWorkingDays: parseInt(formData.scheduledWorkingDays, 10),
       numberOfWorkingDays: parseInt(formData.numberOfWorkingDays, 10),
@@ -212,13 +183,14 @@ export const transformFormDataForSalary = (formData,initialData ) => {
       timeLeavingEarly: parseFloat(formData.timeLeavingEarly),
     },
     earnings: {
-      basicSalary: parseFloat(initialData.salaryDetails?.basicSalary || 0),
+      basicSalary: parseFloat(initialData.salaryDetails? initialData.salaryDetails.basicSalary : initialData.earnings.basicSalary),
       overtimePay: parseFloat(formData.overtimePay),
       transportationCosts: parseFloat(formData.transportationCosts),
       attendanceAllowance: parseFloat(formData.attendanceAllowance),
       familyAllowance: parseFloat(formData.familyAllowance),
       leaveAllowance: parseFloat(formData.leaveAllowance),
       specialAllowance: parseFloat(formData.specialAllowance),
+      holidayAllowance: parseFloat(formData.holidayAllowance),
     },
     deductions: {
       healthInsurance: parseFloat(formData.healthInsurance),
@@ -230,10 +202,33 @@ export const transformFormDataForSalary = (formData,initialData ) => {
       residentTax: parseFloat(formData.residentTax),
       advancePayment: parseFloat(formData.advancePayment),
       yearEndAdjustment: parseFloat(formData.yearEndAdjustment),
+      nonEmploymentDeduction: parseFloat(formData.nonEmploymentDeduction),
+      refundAmount: parseFloat(formData.refundAmount),
     }
   };
 };
 
 export const getInitialFormData = (employeeData = {}) => {
   return cleanInitializeFormData(employeeData);
+};
+
+
+export const handleFormChangeUtil = (formData, setFormData) => (event) => {
+  console.log(formData)
+  const { name, value } = event.target;
+  const updatedFormData = { ...formData, [name]: value };
+
+    if (name === 'numberOfWorkingDays' || name === 'numberOfPaidHolidays') {
+      const { scheduledWorkingDays, numberOfWorkingDays, numberOfPaidHolidays, basicSalary } = updatedFormData;
+      console.log(scheduledWorkingDays, numberOfWorkingDays, numberOfPaidHolidays, basicSalary)
+          const nonEmploymentDeduction = calculateNonEmploymentDeduction({
+              scheduledWorkingDays,
+              numberOfWorkingDays,
+              numberOfPaidHolidays
+          }, basicSalary);
+
+          updatedFormData.nonEmploymentDeduction = nonEmploymentDeduction;
+  }
+
+  setFormData(updatedFormData);
 };

@@ -2,6 +2,7 @@ export interface Salary {
     employeeId: number;
     month: number;
     year: number;
+    slipName: string
     workDetails: WorkDetails;
     earnings: Earnings;
     deductions: Deductions;
@@ -25,6 +26,7 @@ export interface Salary {
     familyAllowance: number;
     leaveAllowance: number;
     specialAllowance: number;
+    holidayAllowance: number
   }
   
   export interface Deductions {
@@ -37,4 +39,6 @@ export interface Salary {
     residentTax: number;
     advancePayment: number;
     yearEndAdjustment: number;
+    nonEmploymentDeduction: number;
+    refundAmount: number;
   }

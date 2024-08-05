@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { Box, TextField, Button, MenuItem, Grid } from '@mui/material';
 import useEmployeeStore from '../../store/employeeStore';
 import { useTranslation } from 'react-i18next';
@@ -23,7 +23,7 @@ const EmployeeSearch = ({ onSearch }) => {
     fetchNamesAndIds();
   }, [fetchEmployeeNamesAndIds]);
 
-  const handleSearch = async () => {
+  const handleSearch = useCallback(async () => {
     let idToSearch = searchId;
     if (!searchId && searchName) {
       const selectedEmployee = employeeList.find(
@@ -41,25 +41,25 @@ const EmployeeSearch = ({ onSearch }) => {
     } else {
       console.error('Please select an employee name or ID.');
     }
-  };
+  }, [searchId, searchName, employeeList, fetchEmployeeDetails, onSearch]);
 
-  const handleNameChange = (e) => {
+  const handleNameChange = useCallback((e) => {
     const selectedName = e.target.value;
     setSearchName(selectedName);
     const selectedEmployee = employeeList.find(
       (item) => `${item.firstName} ${item.lastName}` === selectedName
     );
     setSearchId(selectedEmployee ? selectedEmployee.id : '');
-  };
+  }, [employeeList]);
 
-  const handleIdChange = (e) => {
+  const handleIdChange = useCallback((e) => {
     const selectedId = e.target.value;
     setSearchId(selectedId);
     const selectedEmployee = employeeList.find(
       (item) => item.id === parseInt(selectedId, 10)
     );
     setSearchName(selectedEmployee ? `${selectedEmployee.firstName} ${selectedEmployee.lastName}` : '');
-  };
+  }, [employeeList]);
 
   return (
     <Grid item xs={12}>

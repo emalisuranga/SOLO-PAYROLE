@@ -1,7 +1,7 @@
 import React from "react";
 import EmployeeHeader from '../../Page/Employee/EmployeeHeader';
-import CustomTabs from "../../Component/CustomTabs";
-import getSections from '../../utils/sections';
+import CustomTabs from "../../component/CustomTabs";
+import getSections from '../../utils/employeeSections';
 
 const AddEmployee = () => {
   const handleSubmit = (formData) => {

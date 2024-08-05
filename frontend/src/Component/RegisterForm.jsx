@@ -21,6 +21,8 @@ const RegisterForm = ({ fields, formData, onChange, errors }) => {
             margin="normal"
             variant="outlined"
             InputLabelProps={field.type === 'date' ? { shrink: true } : {}}
+            InputProps={field.name === 'remainingPaidVacationDays' ? { readOnly: true } : {}}
+            disabled={field.disabled}
           />
         </Grid>
       ))}

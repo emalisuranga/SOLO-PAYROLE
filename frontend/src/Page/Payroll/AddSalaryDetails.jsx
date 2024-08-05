@@ -1,11 +1,10 @@
 import React, { useState } from "react";
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import EmployeeHeader from "../../Page/Employee/EmployeeHeader";
-import EmployeeSearch from "./EmployeeSearch";
-import { useNavigate } from "react-router-dom";
+import EmployeeSearch from "../Employee/EmployeeSearch";
 import CustomTabsForSalary from "./CustomTabsForSalary";
 import getSalarySections from "../../utils/salarySections";
-import LoadingAnimation from "../../Component/LoadingAnimation";
+import LoadingAnimation from "../../component/LoadingAnimation";
 import styled from "styled-components";
 
 const EmployeeInfoContainer = styled(Box)`
@@ -24,7 +23,6 @@ const AddSalary = () => {
   const handleSubmit = (formData) => {
   };
 
-  const navigate = useNavigate();
   const [selectedEmployee, setSelectedEmployee] = useState(null);
 
   const handleSearch = (employee) => {
@@ -56,17 +54,6 @@ const AddSalary = () => {
       ) : (
         <LoadingAnimation />
       )}
-
-      <Button
-        variant="contained"
-        onClick={() => {
-          const employeeId = 4;
-          const paymentDetailsId = 4
-          navigate(`/salary-slip/${employeeId}/${paymentDetailsId}`);
-        }}
-      >
-        Payslip1
-      </Button>
     </React.Fragment>
   );
 };

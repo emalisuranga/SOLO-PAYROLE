@@ -39,7 +39,7 @@
     "delete_error": "従業員の削除に失敗しました",
     "salaryDataSaved": "データが正常に保存されました！",
     "salaryDataSaveFailed": "データの保存に失敗しました",
-    "salaryDetailsExist": "この従業員の今月の給与明細は既に存在します。",
+    "salaryDetailsExist": "この従業員の給与明細はすでに作成されています。",
     "salaryDataUpdated": "給与データが正常に更新されました",
     "deleteConfirmationMessageEmployee": "この従業員を無効にしますか？ 後で再有効化することができます。",
     "deleteConfirmationMessageSalary": "この給与明細を削除してもよろしいですか？ この操作は元に戻せません。",
@@ -48,6 +48,8 @@
   "fields": {
     "firstName": "名前",
     "lastName": "姓",
+    "furiganaFirstName": "フリガナ名前",
+    "furiganaLastName": "フリガナ姓",
     "phone": "電話番号",
     "address": "住所",
     "dateOfBirth": "生年月日",
@@ -66,9 +68,9 @@
     "overtime": "残業",
     "timeLate": "遅刻時間",
     "timeLeavingEarly": "早退時間",
-    "attendanceAllowance": "出勤手当",
+    "attendanceAllowance": "精勤手当",
     "familyAllowance": "家族手当",
-    "leaveAllowance": "休暇手当",
+    "leaveAllowance": "休業手当",
     "specialAllowance": "特別手当",
     "healthInsurance": "健康保険",
     "employeePensionInsurance": "従業員年金保険",
@@ -79,10 +81,18 @@
     "residentTax": "住民税",
     "advancePayment": "前払い",
     "yearEndAdjustment": "年末調整",
-    "salaryDetails": "給与の詳細",
     "totalEarnings": "総収入",
     "totalDeductions": "総控除",
-    "netSalary": "純給与"
+    "netSalary": "純給与",
+    "employeeDetails": "従業員の詳細",
+    "personalInformation": "個人情報",
+    "totalAllowance": "手当合計",
+    "totalCompensation": "総報酬",
+    "remarks": "備考",
+    "refundAmount": "還付金等",
+    "holidayAllowance": "休日手当",
+    "nonEmploymentDeduction": "非雇用控除",
+    "slipName": "伝票名"
   },
   "sections": {
     "personalInfo": "個人情報",
@@ -90,7 +100,9 @@
     "salaryDetails": "給与の詳細",
     "attendanceWorkDetails": "出勤および作業の詳細",
     "earnings": "収入",
-    "deductions": "控除"
+    "deductions": "控除",
+    "totalEarnings": "総収入",
+    "summary": "概要"
   },
   "validation": {
     "lettersOnly": "{{field}} は文字のみ使用できます",
@@ -131,7 +143,8 @@
     "bankAccountNumber": "銀行口座番号",
     "bankName": "銀行名",
     "basicSalary": "基本給",
-    "totalAllowance": "総手当"
+    "totalAllowance": "総手当",
+    "rowsPerPage": "ページごとの行数"
   },
   "button": {
     "exportAsPDF": "PDFとしてエクスポート",

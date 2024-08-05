@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import {  CircularProgress, Box } from "@mui/material";
-import CustomTabs from "../../Component/CustomTabs";
+import CustomTabs from "../../component/CustomTabs";
 import { useParams, useNavigate } from 'react-router-dom';
 import useEmployeeStore from '../../store/employeeStore';
-import getSections from '../../utils/sections';
+import getSections from '../../utils/employeeSections';
 import EmployeeHeader from '../../Page/Employee/EmployeeHeader';
 
 const EditEmployee = () => {

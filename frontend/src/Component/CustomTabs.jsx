@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import PropTypes from "prop-types";
 import { Stack,Button,Box,Tab,Tabs } from "@mui/material";
 import CustomTabPanel from "./CustomTabPanel";
@@ -7,8 +7,9 @@ import useFormStore from "../store/formStore";
 import useEmployeeStore from '../store/employeeStore';
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import CustomSnackbar from "./CustomSnackbar";
+import CustomSnackbar from "./Common/CustomSnackbar";
 import { validateForm,initializeFormData, handleFormChange as handleChangeUtil } from "../utils/formUtils";
+import { handleSuccess, handleError } from "../utils/responseHandlers";
 
 function CustomTabs({ sections, mode = 'add', initialData = {} }) {
   const navigate = useNavigate();
@@ -26,11 +27,14 @@ function CustomTabs({ sections, mode = 'add', initialData = {} }) {
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [snackbarSeverity, setSnackbarSeverity] = useState("success");
   const { saveData, updateData } = useEmployeeStore();
+  const initialDataRef = useRef(initialData);
+  const modeRef = useRef(mode);
 
   useEffect(() => {
     const initialFormData = initializeFormData(sections, initialData);
     setFormData(initialFormData);
-  }, [sections, initialData, setFormData]);
+    setErrors({});
+  }, [sections, initialData, setFormData, setErrors]);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -38,37 +42,49 @@ function CustomTabs({ sections, mode = 'add', initialData = {} }) {
 
   const handleFormChange = handleChangeUtil(formData, setFormData);
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    const validationErrors = await validateForm(formData,t);
-
+  const validateAndSetErrors = useCallback(async () => {
+    console.log(formData)
+    const validationErrors = await validateForm(formData, t);
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
       setSnackbarSeverity('error');
       setSnackbarMessage(t("actions.validationError"));
       setSnackbarOpen(true);
-      return;
+      return false;
     }
     setErrors({});
+    return true;
+  }, [formData, t, setErrors, setSnackbarSeverity, setSnackbarMessage, setSnackbarOpen]);
 
+  const handleDataSave = useCallback(async () => {
     try {
-      if (mode === 'edit') {
-        await updateData({ ...formData, id: initialData.id,bankDetails: [{ id: initialData.bankDetails.id }], salaryDetails: [{ id: initialData.salaryDetails.id }] });
-        setSnackbarMessage(t("actions.update_success"));
+      if (modeRef.current === 'edit') {
+        await updateData({
+          ...formData,
+          id: initialDataRef.current.id,
+          bankDetails: [{ id: initialDataRef.current.bankDetails.id }],
+          salaryDetails: [{ id: initialDataRef.current.salaryDetails.id }]
+        });
+        handleSuccess(setSnackbarMessage, setSnackbarSeverity, setSnackbarOpen, t("actions.update_success"));
       } else {
         await saveData(formData);
-        setSnackbarMessage(t("actions.add_success"));
+        handleSuccess(setSnackbarMessage, setSnackbarSeverity, setSnackbarOpen, t("actions.add_success"));
       }
-      setSnackbarSeverity("success");
-      setSnackbarOpen(true);
       setTimeout(() => navigate("/employee"), 2000);
     } catch (error) {
-      setSnackbarSeverity("error");
-      setSnackbarMessage(t("actions.add_error"));
-      setSnackbarOpen(true);
+      handleError(setSnackbarMessage, setSnackbarSeverity, setSnackbarOpen, error, t("actions.add_error"));
       console.error("Failed to save data", error);
     }
-  };
+  }, [formData, t, updateData, saveData, setSnackbarMessage, setSnackbarSeverity, setSnackbarOpen, navigate]);
+
+  const handleSubmit = useCallback(async (event) => {
+    console.log("formData")
+    event.preventDefault();
+    const isValid = await validateAndSetErrors();
+    if (isValid) {
+      await handleDataSave();
+    }
+  }, [handleDataSave, validateAndSetErrors]);
 
   const handleCloseSnackbar = () => {
     setSnackbarOpen(false);
