@@ -26,6 +26,10 @@ model PersonalInfo {
   paymentDetails    PaymentDetails[]
   paidHolidays      PaidHolidays[]
   LeaveRequests     LeaveRequests[]
+
+  @@index([firstName])
+  @@index([lastName])
+  @@index([phone])
 }
 
 model BankDetails {
@@ -55,8 +59,8 @@ model PaymentDetails {
   employeeId      Int
   month           Int
   year            Int
-  slipName        String       @default("") 
-  createdAt       DateTime     @default(now())
+  slipName        String        @default("") 
+  createdAt       DateTime      @default(now())
   workDetails     WorkDetails?
   earnings        Earnings?
   deductions      Deductions?
@@ -66,6 +70,7 @@ model PaymentDetails {
   remarks         String?
 
   @@unique([employeeId, month, year])
+  @@index([month, year])
 }
 
 model WorkDetails {
