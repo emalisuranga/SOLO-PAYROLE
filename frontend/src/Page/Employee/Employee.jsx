@@ -27,16 +27,11 @@ const Employee = () => {
   }, [employees]);
 
   const handleSearch = () => {
-    console.log("handleSearch")
-    console.log("searchId",searchId)
-    console.log("item.id.toString()",employees.id)
     const filteredData = employees.filter(item =>
       (searchName === "" || item.firstName.toLowerCase().includes(searchName.toLowerCase()) || item.lastName.toLowerCase().includes(searchName.toLowerCase())) &&
       (searchId === "" || item.id.toString() === searchId.toString())
     );
-    console.log("filteredData",filteredData)
     setFilteredEmployees(filteredData);
-    // useEmployeeStore.setState({ filteredEmployees: filteredData });
   };
 
   if (loading) {
@@ -53,7 +48,7 @@ const Employee = () => {
         <Grid item xs={12}>
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
             <Typography variant="h5">{t('Employee Details')}</Typography>
-            <Button variant="contained" onClick={() => navigate("/addemployee")}>{t('addEmployee')}</Button>
+            <Button variant="contained" onClick={() => navigate("/add-employee")}>{t('addEmployee')}</Button>
           </Box>
         </Grid>
         <Grid item xs={12}>
@@ -72,7 +67,7 @@ const Employee = () => {
               onChange={(e) => setSearchId(e.target.value)}
               select
               size="small"
-              sx={{ width: 100 }}  // Adjust the width here
+              sx={{ width: 100 }} 
             >
               {employees.map((item) => (
                 <MenuItem key={item.id} value={item.id}>

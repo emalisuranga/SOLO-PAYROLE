@@ -25,9 +25,19 @@ const useEmployeeStore = create((set) => ({
     try {
       const response = await api.get(`/employees/${id}`);
       set({ employee: response.data.data, loading: false });
+      return response.data.data;
     } catch (error) {
       console.error("Error fetching employee details:", error);
       set({ error: "Error fetching employee details", loading: false });
+    }
+  },
+  fetchEmployeeNamesAndIds: async () => {
+    try {
+      const response = await api.get('/employees/employee-names-ids');
+      return response.data.data;
+    } catch (error) {
+      console.error('Error fetching employee names and IDs:', error);
+      throw error;
     }
   },
   saveData: async (data) => {
@@ -48,10 +58,9 @@ const useEmployeeStore = create((set) => ({
       throw error;
     }
   },
-  deleteEmployee: async (id) => {
-    console.log("handleDeleteConfirm")
+  softDeleteEmployee: async (id) => {
     try {
-      const response = await api.delete(`/employees/${id}`);
+      const response = await api.delete(`/employees/soft-delete/${id}`);
       return response.data;
     } catch (error) {
       console.error("Error deleting employee:", error);

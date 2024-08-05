@@ -1,13 +1,8 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
-import Tabs from "@mui/material/Tabs";
-import Tab from "@mui/material/Tab";
-import Box from "@mui/material/Box";
-import { Stack } from "@mui/material";
+import { Stack,Button,Box,Tab,Tabs } from "@mui/material";
 import CustomTabPanel from "./CustomTabPanel";
 import RegisterForm from "./RegisterForm";
-import SubmitButton from "./SubmitButton";
-import Button from "./Button";
 import useFormStore from "../store/formStore";
 import useEmployeeStore from '../store/employeeStore';
 import { useNavigate } from "react-router-dom";
@@ -49,13 +44,15 @@ function CustomTabs({ sections, mode = 'add', initialData = {} }) {
 
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
+      setSnackbarSeverity('error');
+      setSnackbarMessage(t("actions.validationError"));
+      setSnackbarOpen(true);
       return;
     }
+    setErrors({});
 
     try {
       if (mode === 'edit') {
-        console.log({ ...formData, id: initialData.id,bankDetails: [{ id: initialData.bankDetails.id }], salaryDetails: [{ id: initialData.salaryDetails.id }] })
-        // await updateData({ ...formData, id: initialData.id });
         await updateData({ ...formData, id: initialData.id,bankDetails: [{ id: initialData.bankDetails.id }], salaryDetails: [{ id: initialData.salaryDetails.id }] });
         setSnackbarMessage(t("actions.update_success"));
       } else {
@@ -95,9 +92,9 @@ function CustomTabs({ sections, mode = 'add', initialData = {} }) {
           </CustomTabPanel>
         ))}
         <Stack direction="row" spacing={2} sx={{ marginTop: 2, justifyContent: "flex-end" }}>
-          <SubmitButton variant="contained" color="primary" type="submit">
+          <Button variant="contained" color="primary" type="submit">
             {t(mode === 'edit' ? "Update" : "Submit")}
-          </SubmitButton>
+          </Button>
           <Button variant="outlined" color="primary" onClick={handleClear}>
             {t("Clear")}
           </Button>

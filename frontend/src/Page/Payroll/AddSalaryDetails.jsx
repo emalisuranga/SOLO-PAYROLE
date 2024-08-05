@@ -1,271 +1,72 @@
 import React, { useState } from "react";
-import {
-  Stack,
-  TextField,
-  MenuItem,
-  Box,
-  Typography,
-  Grid,
-  Button
-} from "@mui/material";
-import BackButton from "../../Component/BackButton";
-import CustomTabs from "../../Component/CustomTabs";
-import { useNavigate } from 'react-router-dom';
+import { Box, Button, Typography } from "@mui/material";
+import EmployeeHeader from "../../Page/Employee/EmployeeHeader";
+import EmployeeSearch from "./EmployeeSearch";
+import { useNavigate } from "react-router-dom";
+import CustomTabsForSalary from "./CustomTabsForSalary";
+import getSalarySections from "../../utils/salarySections";
+import LoadingAnimation from "../../Component/LoadingAnimation";
+import styled from "styled-components";
 
-const initialData = [
-  { id: 1, name: "John Doe", position: "Developer" },
-  { id: 2, name: "Jane Smith", position: "Designer" },
-  { id: 3, name: "Sam Johnson", position: "Manager" },
-  // Add more data as needed
-];
+const EmployeeInfoContainer = styled(Box)`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+`;
+
+const EmployeeInfo = styled(Typography)`
+  font-size: 1.2em;
+  font-weight: bold;
+`;
 
 const AddSalary = () => {
   const handleSubmit = (formData) => {
-    console.log(formData);
   };
 
-  const sections = [
-    {
-      label: "Employee Information",
-      fields: [
-        {
-          name: "firstName",
-          type: "text",
-          label: "First Name",
-          required: true,
-        },
-        {
-          name: "lastName",
-          type: "text",
-          label: "Last Name",
-          required: true,
-        },
-        { name: "phone", type: "text", label: "Phone", required: true },
-        { name: "address", type: "text", label: "Address", required: true },
-        {
-          name: "dateOfBirth",
-          type: "date",
-          label: "Date of Birth",
-          required: true,
-        },
-        {
-          name: "joinDate",
-          type: "date",
-          label: "Join Date",
-          required: true,
-        },
-        {
-          name: "department",
-          type: "text",
-          label: "Department",
-          required: true,
-        },
-      ],
-    },
-    {
-      label: "Attendance and Work Details",
-      fields: [
-        {
-          name: "scheduledWorkingDays",
-          type: "text",
-          label: "Scheduled Working days",
-          required: true,
-        },
-        {
-          name: "numberOfWorkingDays",
-          type: "text",
-          label: "Number of working days",
-          required: true,
-        },
-        {
-          name: "numberOfPaidHolidays",
-          type: "text",
-          label: "Number of paid holidays",
-          required: true,
-        },
-        {
-          name: "remainingPaidVacationDays",
-          type: "text",
-          label: "Remaining Paid vacation days",
-          required: true,
-        },
-        {
-          name: "overtime",
-          type: "text",
-          label: "Overtime",
-          required: true,
-        },
-        {
-          name: "timeLate",
-          type: "text",
-          label: "Time Late",
-          required: true,
-        },
-        {
-          name: "timeLeavingEarly",
-          type: "text",
-          label: "Time Leaving Early",
-          required: true,
-        },
-      ],
-    },
-    {
-      label: "Earnings",
-      fields: [
-        {
-          name: "attendanceAllowance",
-          type: "text",
-          label: "Attendance Allowance",
-          required: true,
-        },
-        {
-          name: "familyAllowance",
-          type: "text",
-          label: "Family Allowance",
-          required: true,
-        },
-        {
-          name: "attendanceAllowance",
-          type: "text",
-          label: "Attendance Allowance",
-          required: true,
-        },
-        {
-          name: "leaveAllowance",
-          type: "text",
-          label: "Leave Allowance",
-          required: true,
-        },
-        {
-          name: "specialAllowance",
-          type: "text",
-          label: "Special Allowance",
-          required: true,
-        },
-      ],
-    },
-    {
-      label: "Deductions",
-      fields: [
-        {
-          name: "healthInsurance",
-          type: "text",
-          label: "Health insurance",
-          required: true,
-        },
-        {
-          name: "employeePensionInsurance",
-          type: "text",
-          label: "Employee pension insurance",
-          required: true,
-        },
-        {
-          name: "employmentInsurance",
-          type: "text",
-          label: "Employment insurance",
-          required: true,
-        },
-        {
-          name: "longTermCareInsurance",
-          type: "text",
-          label: "Long-term care insurance",
-          required: true,
-        },
-        {
-          name: "socialInsurance",
-          type: "text",
-          label: "Social insurance",
-          required: true,
-        },
-        {
-          name: "incomeTax",
-          type: "text",
-          label: "Income tax",
-          required: true,
-        },
-        {
-          name: "residentTax",
-          type: "text",
-          label: "Resident tax",
-          required: true,
-        },
-        {
-          name: "advancePayment",
-          type: "text",
-          label: "Advance payment",
-          required: true,
-        },
-        {
-          name: "yearEndAdjustment",
-          type: "text",
-          label: "Year-end adjustment",
-          required: true,
-        },
-      ],
-    },
-  ];
+  const navigate = useNavigate();
+  const [selectedEmployee, setSelectedEmployee] = useState(null);
 
-  const [searchName, setSearchName] = useState("");
-  const [searchId, setSearchId] = useState("");
-  const [tableData, setTableData] = useState(initialData);
-  const navigate=useNavigate();
-
-  const handleSearch = () => {
-    const filteredData = initialData.filter(
-      (item) =>
-        (searchName === "" ||
-          item.name.toLowerCase().includes(searchName.toLowerCase())) &&
-        (searchId === "" || item.id.toString() === searchId.toString())
-    );
-    setTableData(filteredData);
+  const handleSearch = (employee) => {
+    setSelectedEmployee(employee);
   };
-
-  const handleNav = ()  => {
-    console.log("test")
-  }
+  const sections = getSalarySections(selectedEmployee);
 
   return (
     <React.Fragment>
-      <Stack
-        direction="row"
-        alignItems="center"
-        spacing={2}
-        sx={{ mb: 2, mt: 2 }}
-      >
-        <BackButton />
-        <Typography variant="h5">給与詳細フォーム</Typography>
-      </Stack>
-      <Grid item xs={12}>
-        <Box sx={{ display: "flex", gap: 2, mb: 2,justifyContent: "flex-end" }}>
-          <TextField
-            label="Name"
-            variant="outlined"
-            value={searchName}
-            onChange={(e) => setSearchName(e.target.value)}
-            size="small" 
+      <EmployeeHeader titleKey="addSalaryForm" />
+      <EmployeeSearch onSearch={handleSearch} />
+
+      {selectedEmployee ? (
+        <Box sx={{ p: 3 }}>
+          <EmployeeInfoContainer>
+            <EmployeeInfo variant="h3" gutterBottom>
+              {`${selectedEmployee.firstName} ${selectedEmployee.lastName}`}
+            </EmployeeInfo>
+            <EmployeeInfo variant="h4" gutterBottom>
+              {selectedEmployee.id}
+            </EmployeeInfo>
+          </EmployeeInfoContainer>
+          <CustomTabsForSalary
+            sections={sections}
+            onSubmit={handleSubmit}
+            initialData={selectedEmployee}
           />
-          <TextField
-            label="ID"
-            variant="outlined"
-            value={searchId}
-            onChange={(e) => setSearchId(e.target.value)}
-            select
-            size="small" 
-            sx={{ width: 100 }} // Adjust the width here
-          >
-            {initialData.map((item) => (
-              <MenuItem key={item.id} value={item.id}>
-                {item.id}
-              </MenuItem>
-            ))}
-          </TextField>
-          <Button variant="contained" onClick={handleSearch} sx={{ height: 40 }} >
-            Search
-          </Button>
         </Box>
-      </Grid>
-      <CustomTabs sections={sections} onSubmit={handleSubmit} />
-      <Button variant="contained" onClick={()=>{navigate("/payslip")}}>Payslip1</Button>
+      ) : (
+        <LoadingAnimation />
+      )}
+
+      <Button
+        variant="contained"
+        onClick={() => {
+          const employeeId = 4;
+          const paymentDetailsId = 4
+          navigate(`/salary-slip/${employeeId}/${paymentDetailsId}`);
+        }}
+      >
+        Payslip1
+      </Button>
     </React.Fragment>
   );
 };

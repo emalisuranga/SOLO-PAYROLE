@@ -2,25 +2,34 @@ import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import Dashboard from '../Page/Dashboard';
 import Employee from '../Page/Employee/Employee';
-import Payroll from '../Page/Payroll';
+// import Payroll from '../Page/Payroll';
 import Settings from '../Page/Settings';
 import AddEmployee from '../Page/Employee/AddEmployee';
 import AddSalaryDetails from '../Page/Payroll/AddSalaryDetails';
-import Payslip from '../Page/Payroll/Payslip2';
+import SalaryDetails from '../Page/Payroll/SalaryDetails';
+// import Payslip from '../Page/Reports/MainComponent';
 import EmployeeDetails from '../Page/Employee/EmployeeDetails';
 import EditEmployee from "../Page/Employee/EditEmployee";
+import ViewSalaryDetails from '../Page/Payroll/ViewSalaryDetails';
+import EditSalary from '../Page/Payroll/EditSalary';
+import SalarySlipDetails from '../Page/Reports/SalarySlipDetails/SalarySlipDetails';
+import SalarySlipPrint from '../Page/Reports/SalarySlipPrint';
 
 const AppRoutes = () => (
   <Routes>
     <Route path="/" element={<Dashboard />} />
-    <Route path="/employee" element={<Employee />} />
-    <Route path="/payroll" element={<Payroll />} />
     <Route path="/settings" element={<Settings />} />
-    <Route path="/addemployee" element={<AddEmployee />} />
+    <Route path="/employee" element={<Employee />} />
+    <Route path="/add-employee" element={<AddEmployee />} />
     <Route path="/add-salary-details" element={<AddSalaryDetails />} />
-    <Route path="/payslip" element={<Payslip />} />
     <Route path="/employee/:id" element={<EmployeeDetails />} />
     <Route path="/employee/edit/:id" element={<EditEmployee />} />
+    <Route path="/salary-details/view/:paymentId" element={<ViewSalaryDetails />} />
+    <Route path="/salary-details" element={<SalaryDetails />} />
+    <Route path="/salary-details/edit/:paymentId" element={<EditSalary />} />
+    <Route path="/salary-slip/:employeeId/:paymentDetailsId" element={<SalarySlipDetails />} />
+    <Route path="/salary-slip-print/:employeeId/:paymentDetailsId" element={<SalarySlipPrint />} />
+    {/* <Route path="/salary-slip" element={<SalarySlipDetails />} /> */}
     
   </Routes>
 );
