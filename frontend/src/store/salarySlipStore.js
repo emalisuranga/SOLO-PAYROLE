@@ -14,11 +14,13 @@ const useSalarySlipStore = create((set) => ({
     try {
       const response = await api.get(`/salary-slip/${employeeId}/${paymentDetailsId}`);
       set({ salarySlip: response.data.data, loading: false });
+      return response.data.data;
     } catch (error) {
       set({
         error: error.response?.data?.message || 'Failed to fetch salary slip details',
         loading: false,
       });
+      return null;
     }
   },
   updateRemarks: async (paymentDetailsId, remarks) => {
@@ -39,6 +41,7 @@ const useSalarySlipStore = create((set) => ({
       });
     }
   },
+  setSalarySlip: (salarySlip) => set({ salarySlip }),
 }));
 
 export default useSalarySlipStore;

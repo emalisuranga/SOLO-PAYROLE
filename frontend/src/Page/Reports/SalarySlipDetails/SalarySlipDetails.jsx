@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect,  useCallback } from "react";
 import {
   Table,
   TableBody,
@@ -22,30 +22,42 @@ import {
   VerticalTableCell,
   ColoredTableCell,
 } from "./SalarySlipDetails.styles";
-import { generatePaymentText } from "../../../utils/dateUtils";
 import SalarySlipPrint from "../SalarySlipPrint";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { handleSuccess, handleError } from "../../../utils/responseHandlers";
 import CustomSnackbar from "../../../component/Common/CustomSnackbar";
+import { formatSalarySlipData } from '../../../utils/formatUtils';
 
 const SalarySlipDetails = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { employeeId, paymentDetailsId } = useParams();
-  const { salarySlip, loading, error, fetchSalarySlipDetails, updateRemarks } =
+  const { salarySlip, loading, error, fetchSalarySlipDetails, updateRemarks, setSalarySlip } =
     useSalarySlipStore();
   const [remarks, setRemarks] = useState("");
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [snackbarSeverity, setSnackbarSeverity] = useState("success");
 
+  const fetchAndSetSalarySlipDetails = useCallback(async () => {
+    try {
+      const result = await fetchSalarySlipDetails(parseInt(employeeId, 10), parseInt(paymentDetailsId, 10));
+      if (result) {
+        const formattedData = formatSalarySlipData(result);
+        setSalarySlip(formattedData);
+        handleSuccess(setSnackbarMessage, setSnackbarSeverity, setSnackbarOpen, "Salary slip details fetched successfully");
+      } else {
+        throw new Error('Data not found');
+      }
+    } catch (error) {
+      handleError(setSnackbarMessage, setSnackbarSeverity, setSnackbarOpen, error, "Failed to fetch salary slip details");
+    }
+  }, [employeeId, paymentDetailsId, fetchSalarySlipDetails, setSalarySlip]);
+
   useEffect(() => {
-    fetchSalarySlipDetails(
-      parseInt(employeeId, 10),
-      parseInt(paymentDetailsId, 10)
-    );
-  }, [employeeId, paymentDetailsId, fetchSalarySlipDetails]);
+    fetchAndSetSalarySlipDetails();
+  }, [fetchAndSetSalarySlipDetails]);
 
   useEffect(() => {
     if (salarySlip) {
@@ -54,7 +66,7 @@ const SalarySlipDetails = () => {
   }, [salarySlip]);
 
   const handleRemarksChange = (event) => {
-    setRemarks(event.target.value);
+    setRemarks(event.target.value || "");
   };
 
   const handleSubmit = async () => {
@@ -83,10 +95,6 @@ const SalarySlipDetails = () => {
     setSnackbarOpen(false);
   };
 
-  const paymentText = salarySlip
-    ? generatePaymentText(salarySlip.year, salarySlip.month)
-    : "";
-
   const exportAsPDF = async () => {
     const input = document.getElementById("salary-slip");
 
@@ -104,7 +112,7 @@ const SalarySlipDetails = () => {
     const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
 
     pdf.addImage(imgData, "JPEG", 0, 0, pdfWidth, pdfHeight);
-    const fileName = `${paymentText}_${salarySlip.employee.firstName}_${salarySlip.employee.lastName}.pdf`;
+    const fileName = `${salarySlip.slipName}_${salarySlip.employee.firstName}_${salarySlip.employee.lastName}.pdf`;
     pdf.save(fileName);
   };
 
@@ -180,7 +188,7 @@ const SalarySlipDetails = () => {
                   }}
                 >
                   <SmallTypography variant="body2">
-                    {paymentText}
+                    {salarySlip.slipName}
                   </SmallTypography>
                   <SmallTypography variant="body2">給料明細書</SmallTypography>
                 </Box>
@@ -251,7 +259,7 @@ const SalarySlipDetails = () => {
         <Grid container spacing={2} sx={{ mt: 1 }}>
           <Grid item xs={5}>
             <SmallTypography variant="body2" align="left">
-              {paymentText}
+            {salarySlip.slipName}
             </SmallTypography>
           </Grid>
           <Grid item xs={6}>
@@ -694,10 +702,7 @@ const SalarySlipDetails = () => {
                 </CustomTableCell>
                 <CustomTableCell>
                   <SmallTypography variant="body2" align="center">
-                    {salarySlip.deductions.longTermCareInsurance +
-                      salarySlip.deductions.healthInsurance +
-                      salarySlip.deductions.employeePensionInsurance +
-                      salarySlip.deductions.employmentInsurance}
+                  {`${salarySlip.deductions.socialInsurance}`}
                   </SmallTypography>
                 </CustomTableCell>
               </TableRow>

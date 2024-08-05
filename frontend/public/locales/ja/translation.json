@@ -39,7 +39,7 @@
     "delete_error": "従業員の削除に失敗しました",
     "salaryDataSaved": "データが正常に保存されました！",
     "salaryDataSaveFailed": "データの保存に失敗しました",
-    "salaryDetailsExist": "この従業員の今月の給与明細は既に存在します。",
+    "salaryDetailsExist": "この従業員の給与明細はすでに作成されています。",
     "salaryDataUpdated": "給与データが正常に更新されました",
     "deleteConfirmationMessageEmployee": "この従業員を無効にしますか？ 後で再有効化することができます。",
     "deleteConfirmationMessageSalary": "この給与明細を削除してもよろしいですか？ この操作は元に戻せません。",
@@ -91,7 +91,8 @@
     "remarks": "備考",
     "refundAmount": "還付金等",
     "holidayAllowance": "休日手当",
-    "nonEmploymentDeduction": "非雇用控除"
+    "nonEmploymentDeduction": "非雇用控除",
+    "slipName": "伝票名"
   },
   "sections": {
     "personalInfo": "個人情報",

@@ -29,10 +29,6 @@ const SalarySlipPrint = ({ salarySlip }) => {
     return () => window.removeEventListener("resize", adjustScale);
   });
 
-  const paymentText = salarySlip
-    ? generatePaymentText(salarySlip.year, salarySlip.month)
-    : "";
-
   if (!salarySlip) {
     return null;
   }
@@ -67,7 +63,7 @@ const SalarySlipPrint = ({ salarySlip }) => {
                     alignItems: "center",
                   }}
                 >
-                  <Typography variant="body2">{paymentText}</Typography>
+                  <Typography variant="body2">{salarySlip.slipName}</Typography>
                   <Typography variant="body2">給料明細書</Typography>
                 </Box>
               </CustomTableCell>
@@ -131,7 +127,7 @@ const SalarySlipPrint = ({ salarySlip }) => {
         <Grid container spacing={2} sx={{ mt: 10 }}>
           <Grid item xs={5}>
             <Typography variant="body2" align="left">
-              {paymentText}
+            {salarySlip.slipName}
             </Typography>
           </Grid>
           <Grid item xs={3}>
@@ -540,10 +536,7 @@ const SalarySlipPrint = ({ salarySlip }) => {
                 </CustomTableCell>
                 <CustomTableCell>
                   <Typography variant="body2" align="center">
-                    {salarySlip.deductions.longTermCareInsurance +
-                      salarySlip.deductions.healthInsurance +
-                      salarySlip.deductions.employeePensionInsurance +
-                      salarySlip.deductions.employmentInsurance}
+                  {`${salarySlip.deductions.socialInsurance}`}
                   </Typography>
                 </CustomTableCell>
               </TableRow>

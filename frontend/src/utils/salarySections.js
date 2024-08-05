@@ -1,4 +1,5 @@
 import { t } from 'i18next';
+import { generatePaymentText } from './dateUtils';
 
 const formatDate = (dateString) => {
   if (!dateString) return '';
@@ -35,6 +36,7 @@ const getSalarySections = (data) => [
       { name: "overtime", type: "text", required: true, defaultValue: 0 },
       { name: "timeLate", type: "text", required: true, defaultValue: 0 },
       { name: "timeLeavingEarly", type: "text", required: true, defaultValue: 0 },
+      { name: "slipName", type: "text", required: true, defaultValue: generatePaymentText() },
     ]),
   },
   {

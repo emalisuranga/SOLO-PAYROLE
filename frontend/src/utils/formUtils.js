@@ -2,6 +2,7 @@ import getValidationSchema from "./validationSchemaForEmployee";
 import { getSalaryValidationSchema } from "./validationSchemaForSalary";
 import getSections from './employeeSections';
 import { calculateNonEmploymentDeduction } from './salaryCalculations';
+import { generatePaymentText } from './dateUtils';
 
 const formatDate = (dateString) => {
   if (!dateString) return "";
@@ -69,70 +70,48 @@ export const cleanInitializeFormData = () => {
 
 export const initializeAddSalaryFormData = (sections, employeeData = {}) => {
   const formData = {};
+  const { salaryDetails } = employeeData;
 
-  sections.forEach((section) => {
-    section.fields.forEach((field) => {
-      const nestedValue = employeeData[field.name];
-
-      if (nestedValue !== undefined) {
-        formData[field.name] = nestedValue;
-      } else if (
-        employeeData.salaryDetails &&
-        employeeData.salaryDetails[field.name] !== undefined
-      ) {
-        formData[field.name] = employeeData.salaryDetails[field.name];
+  sections.forEach(({ fields }) => {
+    fields.forEach(({ name, defaultValue }) => {
+      if (employeeData[name] !== undefined) {
+        formData[name] = employeeData[name];
+      } else if (salaryDetails && salaryDetails[name] !== undefined) {
+        formData[name] = salaryDetails[name];
       } else {
-        formData[field.name] = field.defaultValue || 0;
+        formData[name] = defaultValue || 0;
       }
     });
   });
-  if (employeeData.salaryDetails && employeeData.salaryDetails.basicSalary !== undefined) {
-    formData.basicSalary = employeeData.salaryDetails.basicSalary;
-  } else {
-    formData.basicSalary = 0;
-  }
+
+  formData.basicSalary = salaryDetails?.basicSalary !== undefined ? salaryDetails.basicSalary : 0;
+  formData.slipName = generatePaymentText();
 
   return formData;
 };
 
 export const initializeUpdateSalaryFormData = (sections, salaryData = {}) => {
-  // console.log("sections", JSON.stringify(sections))
-  // console.log("salaryData", JSON.stringify(salaryData))
-
   const formData = {};
+  const { workDetails, earnings, deductions, slipName } = salaryData;
 
-  sections.forEach((section) => {
-    section.fields.forEach((field) => {
-      const nestedValue = salaryData[field.name];
-
-      if (nestedValue !== undefined) {
-        formData[field.name] = nestedValue;
-      } else if (
-        salaryData.workDetails &&
-        salaryData.workDetails[field.name] !== undefined
-      ) {
-        formData[field.name] = salaryData.workDetails[field.name];
-      } else if (
-        salaryData.earnings &&
-        salaryData.earnings[field.name] !== undefined
-      ) {
-        formData[field.name] = salaryData.earnings[field.name];
-      } else if (
-        salaryData.deductions &&
-        salaryData.deductions[field.name] !== undefined
-      ) {
-        formData[field.name] = salaryData.deductions[field.name];
+  sections.forEach(({ fields }) => {
+    fields.forEach(({ name, defaultValue }) => {
+      if (salaryData[name] !== undefined) {
+        formData[name] = salaryData[name];
+      } else if (workDetails && workDetails[name] !== undefined) {
+        formData[name] = workDetails[name];
+      } else if (earnings && earnings[name] !== undefined) {
+        formData[name] = earnings[name];
+      } else if (deductions && deductions[name] !== undefined) {
+        formData[name] = deductions[name];
       } else {
-        formData[field.name] = field.defaultValue || 0;
+        formData[name] = defaultValue || 0;
       }
     });
   });
 
-  if (salaryData.earnings && salaryData.earnings.basicSalary !== undefined) {
-    formData.basicSalary = salaryData.earnings.basicSalary;
-  } else {
-    formData.basicSalary = 0; 
-  }
+  formData.basicSalary = earnings?.basicSalary !== undefined ? earnings.basicSalary : 0;
+  formData.slipName = slipName || generatePaymentText();
 
   return formData;
 };
@@ -184,6 +163,7 @@ export const transformFormDataForSalary = (formData,initialData ) => {
   let month = now.getMonth(); 
   let year = now.getFullYear();
 
+
   if (month === 0) {
     month = 12; 
     year -= 1;
@@ -192,6 +172,7 @@ export const transformFormDataForSalary = (formData,initialData ) => {
     employeeId: initialData.employeeId? initialData.employeeId : initialData.id,
     month: month,
     year: year,
+    slipName: formData.slipName,
     workDetails: {
       scheduledWorkingDays: parseInt(formData.scheduledWorkingDays, 10),
       numberOfWorkingDays: parseInt(formData.numberOfWorkingDays, 10),

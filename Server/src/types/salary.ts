@@ -2,6 +2,7 @@ export interface Salary {
     employeeId: number;
     month: number;
     year: number;
+    slipName: string
     workDetails: WorkDetails;
     earnings: Earnings;
     deductions: Deductions;

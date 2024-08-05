@@ -50,6 +50,7 @@ export const addSalaryDetails = async (salary: Salary) => {
             employeeId: salary.employeeId,
             month: salary.month,
             year: salary.year,
+            slipName: salary.slipName,
             workDetails: {
                 create: {
                     scheduledWorkingDays: salary.workDetails.scheduledWorkingDays,
@@ -188,6 +189,7 @@ export const updateSalaryDetails = async (id: number, salary: Salary) => {
     const updatedSalaryDetails = await prisma.paymentDetails.update({
         where: { id },
         data: {
+            slipName: salary.slipName,
             workDetails: {
                 update: {
                     scheduledWorkingDays: salary.workDetails.scheduledWorkingDays,

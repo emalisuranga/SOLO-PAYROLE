@@ -55,6 +55,7 @@ model PaymentDetails {
   employeeId      Int
   month           Int
   year            Int
+  slipName        String       @default("") 
   createdAt       DateTime     @default(now())
   workDetails     WorkDetails?
   earnings        Earnings?
