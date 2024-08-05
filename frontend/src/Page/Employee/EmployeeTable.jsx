@@ -107,12 +107,8 @@ const EmployeeTable = ({ data }) => {
             <TableCell>{t("table.employeeId")}</TableCell>
             <TableCell>{t("table.fullName")}</TableCell>
             <TableCell>{t("table.phone")}</TableCell>
-            <TableCell>{t("table.address")}</TableCell>
-            <TableCell>{t("table.dateOfBirth")}</TableCell>
             <TableCell>{t("table.joinDate")}</TableCell>
             <TableCell>{t("table.department")}</TableCell>
-            <TableCell>{t("table.bankAccountNumber")}</TableCell>
-            <TableCell>{t("table.bankName")}</TableCell>
             <TableCell>{t("table.basicSalary")}</TableCell>
             <TableCell>{t("table.totalAllowance")}</TableCell>
             <TableCell>{t("table.actions")}</TableCell>
@@ -124,16 +120,10 @@ const EmployeeTable = ({ data }) => {
               <TableCell>{row.id}</TableCell>
               <TableCell>{`${row.firstName} ${row.lastName}`}</TableCell>
               <TableCell>{row.phone}</TableCell>
-              <TableCell>{row.address}</TableCell>
-              <TableCell>
-                {new Date(row.dateOfBirth).toLocaleDateString()}
-              </TableCell>
               <TableCell>
                 {new Date(row.joinDate).toLocaleDateString()}
               </TableCell>
               <TableCell>{row.department}</TableCell>
-              <TableCell>{row.bankDetails?.bankAccountNumber}</TableCell>
-              <TableCell>{row.bankDetails?.bankName}</TableCell>
               <TableCell>{row.salaryDetails?.basicSalary}</TableCell>
               <TableCell>
                 {[

@@ -45,9 +45,23 @@ export const createEmployee = async (employee: Employee) => {
 export const getAllEmployees = async () => {
   const result = await prisma.personalInfo.findMany({
     where: { isDeleted: false },
-    include: {
-      bankDetails: true,
-      salaryDetails: true,
+    select: {
+      id: true,
+      firstName: true,
+      lastName: true,
+      phone: true,
+      joinDate: true,
+      department: true,
+      salaryDetails: {
+        select: {
+          basicSalary: true,
+          transportationCosts: true,
+          familyAllowance: true,
+          attendanceAllowance: true,
+          leaveAllowance: true,
+          specialAllowance: true,
+        },
+      },
     },
     orderBy: {
       id: 'asc',
@@ -59,9 +73,34 @@ export const getAllEmployees = async () => {
 export const getEmployeeById = async (id: number) => {
   const employee = await prisma.personalInfo.findFirst({
     where: { id, isDeleted: false },
-    include: {
-      bankDetails: true,
-      salaryDetails: true,
+    select: {
+      id: true,
+      firstName: true,
+      lastName: true,
+      furiganaFirstName: true,
+      furiganaLastName: true,
+      phone: true,
+      address: true,
+      dateOfBirth: true,
+      joinDate: true,
+      department: true,
+      bankDetails: {
+        select: {
+          bankAccountNumber: true,
+          bankName: true,
+          branchCode: true,
+        },
+      },
+      salaryDetails: {
+        select: {
+          basicSalary: true,
+          transportationCosts: true,
+          familyAllowance: true,
+          attendanceAllowance: true,
+          leaveAllowance: true,
+          specialAllowance: true,
+        },
+      },
       paidHolidays: {
         select: {
           remainingLeave: true,
@@ -82,18 +121,6 @@ export const getEmployeeById = async (id: number) => {
 };
 
 export const updateEmployee = async (id: number, employee: Employee) => {
-  const bankDetailsExists = await prisma.bankDetails.findUnique({
-    where: { employeeId: id },
-  });
-
-  const salaryDetailsExists = await prisma.salaryDetails.findUnique({
-    where: { employeeId: id },
-  });
-
-  if (!bankDetailsExists || !salaryDetailsExists) {
-    throw new NotFoundError("Related records not found");
-  }
-
   const existingEmployee = await prisma.personalInfo.findUnique({
     where: { id, isDeleted: false },
   });
@@ -102,7 +129,7 @@ export const updateEmployee = async (id: number, employee: Employee) => {
     throw new NotFoundError(`Employee with ID ${id} does not exist.`);
   }
 
-  const { joinDate, ...otherDetails } = employee;
+  const { joinDate, dateOfBirth, ...otherDetails } = employee;
 
   if (joinDate && new Date(joinDate).getTime() !== existingEmployee.joinDate.getTime()) {
     const currentPaidHoliday = await prisma.paidHolidays.findFirst({
