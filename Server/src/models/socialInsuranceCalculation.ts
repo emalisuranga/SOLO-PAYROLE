@@ -9,23 +9,32 @@ const prisma = new PrismaClient();
  * @param socialInsuranceCalculationId - The ID of the social insurance calculation
  * @returns The social insurance calculation details
  */
-export const getSocialInsuranceCalculationDetails = async (socialInsuranceCalculationId: number) => {
-  return await prisma.socialInsuranceCalculation.findUnique({
-    where: { id: socialInsuranceCalculationId },
-  });
+export const getSocialInsuranceCalculationDetails = async () => {
+  return await prisma.socialInsuranceCalculation.findFirst();
 }
 /**
  * Insert new data into SocialInsuranceCalculation.
  * @param data - The data to be inserted
  * @returns The newly created social insurance calculation record
  */
-export const createSocialInsuranceCalculation = async (data: SocialInsuranceCalculation) => {
-  return await prisma.socialInsuranceCalculation.create({
-    data: {
-      ...data,
-    },
-  });
-}
+export const createOrUpdateSocialInsuranceCalculation = async (data: SocialInsuranceCalculation) => {
+  const existingRecord = await prisma.socialInsuranceCalculation.findFirst();
+
+  if (existingRecord) {
+    return await prisma.socialInsuranceCalculation.update({
+      where: { id: existingRecord.id },
+      data: {
+        ...data,
+      },
+    });
+  } else {
+    return await prisma.socialInsuranceCalculation.create({
+      data: {
+        ...data,
+      },
+    });
+  }
+};
 
 /**
  * Update social insurance calculation details.

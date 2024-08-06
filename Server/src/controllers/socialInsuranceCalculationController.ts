@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { getSocialInsuranceCalculationDetails, createSocialInsuranceCalculation, updateSocialInsuranceCalculation } from '../models/socialInsuranceCalculation';
+import { getSocialInsuranceCalculationDetails, createOrUpdateSocialInsuranceCalculation, updateSocialInsuranceCalculation } from '../models/socialInsuranceCalculation';
 import { sendSuccessResponse, sendErrorResponse, handleErrorResponse } from '../utils/responseHandler';
 
 /**
@@ -8,17 +8,15 @@ import { sendSuccessResponse, sendErrorResponse, handleErrorResponse } from '../
  * @param res - Express response object
  */ 
 export const fetchSocialInsuranceCalculationDetailsHandler = async (req: Request, res: Response): Promise<void> => {
-  const { socialInsuranceCalculationId } = req.params;
 
   try {
-    const socialInsuranceCalculation = await getSocialInsuranceCalculationDetails(parseInt(socialInsuranceCalculationId, 10));
-
+    const socialInsuranceCalculation = await getSocialInsuranceCalculationDetails();
     if (!socialInsuranceCalculation) {
-      sendErrorResponse(res, 'Social insurance calculation not found', 'Social insurance calculation not found');
+      sendErrorResponse(res, 404, 'Social insurance calculation details not found');
       return;
     }
 
-    sendSuccessResponse(res, socialInsuranceCalculation, 'Social insurance calculation fetched successfully');
+    sendSuccessResponse(res, socialInsuranceCalculation, 'Social insurance calculation details fetched successfully');
   } catch (error: any) {
     console.error('Error fetching social insurance calculation details:', error);
     handleErrorResponse(error, res);
@@ -34,7 +32,7 @@ export const addSocialInsuranceCalculationHandler = async (req: Request, res: Re
   const socialInsuranceCalculation = req.body;
 
   try {
-    await createSocialInsuranceCalculation(socialInsuranceCalculation);
+    await createOrUpdateSocialInsuranceCalculation(socialInsuranceCalculation);
     sendSuccessResponse(res, socialInsuranceCalculation, 'Social insurance calculation details added successfully');
   } catch (error: any) {
     console.error('Error adding social insurance calculation details:', error);

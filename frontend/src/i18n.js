@@ -9,7 +9,7 @@ i18n
   .use(initReactI18next)
   .init({
     fallbackLng: 'en',
-    lng: 'enn', // Explicitly set the language to Japanese
+    lng: 'en', // Explicitly set the language to Japanese
     debug: true,
     interpolation: {
       escapeValue: false, 
