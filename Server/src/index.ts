@@ -4,6 +4,7 @@ import employeeRoutes from './routes/employeeRoutes';
 import salaryDetailsRouter from './routes/salaryDetailsRouter';
 import salarySlipRoutes from './routes/salarySlipRoutes';
 import leaveManagementRoutes from './routes/leaveManagementRoutes';
+import socialInsuranceCalculationRoutes from './routes/SocialInsuranceCalculationRoutes';
 import dotenv from 'dotenv';
 import cors from 'cors';
 
@@ -22,6 +23,7 @@ app.use('/api/employees', employeeRoutes);
 app.use('/api/salary-details', salaryDetailsRouter);
 app.use('/api/salary-slip', salarySlipRoutes);
 app.use('/api/leave-management', leaveManagementRoutes);
+app.use('/api/social-insurance-calculation', socialInsuranceCalculationRoutes);
 app.get('/', (req, res) => {
     res.send('Hello World!');
   });

@@ -137,3 +137,25 @@ model LeaveRequests {
   salaryMonth  Int
   salaryYear   Int
 }
+
+model MonthlyRemuneration {
+  id                Int      @id @default(autoincrement())
+  monthlySalary     Int
+  remunerationStartSalary Int
+  remunerationEndSalary   Int
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+}
+
+model SocialInsuranceCalculation {
+  id                             Int      @id @default(autoincrement())
+  longTermInsurancePercentage    Float
+  healthInsurancePercentage      Float
+  employeePensionPercentage      Float
+  pensionStartSalary             Int
+  pensionEndSalary               Int
+  regularEmployeeInsurancePercentage Float
+  specialEmployeeInsurancePercentage Float
+  createdAt                      DateTime @default(now())
+  updatedAt                      DateTime @updatedAt
+}
