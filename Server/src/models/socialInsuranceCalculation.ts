@@ -34,10 +34,18 @@ export const createSocialInsuranceCalculation = async (data: SocialInsuranceCalc
  * @returns The updated social insurance calculation record
  */
 export const updateSocialInsuranceCalculation = async (socialInsuranceCalculationId: number, data: SocialInsuranceCalculation) => {
+  const existingRecord = await prisma.socialInsuranceCalculation.findUnique({
+    where: { id: socialInsuranceCalculationId },
+  });
+
+  if (!existingRecord) {
+    throw new Error('Record not found');
+  }
+
   return await prisma.socialInsuranceCalculation.update({
     where: { id: socialInsuranceCalculationId },
     data: {
       ...data,
     },
-  });   
-}
+  });
+};

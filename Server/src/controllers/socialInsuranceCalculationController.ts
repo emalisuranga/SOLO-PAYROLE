@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { getSocialInsuranceCalculationDetails, createSocialInsuranceCalculation, updateSocialInsuranceCalculation } from '../models/SocialInsuranceCalculation';
+import { getSocialInsuranceCalculationDetails, createSocialInsuranceCalculation, updateSocialInsuranceCalculation } from '../models/socialInsuranceCalculation';
 import { sendSuccessResponse, sendErrorResponse, handleErrorResponse } from '../utils/responseHandler';
 
 /**
