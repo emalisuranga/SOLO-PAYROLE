@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { createInitialLeaveRequest as createInitialLeaveRequestModel } from '../models/leaveManagement';
-import { LeaveRequests } from '../types/leaveManagementTypes';
+import { LeaveRequests } from '../types/leaveManagement';
 import { sendSuccessResponse, sendErrorResponse } from '../utils/responseHandler';
 
 export const createInitialLeaveRequestHandler = async (req: Request, res: Response) => {

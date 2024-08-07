@@ -15,6 +15,9 @@ export const getMonthlyRemunerationDetails = async () => {
             monthlySalary: true,
             remunerationStartSalary: true,
             remunerationEndSalary: true
+        },
+        orderBy: {
+            monthlySalary: 'asc'
         }
     });
 

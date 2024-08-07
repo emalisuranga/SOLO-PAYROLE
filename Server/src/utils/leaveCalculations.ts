@@ -29,3 +29,7 @@ export const calculateLeaveValidity = (joinDate: Date) => {
 export const calculateDifference = (newTotalDays: number, previousTotalDays: number): number => {
     return newTotalDays - previousTotalDays;
 };
+
+export const calculateRemainingPaidVacationDays = (paidHolidays: Array<{ remainingLeave: number }>): number => {
+    return paidHolidays.reduce((acc, holiday) => acc + holiday.remainingLeave, 0);
+  };

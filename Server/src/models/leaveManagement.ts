@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client';
-import { LeaveRequests, AdjustLeaveRequestParams } from '../types/leaveManagementTypes';
+import { LeaveRequests, AdjustLeaveRequestParams } from '../types/leaveManagement';
 import {
     calculateLeaveValidity,
     calculateDifference

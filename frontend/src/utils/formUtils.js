@@ -70,7 +70,7 @@ export const cleanInitializeFormData = () => {
 
 export const initializeAddSalaryFormData = (sections, employeeData = {}) => {
   const formData = {};
-  const { salaryDetails } = employeeData;
+  const { salaryDetails, deductions } = employeeData;
 
   sections.forEach(({ fields }) => {
     fields.forEach(({ name, defaultValue }) => {
@@ -78,6 +78,8 @@ export const initializeAddSalaryFormData = (sections, employeeData = {}) => {
         formData[name] = employeeData[name];
       } else if (salaryDetails && salaryDetails[name] !== undefined) {
         formData[name] = salaryDetails[name];
+      } else if (deductions && deductions[name] !== undefined) {
+        formData[name] = deductions[name];
       } else {
         formData[name] = defaultValue || 0;
       }

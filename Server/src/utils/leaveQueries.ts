@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client';
-import { AdjustLeaveRequestParams } from '../types/leaveManagementTypes';
+import { AdjustLeaveRequestParams } from '../types/leaveManagement';
 import { NotFoundError } from '../errors/customError';
 
 const prisma = new PrismaClient();
