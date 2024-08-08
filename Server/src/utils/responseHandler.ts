@@ -12,18 +12,6 @@ export const sendSuccessResponse = (
     data,
   });
 };
-  
-export const sendErrorResponse = (
-  res: Response,
-  error: any,
-  message: string = 'Error'
-) => {
-  return res.status(500).json({
-    status: 'error',
-    message,
-    error,
-  });
-};
 
 export const handleErrorResponse = (error: any, res: Response) => {
   if (error instanceof CustomError) {

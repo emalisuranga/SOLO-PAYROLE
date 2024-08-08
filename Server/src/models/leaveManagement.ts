@@ -1,5 +1,5 @@
-import { PrismaClient } from '@prisma/client';
-import { LeaveRequests, AdjustLeaveRequestParams } from '../types/leaveManagement';
+import prisma from '../config/prismaClient';
+import { AdjustLeaveRequestParams } from '../types/leaveManagement';
 import {
     calculateLeaveValidity,
     calculateDifference
@@ -14,8 +14,6 @@ import {
     findValidPaidHoliday,
     adjustPaidHolidays
 } from '../utils/leaveQueries';
-
-const prisma = new PrismaClient();
 
 export const createOrUpdatePaidHolidays = async (employeeId: number, joinDate: Date, currentUsedLeave: number = 0) => {
     const leaveValidity = calculateLeaveValidity(joinDate);

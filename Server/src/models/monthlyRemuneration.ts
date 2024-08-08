@@ -1,32 +1,34 @@
-import { PrismaClient } from '@prisma/client';
-import { MonthlyRemuneration } from '../types/monthlyRemuneration';
+import prisma from '../config/prismaClient';
+import { cache } from '../cache/cache';
+import { MonthlySalaryRange } from '../types/InsuranceCalculationInterfaces';
 
-const prisma = new PrismaClient();
+// const prisma = new PrismaClient();
 
 /**
  * Fetch monthly remuneration details by employee ID and monthly remuneration ID.
  * @param employeeId - The ID of the employee
  * @param monthlyRemunerationId - The ID of the monthly remuneration
  * @returns The monthly remuneration details
- */ 
-export const getMonthlyRemunerationDetails = async () => {
-    const existingRecords = await prisma.monthlyRemuneration.findMany({
+ */
+
+export const getMonthlyRemunerationDetails = async (): Promise<MonthlySalaryRange[]> => {
+    if (!cache.monthlyRemunerations) {
+      const monthlyRemunerations = await prisma.monthlyRemuneration.findMany({
         select: {
-            monthlySalary: true,
-            remunerationStartSalary: true,
-            remunerationEndSalary: true
+          monthlySalary: true,
+          remunerationStartSalary: true,
+          remunerationEndSalary: true
         },
         orderBy: {
-            monthlySalary: 'asc'
+          monthlySalary: 'asc'
         }
-    });
-
-    if (existingRecords.length > 0) {
-        return existingRecords;
-    } else {
-        throw new Error('Record not found');
+      });
+  
+      cache.monthlyRemunerations = monthlyRemunerations;
     }
-}
+  
+    return cache.monthlyRemunerations;
+  };
 
 /**
  * Insert new data into MonthlyRemuneration.

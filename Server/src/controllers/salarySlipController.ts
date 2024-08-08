@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { getSalarySlipDetails, updatePaymentDetailsRemarks } from '../models/salarySlip';
-import { sendSuccessResponse, sendErrorResponse, handleErrorResponse } from '../utils/responseHandler';
+import { sendSuccessResponse, handleErrorResponse } from '../utils/responseHandler';
+import { NotFoundError } from '../errors/customError';
 
 /**
  * Get salary slip details for a given employee and payment details ID.
@@ -14,8 +15,7 @@ export const fetchSalarySlipDetailHandler = async (req: Request, res: Response):
     const salarySlip = await getSalarySlipDetails(parseInt(employeeId, 10), parseInt(paymentDetailsId, 10));
 
     if (!salarySlip || salarySlip.employeeId !== parseInt(employeeId, 10)) {
-      sendErrorResponse(res, 'Salary slip not found', 'Salary slip not found');
-      return;
+      throw new NotFoundError('Salary slip not found');
     }
 
     sendSuccessResponse(res, salarySlip, 'Salary slip fetched successfully');

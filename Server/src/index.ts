@@ -8,6 +8,7 @@ import socialInsuranceCalculationRoutes from './routes/socialInsuranceCalculatio
 import monthlyRemunerationRoutes from './routes/monthlyRemunerationRoutes';
 import dotenv from 'dotenv';
 import cors from 'cors';
+import { errorMiddleware } from './middlewares/errorMiddleware'
 
 // Load environment variables
 dotenv.config();
@@ -18,6 +19,7 @@ const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
+app.use(errorMiddleware);
 
 // Routes
 app.use('/api/employees', employeeRoutes);

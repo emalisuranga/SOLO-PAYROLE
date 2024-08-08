@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client';
+import prisma from '../config/prismaClient';
 import { Salary } from '../types/salary';
 import { createInitialLeaveRequest, adjustLeaveRequest } from '../models/leaveManagement';
 import {
@@ -9,8 +9,6 @@ import {
     convertToNegative
 } from '../utils/salaryCalculations';
 import { NotFoundError, BadRequestError } from '../errors/customError';
-
-const prisma = new PrismaClient();
 
 /**
  * Add salary details for an employee.

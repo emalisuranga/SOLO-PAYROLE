@@ -1,12 +1,10 @@
-import { PrismaClient } from '@prisma/client';
+import prisma from '../config/prismaClient';
 import { Employee } from '../types/employee';
 import { createOrUpdatePaidHolidays } from '../models/leaveManagement';
 import { NotFoundError } from '../errors/customError';
 import { calculateInsuranceDeductions } from '../utils/insuranceCalculations';
 import { calculateRemainingPaidVacationDays } from '../utils/leaveCalculations';
 import { checkRelatedRecordsExist, updatePaidHolidaysIfNecessary } from '../utils/employeeHelpers';
-
-const prisma = new PrismaClient();
 
 export const createEmployee = async (employee: Employee) => {
   const result = await prisma.personalInfo.create({

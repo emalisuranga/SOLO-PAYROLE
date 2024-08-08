@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { getSocialInsuranceCalculationDetails, createOrUpdateSocialInsuranceCalculation, updateSocialInsuranceCalculation } from '../models/socialInsuranceCalculation';
-import { sendSuccessResponse, sendErrorResponse, handleErrorResponse } from '../utils/responseHandler';
+import { sendSuccessResponse, handleErrorResponse } from '../utils/responseHandler';
+import { NotFoundError } from '../errors/customError';
 
 /**
  * Fetch social insurance calculation details by social insurance calculation ID.
@@ -12,8 +13,7 @@ export const fetchSocialInsuranceCalculationDetailsHandler = async (req: Request
   try {
     const socialInsuranceCalculation = await getSocialInsuranceCalculationDetails();
     if (!socialInsuranceCalculation) {
-      sendErrorResponse(res, 404, 'Social insurance calculation details not found');
-      return;
+      throw new NotFoundError('Social insurance calculation details not found');
     }
 
     sendSuccessResponse(res, socialInsuranceCalculation, 'Social insurance calculation details fetched successfully');

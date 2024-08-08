@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { getMonthlyRemunerationDetails, createMonthlyRemuneration } from '../models/monthlyRemuneration';
-import { sendSuccessResponse, sendErrorResponse, handleErrorResponse } from '../utils/responseHandler';
+import { sendSuccessResponse, handleErrorResponse } from '../utils/responseHandler';
+import { NotFoundError } from '../errors/customError';
 
 /**
  * Fetch monthly remuneration details.
@@ -12,8 +13,7 @@ export const fetchMonthlyRemunerationDetailsHandler = async (req: Request, res: 
   try {
     const monthlyRemuneration = await getMonthlyRemunerationDetails();
     if (!monthlyRemuneration) {
-      sendErrorResponse(res, 404, 'Monthly remuneration details not found');
-      return;
+      throw new NotFoundError('Monthly remuneration details not found');
     }
 
     sendSuccessResponse(res, monthlyRemuneration, 'Monthly remuneration details fetched successfully');
